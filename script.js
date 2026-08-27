@@ -45,6 +45,13 @@ function addStudent() {
 
 
 // Display Students
+<strong>${student.name}</strong>
+<br>
+Roll: ${student.roll}
+<br>
+College: ${student.college}
+<br>
+Department: ${student.department}
 function displayStudents() {
     const list = document.getElementById("studentList");
     const searchInput = document.getElementById("searchStudent");
