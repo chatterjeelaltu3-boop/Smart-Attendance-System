@@ -235,7 +235,13 @@ function captureFace() {
     canvas.style.width = "100%";
     canvas.style.maxWidth = "500px";
     canvas.style.margin = "15px auto";
-
+window.addEventListener("load", function () {
+    if (typeof faceapi !== "undefined") {
+        console.log("Face recognition library loaded successfully.");
+    } else {
+        console.log("Face recognition library failed to load.");
+    }
+});
     message.innerText = "Photo captured successfully!";
 
     console.log("Photo captured successfully.");
