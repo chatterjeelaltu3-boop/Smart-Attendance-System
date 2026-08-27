@@ -102,6 +102,53 @@
         </section>
 <section class="box face-section">
 
+    <h2>Student Face Registration</h2>
+
+    <input
+        type="text"
+        id="faceName"
+        placeholder="Student Name"
+    >
+
+    <input
+        type="text"
+        id="faceRoll"
+        placeholder="Roll Number"
+    >
+
+    <input
+        type="text"
+        id="collegeName"
+        placeholder="College Name"
+    >
+
+    <input
+        type="text"
+        id="departmentName"
+        placeholder="Department"
+    >
+
+    <br><br>
+
+    <video id="camera" autoplay playsinline></video>
+
+    <p id="faceMessage">
+        Enter student details and start the camera.
+    </p>
+
+    <button onclick="startCamera()">
+        📷 Start Camera
+    </button>
+
+    <button onclick="registerFace()">
+        📸 Register Face
+    </button>
+
+    <p id="captureMessage"></p>
+
+    <canvas id="snapshot" style="display:none;"></canvas>
+
+</section>
     <h2>Face Attendance</h2>
 
     <video id="camera" autoplay playsinline></video>
