@@ -203,3 +203,31 @@ async function startCamera() {
             "Camera permission was denied or camera is unavailable.";
     }
 }
+function captureFace() {
+
+    const video = document.getElementById("camera");
+    const canvas = document.getElementById("snapshot");
+    const message = document.getElementById("captureMessage");
+
+    if (!video.srcObject) {
+        message.innerText = "First start the camera.";
+        return;
+    }
+
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+    const context = canvas.getContext("2d");
+
+    context.drawImage(
+        video,
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+    message.innerText = "Face captured successfully!";
+
+    console.log("Face image captured.");
+}
