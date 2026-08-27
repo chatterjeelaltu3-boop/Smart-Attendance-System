@@ -204,7 +204,45 @@ async function startCamera() {
     }
 }
 function captureFace() {
+function captureFace() {
 
+    const video = document.getElementById("camera");
+    const canvas = document.getElementById("snapshot");
+    const nameInput = document.getElementById("faceName");
+    const message = document.getElementById("captureMessage");
+
+    const name = nameInput.value.trim();
+
+    if (name === "") {
+        message.innerText = "Please enter your name first.";
+        return;
+    }
+
+    if (!video.srcObject) {
+        message.innerText = "Please start the camera first.";
+        return;
+    }
+
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+
+    const context = canvas.getContext("2d");
+
+    context.drawImage(
+        video,
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+    message.innerText =
+        "Face captured for " + name + " successfully!";
+
+    localStorage.setItem("registeredName", name);
+
+    console.log("Face registration completed for:", name);
+}
     const video = document.getElementById("camera");
     const canvas = document.getElementById("snapshot");
     const message = document.getElementById("captureMessage");
