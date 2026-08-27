@@ -204,7 +204,7 @@ async function startCamera() {
     }
 }
 function captureFace() {
-function captureFace() {
+
 
     const video = document.getElementById("camera");
     const canvas = document.getElementById("snapshot");
