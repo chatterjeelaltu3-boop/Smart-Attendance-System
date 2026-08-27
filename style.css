@@ -158,8 +158,23 @@ button:hover {
     .student-row {
         flex-direction: column;
         align-items: flex-start;
-    }
+    }.face-section {
+    text-align: center;
+}
 
+#camera {
+    width: 100%;
+    max-width: 500px;
+    border-radius: 15px;
+    margin: 15px auto;
+    display: block;
+    background: #111;
+}
+
+#faceMessage {
+    margin: 15px 0;
+    color: #666;
+}
     .student-actions {
         width: 100%;
     }
