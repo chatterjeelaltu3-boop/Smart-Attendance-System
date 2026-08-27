@@ -1,20 +1,25 @@
 let students = [];
 
-// Add Student
 function addStudent() {
+
     const nameInput = document.getElementById("studentName");
     const rollInput = document.getElementById("studentRoll");
+    const collegeInput = document.getElementById("studentCollege");
+    const departmentInput = document.getElementById("studentDepartment");
 
     const name = nameInput.value.trim();
     const roll = rollInput.value.trim();
+    const college = collegeInput.value.trim();
+    const department = departmentInput.value.trim();
 
-    if (name === "" || roll === "") {
-        alert("Please enter student name and roll number.");
+    if (!name || !roll || !college || !department) {
+        alert("Please fill all student details.");
         return;
     }
 
-    // Check duplicate roll number
-    const duplicate = students.some(student => student.roll === roll);
+    const duplicate = students.some(
+        student => student.roll === roll
+    );
 
     if (duplicate) {
         alert("This roll number already exists.");
@@ -24,11 +29,15 @@ function addStudent() {
     students.push({
         name: name,
         roll: roll,
+        college: college,
+        department: department,
         status: null
     });
 
     nameInput.value = "";
     rollInput.value = "";
+    collegeInput.value = "";
+    departmentInput.value = "";
 
     displayStudents();
     updateDashboard();
