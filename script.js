@@ -204,31 +204,26 @@ async function startCamera() {
     }
 }
 function captureFace() {
-
-
     const video = document.getElementById("camera");
     const canvas = document.getElementById("snapshot");
-    const nameInput = document.getElementById("faceName");
     const message = document.getElementById("captureMessage");
 
-    const name = nameInput.value.trim();
-
-    if (name === "") {
-        message.innerText = "Please enter your name first.";
+    if (!video.srcObject) {
+        message.innerText = "First click Start Camera.";
         return;
     }
 
-    if (!video.srcObject) {
-        message.innerText = "Please start the camera first.";
+    if (video.videoWidth === 0 || video.videoHeight === 0) {
+        message.innerText = "Camera is not ready. Please wait a moment.";
         return;
     }
 
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
 
-    const context = canvas.getContext("2d");
+    const ctx = canvas.getContext("2d");
 
-    context.drawImage(
+    ctx.drawImage(
         video,
         0,
         0,
@@ -236,36 +231,12 @@ function captureFace() {
         canvas.height
     );
 
-    message.innerText =
-        "Face captured for " + name + " successfully!";
+    canvas.style.display = "block";
+    canvas.style.width = "100%";
+    canvas.style.maxWidth = "500px";
+    canvas.style.margin = "15px auto";
 
-    localStorage.setItem("registeredName", name);
+    message.innerText = "Photo captured successfully!";
 
-    console.log("Face registration completed for:", name);
-}
-    const video = document.getElementById("camera");
-    const canvas = document.getElementById("snapshot");
-    const message = document.getElementById("captureMessage");
-
-    if (!video.srcObject) {
-        message.innerText = "First start the camera.";
-        return;
-    }
-
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-
-    const context = canvas.getContext("2d");
-
-    context.drawImage(
-        video,
-        0,
-        0,
-        canvas.width,
-        canvas.height
-    );
-
-    message.innerText = "Face captured successfully!";
-
-    console.log("Face image captured.");
+    console.log("Photo captured successfully.");
 }
