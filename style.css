@@ -175,6 +175,9 @@ button:hover {
     margin: 15px 0;
     color: #666;
 }
+#camera {
+    transform: scaleX(-1);
+}
     .student-actions {
         width: 100%;
     }
