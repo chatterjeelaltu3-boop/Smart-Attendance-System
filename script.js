@@ -258,6 +258,130 @@ window.addEventListener("load", function () {
         console.log("Face recognition library failed to load.");
     }
 });
+    const MODEL_URL =
+    "https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js@master/weights";
+
+let faceModelsLoaded = false;
+let detectionRunning = false;
+
+
+// Load face detection model
+async function loadFaceDetectionModels() {
+
+    const message =
+        document.getElementById("faceDetectionMessage");
+
+    try {
+
+        message.innerText =
+            "Loading face detection model...";
+
+        await faceapi.nets.tinyFaceDetector.loadFromUri(
+            MODEL_URL
+        );
+
+        faceModelsLoaded = true;
+
+        message.innerText =
+            "Face detection ready ✅";
+
+    } catch (error) {
+
+        console.error(error);
+
+        message.innerText =
+            "Face detection model failed to load.";
+
+    }
+}
+
+
+// Start face detection
+async function startFaceDetection() {
+
+    const video = document.getElementById("camera");
+    const canvas = document.getElementById("faceCanvas");
+    const message =
+        document.getElementById("faceDetectionMessage");
+
+    if (!faceModelsLoaded) {
+        message.innerText =
+            "Please wait for face detection to load.";
+        return;
+    }
+
+    if (!video.srcObject) {
+        message.innerText =
+            "First click Start Camera.";
+        return;
+    }
+
+    detectionRunning = true;
+
+    const displaySize = {
+        width: video.videoWidth,
+        height: video.videoHeight
+    };
+
+    faceapi.matchDimensions(canvas, displaySize);
+
+    async function detect() {
+
+        if (!detectionRunning) return;
+
+        const detections =
+            await faceapi.detectAllFaces(
+                video,
+                new faceapi.TinyFaceDetectorOptions({
+                    inputSize: 320,
+                    scoreThreshold: 0.5
+                })
+            );
+
+        const resizedDetections =
+            faceapi.resizeResults(
+                detections,
+                displaySize
+            );
+
+        const ctx = canvas.getContext("2d");
+
+        ctx.clearRect(
+            0,
+            0,
+            canvas.width,
+            canvas.height
+        );
+
+        faceapi.draw.drawDetections(
+            canvas,
+            resizedDetections
+        );
+
+        if (detections.length > 0) {
+
+            message.innerText =
+                "Face detected ✅";
+
+        } else {
+
+            message.innerText =
+                "Looking for a face...";
+
+        }
+
+        requestAnimationFrame(detect);
+    }
+
+    detect();
+}
+
+
+// Load model when page opens
+window.addEventListener(
+    "load",
+    loadFaceDetectionModels
+);
     message.innerText = "Photo captured successfully!";
 
     console.log("Photo captured successfully.");
