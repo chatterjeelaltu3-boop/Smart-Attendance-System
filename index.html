@@ -1,22 +1,26 @@
-index.html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Attendance</title>
+
+    <title>Smart Attendance System</title>
 
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <div class="dashboard">
+    <div class="container">
 
-        <h1>Smart Attendance System</h1>
-        <p>Manage student attendance easily</p>
+        <header>
+            <h1>Smart Attendance System</h1>
+            <p>Student Attendance Dashboard</p>
+        </header>
 
-        <div class="cards">
+        <!-- Dashboard Cards -->
+
+        <section class="dashboard">
 
             <div class="card">
                 <h3>Total Students</h3>
@@ -24,12 +28,12 @@ index.html
             </div>
 
             <div class="card">
-                <h3>Present Today</h3>
+                <h3>Present</h3>
                 <h2 id="presentStudents">0</h2>
             </div>
 
             <div class="card">
-                <h3>Absent Today</h3>
+                <h3>Absent</h3>
                 <h2 id="absentStudents">0</h2>
             </div>
 
@@ -38,29 +42,67 @@ index.html
                 <h2 id="attendancePercentage">0%</h2>
             </div>
 
-        </div>
+        </section>
 
-        <div class="student-section">
+
+        <!-- Add Student -->
+
+        <section class="box">
 
             <h2>Add Student</h2>
 
-            <input type="text" id="studentName" placeholder="Student Name">
+            <div class="form">
 
-            <input type="text" id="studentRoll" placeholder="Roll Number">
+                <input
+                    type="text"
+                    id="studentName"
+                    placeholder="Enter student name"
+                >
 
-            <button onclick="addStudent()">Add Student</button>
+                <input
+                    type="text"
+                    id="studentRoll"
+                    placeholder="Enter roll number"
+                >
 
-        </div>
+                <button onclick="addStudent()">
+                    Add Student
+                </button>
 
-        <div class="attendance-section">
+            </div>
+
+        </section>
+
+
+        <!-- Search -->
+
+        <section class="box">
+
+            <h2>Search Student</h2>
+
+            <input
+                class="search"
+                type="text"
+                id="searchStudent"
+                placeholder="Search by name or roll number"
+                oninput="displayStudents()"
+            >
+
+        </section>
+
+
+        <!-- Attendance -->
+
+        <section class="box">
 
             <h2>Today's Attendance</h2>
 
             <div id="studentList"></div>
 
-        </div>
+        </section>
 
     </div>
+
 
     <script src="script.js"></script>
 
