@@ -181,3 +181,25 @@ function updateDashboard() {
 // Start Dashboard
 displayStudents();
 updateDashboard();
+async function startCamera() {
+    const video = document.getElementById("camera");
+    const message = document.getElementById("faceMessage");
+
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+            video: true,
+            audio: false
+        });
+
+        video.srcObject = stream;
+
+        message.innerText =
+            "Camera is ON. Face detection will be added next.";
+
+    } catch (error) {
+        console.error(error);
+
+        message.innerText =
+            "Camera permission was denied or camera is unavailable.";
+    }
+}
