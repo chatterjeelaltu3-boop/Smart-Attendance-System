@@ -182,3 +182,15 @@ button:hover {
         width: 100%;
     }
 }
+#faceCanvas {
+    display: block;
+    width: 100%;
+    max-width: 500px;
+    margin: -15px auto 15px;
+    pointer-events: none;
+}
+
+#faceDetectionMessage {
+    text-align: center;
+    font-weight: bold;
+}
