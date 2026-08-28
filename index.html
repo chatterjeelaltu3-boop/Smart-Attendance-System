@@ -1,4 +1,4 @@
-
+```html
 <!DOCTYPE html>
 <html lang="en">
 
@@ -8,7 +8,6 @@
 
     <title>Smart Attendance System</title>
 
-    <!-- CSS -->
     <link rel="stylesheet" href="style.css">
 
     <!-- Face API -->
@@ -27,10 +26,9 @@
 
         <div class="college-logo-area">
 
-            <!-- HETC LOGO -->
             <img
                 src="Screenshot 2026-08-28 160906.png"
-                alt="Hooghly Engineering & Technology College Logo"
+                alt="HETC Logo"
                 class="college-logo-img">
 
             <h1>Smart Attendance</h1>
@@ -41,40 +39,31 @@
 
         </div>
 
-
         <h2>Welcome Back 👋</h2>
 
         <p class="login-subtitle">
             Login to your attendance dashboard
         </p>
 
-
         <div class="input-group">
-
             <label>Full Name</label>
 
             <input
                 type="text"
                 id="loginName"
                 placeholder="Enter your name">
-
         </div>
 
-
         <div class="input-group">
-
             <label>Mobile Number or Email</label>
 
             <input
                 type="text"
                 id="loginIdentity"
                 placeholder="Mobile number or email">
-
         </div>
 
-
         <div class="input-group">
-
             <label>4 Digit PIN</label>
 
             <input
@@ -83,50 +72,35 @@
                 maxlength="4"
                 inputmode="numeric"
                 placeholder="Enter 4 digit PIN">
-
         </div>
-
 
         <button
             id="loginButton"
             class="primary-button">
-
             🔐 Login
-
         </button>
-
 
         <button
             id="createAccountButton"
             class="secondary-button">
-
             ✨ Create Account
-
         </button>
-
 
         <button
             id="forgotPinButton"
             class="text-button">
-
             Forgot PIN?
-
         </button>
 
-
-        <div
-            id="loginMessage"
-            class="auth-message">
-        </div>
+        <div id="loginMessage" class="auth-message"></div>
 
     </div>
 
 </section>
 
 
-
 <!-- =========================================================
-     CREATE ACCOUNT PAGE
+     CREATE ACCOUNT
 ========================================================= -->
 
 <section
@@ -136,46 +110,35 @@
 
     <div class="form-card">
 
-
         <div class="page-header">
 
-
-            <!-- SAME HETC LOGO -->
             <img
                 src="Screenshot 2026-08-28 160906.png"
-                alt="Hooghly Engineering & Technology College Logo"
-                class="college-logo-img small-logo-img">
-
+                alt="HETC Logo"
+                class="college-logo-img small-logo">
 
             <div>
-
                 <h1>Create Account</h1>
 
                 <p>
                     Register your Smart Attendance account
                 </p>
-
             </div>
 
         </div>
 
 
-
         <div class="input-group">
-
             <label>Full Name *</label>
 
             <input
                 type="text"
                 id="createName"
                 placeholder="Enter your full name">
-
         </div>
 
 
-
         <div class="input-group">
-
             <label>Mobile Number *</label>
 
             <input
@@ -184,26 +147,20 @@
                 maxlength="10"
                 inputmode="numeric"
                 placeholder="10 digit mobile number">
-
         </div>
 
 
-
         <div class="input-group">
-
             <label>Email Address</label>
 
             <input
                 type="email"
                 id="createEmail"
                 placeholder="Enter email address">
-
         </div>
 
 
-
         <div class="input-group">
-
             <label>Create 4 Digit PIN *</label>
 
             <input
@@ -212,13 +169,10 @@
                 maxlength="4"
                 inputmode="numeric"
                 placeholder="Create PIN">
-
         </div>
 
 
-
         <div class="input-group">
-
             <label>Confirm 4 Digit PIN *</label>
 
             <input
@@ -227,13 +181,10 @@
                 maxlength="4"
                 inputmode="numeric"
                 placeholder="Confirm PIN">
-
         </div>
 
 
-
         <div class="input-group">
-
             <label>College Name *</label>
 
             <input
@@ -241,35 +192,27 @@
                 id="createCollege"
                 value="Hooghly Engineering & Technology College"
                 readonly>
-
         </div>
 
 
-
         <div class="input-group">
-
-            <label>Department / Branch *</label>
+            <label>Branch / Department *</label>
 
             <input
                 type="text"
                 id="createDepartment"
                 placeholder="Example: CSE">
-
         </div>
 
 
-
         <div class="input-group">
-
             <label>Roll Number *</label>
 
             <input
                 type="text"
                 id="createRoll"
                 placeholder="Enter roll number">
-
         </div>
-
 
 
         <button
@@ -281,7 +224,6 @@
         </button>
 
 
-
         <button
             id="backToLoginButton"
             class="text-button">
@@ -289,7 +231,6 @@
             ← Back to Login
 
         </button>
-
 
 
         <div
@@ -302,9 +243,8 @@
 </section>
 
 
-
 <!-- =========================================================
-     FORGOT PIN PAGE
+     FORGOT PIN
 ========================================================= -->
 
 <section
@@ -314,10 +254,8 @@
 
     <div class="form-card">
 
-
         <div class="college-logo-area">
 
-            <!-- SAME HETC LOGO -->
             <img
                 src="Screenshot 2026-08-28 160906.png"
                 alt="HETC Logo"
@@ -332,35 +270,27 @@
         </div>
 
 
-
         <div class="input-group">
-
             <label>Name</label>
 
             <input
                 type="text"
                 id="forgotName"
                 placeholder="Enter your name">
-
         </div>
 
 
-
         <div class="input-group">
-
             <label>Mobile Number or Email</label>
 
             <input
                 type="text"
                 id="forgotIdentity"
                 placeholder="Mobile or email">
-
         </div>
 
 
-
         <div class="input-group">
-
             <label>New 4 Digit PIN</label>
 
             <input
@@ -369,13 +299,10 @@
                 maxlength="4"
                 inputmode="numeric"
                 placeholder="New PIN">
-
         </div>
 
 
-
         <div class="input-group">
-
             <label>Confirm New PIN</label>
 
             <input
@@ -384,9 +311,7 @@
                 maxlength="4"
                 inputmode="numeric"
                 placeholder="Confirm PIN">
-
         </div>
-
 
 
         <button
@@ -398,7 +323,6 @@
         </button>
 
 
-
         <button
             id="forgotBackButton"
             class="text-button">
@@ -406,7 +330,6 @@
             ← Back to Login
 
         </button>
-
 
 
         <div
@@ -419,7 +342,6 @@
 </section>
 
 
-
 <!-- =========================================================
      DASHBOARD
 ========================================================= -->
@@ -429,28 +351,21 @@
     class="dashboard-page"
     style="display:none;">
 
-
-    <!-- =====================================================
-         SIDEBAR
-    ===================================================== -->
+    <!-- SIDEBAR -->
 
     <aside class="sidebar">
 
-
         <div class="sidebar-logo">
-
 
             <!-- SAME HETC LOGO -->
             <img
                 src="Screenshot 2026-08-28 160906.png"
-                alt="Hooghly Engineering & Technology College Logo"
-                class="college-logo-img dashboard-logo">
-
+                alt="HETC Logo"
+                class="college-logo-img">
 
             <h2>
                 Smart Attendance
             </h2>
-
 
             <p>
                 Hooghly Engineering & Technology College
@@ -459,73 +374,75 @@
         </div>
 
 
-
         <!-- SIDE MENU -->
 
         <nav class="side-menu">
 
-
             <button
                 class="menu-item active"
                 id="dashboardMenuButton">
-
                 🏠 Dashboard
-
             </button>
 
+
+            <button
+                class="menu-item"
+                id="editProfileMenuButton">
+                👤 Edit My Profile
+            </button>
+
+
+            <button
+                class="menu-item"
+                id="editContactMenuButton">
+                📱 Edit Mobile & Email
+            </button>
+
+
+            <button
+                class="menu-item"
+                id="personalDetailsMenuButton">
+                📋 Personal Details
+            </button>
 
 
             <button
                 class="menu-item"
                 id="faceRegistrationMenuButton">
-
-                👤 Face Registration
-
+                👤 Register Face
             </button>
-
 
 
             <button
                 class="menu-item"
                 id="attendanceMenuButton">
-
-                📸 Mark Attendance
-
+                📸 Face Attendance
             </button>
-
 
 
             <button
                 class="menu-item"
                 id="studentsMenuButton">
-
                 👥 Students
-
             </button>
-
 
 
             <button
                 class="menu-item"
                 id="checkAttendanceMenuButton">
-
-                📊 My Attendance
-
+                📊 Check Attendance
             </button>
 
 
+            <!-- ADMIN -->
 
             <button
                 class="menu-item"
-                id="editDetailsMenuButton">
-
-                ✏️ Edit Details
-
+                id="adminMenuButton">
+                👨‍💼 Admin — Ayush Chatterjee
             </button>
 
-
         </nav>
-
 
 
         <button
@@ -536,14 +453,10 @@
 
         </button>
 
-
     </aside>
 
 
-
-    <!-- =====================================================
-         MAIN CONTENT
-    ===================================================== -->
+    <!-- MAIN CONTENT -->
 
     <main class="main-content">
 
@@ -551,7 +464,6 @@
         <!-- TOP BAR -->
 
         <header class="topbar">
-
 
             <div>
 
@@ -566,33 +478,27 @@
             </div>
 
 
-
             <div class="profile-area">
 
-
                 <div class="profile-icon">
-                    👤
+                    👨‍💼
                 </div>
-
 
                 <div>
 
                     <strong id="dashboardUserName">
-                        Student
+                        Ayush Chatterjee
                     </strong>
 
                     <small id="dashboardUserRoll">
-                        Roll
+                        Admin
                     </small>
 
                 </div>
 
-
             </div>
 
-
         </header>
-
 
 
         <!-- =================================================
@@ -604,10 +510,9 @@
             class="dashboard-section">
 
 
-            <!-- WELCOME CARD -->
+            <!-- WELCOME -->
 
             <div class="welcome-card">
-
 
                 <div>
 
@@ -615,11 +520,9 @@
                         Welcome back 👋
                     </span>
 
-
                     <h2 id="welcomeName">
-                        Student
+                        Ayush Chatterjee
                     </h2>
-
 
                     <p>
                         Hooghly Engineering & Technology College
@@ -632,9 +535,7 @@
                     📚
                 </div>
 
-
             </div>
-
 
 
             <!-- STAT CARDS -->
@@ -663,7 +564,6 @@
                 </div>
 
 
-
                 <div class="stat-card green">
 
                     <div class="stat-icon">
@@ -683,7 +583,6 @@
                     </div>
 
                 </div>
-
 
 
                 <div class="stat-card red">
@@ -707,7 +606,6 @@
                 </div>
 
 
-
                 <div class="stat-card purple">
 
                     <div class="stat-icon">
@@ -728,9 +626,7 @@
 
                 </div>
 
-
             </div>
-
 
 
             <!-- QUICK ACTIONS -->
@@ -742,7 +638,6 @@
                 </h2>
 
             </div>
-
 
 
             <div class="quick-actions">
@@ -767,7 +662,6 @@
                 </button>
 
 
-
                 <button
                     id="quickAttendance"
                     class="action-card">
@@ -777,15 +671,14 @@
                     </span>
 
                     <strong>
-                        Mark Attendance
+                        Face Attendance
                     </strong>
 
                     <small>
-                        Scan your face automatically
+                        Automatically capture attendance
                     </small>
 
                 </button>
-
 
 
                 <button
@@ -801,17 +694,236 @@
                     </strong>
 
                     <small>
-                        View your attendance history
+                        View attendance history
                     </small>
 
                 </button>
 
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             EDIT MY PROFILE
+        ================================================= -->
+
+        <section
+            id="editProfileSection"
+            class="dashboard-section"
+            style="display:none;">
+
+            <div class="section-header">
+
+                <h2>
+                    👤 Edit My Profile
+                </h2>
+
+                <p>
+                    Update your personal profile information.
+                </p>
 
             </div>
 
 
+            <div class="details-card">
+
+                <div class="input-group">
+
+                    <label>
+                        Full Name
+                    </label>
+
+                    <input
+                        type="text"
+                        id="editName">
+
+                </div>
+
+
+                <div class="input-group">
+
+                    <label>
+                        Roll Number
+                    </label>
+
+                    <input
+                        type="text"
+                        id="editRoll">
+
+                </div>
+
+
+                <div class="input-group">
+
+                    <label>
+                        Branch / Department
+                    </label>
+
+                    <input
+                        type="text"
+                        id="editDepartment">
+
+                </div>
+
+
+                <button
+                    id="saveEditedDetailsButton"
+                    class="primary-button">
+
+                    💾 Save Profile
+
+                </button>
+
+            </div>
+
         </section>
 
+
+        <!-- =================================================
+             EDIT MOBILE & EMAIL
+        ================================================= -->
+
+        <section
+            id="editContactSection"
+            class="dashboard-section"
+            style="display:none;">
+
+            <div class="section-header">
+
+                <h2>
+                    📱 Edit Mobile & Email
+                </h2>
+
+                <p>
+                    Update your contact information.
+                </p>
+
+            </div>
+
+
+            <div class="details-card">
+
+                <div class="input-group">
+
+                    <label>
+                        Mobile Number
+                    </label>
+
+                    <input
+                        type="tel"
+                        id="editMobile"
+                        maxlength="10">
+
+                </div>
+
+
+                <div class="input-group">
+
+                    <label>
+                        Email Address
+                    </label>
+
+                    <input
+                        type="email"
+                        id="editEmail">
+
+                </div>
+
+
+                <button
+                    id="saveContactButton"
+                    class="primary-button">
+
+                    💾 Save Contact Details
+
+                </button>
+
+
+                <div
+                    id="contactMessage"
+                    class="auth-message">
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             PERSONAL DETAILS
+        ================================================= -->
+
+        <section
+            id="personalDetailsSection"
+            class="dashboard-section"
+            style="display:none;">
+
+            <div class="section-header">
+
+                <h2>
+                    📋 Personal Details
+                </h2>
+
+                <p>
+                    Your registered information.
+                </p>
+
+            </div>
+
+
+            <div class="details-card">
+
+                <p>
+                    <strong>Name:</strong>
+                    <span id="personalName">
+                        Ayush Chatterjee
+                    </span>
+                </p>
+
+                <p>
+                    <strong>Mobile:</strong>
+                    <span id="personalMobile">
+                        -
+                    </span>
+                </p>
+
+                <p>
+                    <strong>Email:</strong>
+                    <span id="personalEmail">
+                        -
+                    </span>
+                </p>
+
+                <p>
+                    <strong>College:</strong>
+                    Hooghly Engineering & Technology College
+                </p>
+
+                <p>
+                    <strong>Branch:</strong>
+                    <span id="personalDepartment">
+                        -
+                    </span>
+                </p>
+
+                <p>
+                    <strong>Roll:</strong>
+                    <span id="personalRoll">
+                        -
+                    </span>
+                </p>
+
+                <p>
+                    <strong>Account Type:</strong>
+                    <span>
+                        Admin
+                    </span>
+                </p>
+
+            </div>
+
+        </section>
 
 
         <!-- =================================================
@@ -823,23 +935,17 @@
             class="dashboard-section"
             style="display:none;">
 
-
             <div class="section-header">
 
-                <div>
+                <h2>
+                    👤 Face Registration
+                </h2>
 
-                    <h2>
-                        Face Registration
-                    </h2>
-
-                    <p>
-                        Your face will be captured automatically.
-                    </p>
-
-                </div>
+                <p>
+                    Your face will be captured automatically.
+                </p>
 
             </div>
-
 
 
             <div class="face-layout">
@@ -849,11 +955,9 @@
 
                 <div class="details-card">
 
-
                     <h3>
                         Student Details
                     </h3>
-
 
 
                     <div class="input-group">
@@ -869,19 +973,30 @@
                     </div>
 
 
+                    <div class="input-group">
+
+                        <label>
+                            Mobile Number
+                        </label>
+
+                        <input
+                            type="tel"
+                            id="faceMobile">
+
+                    </div>
+
 
                     <div class="input-group">
 
                         <label>
-                            Roll Number
+                            Email Address
                         </label>
 
                         <input
-                            type="text"
-                            id="faceRoll">
+                            type="email"
+                            id="faceEmail">
 
                     </div>
-
 
 
                     <div class="input-group">
@@ -899,11 +1014,10 @@
                     </div>
 
 
-
                     <div class="input-group">
 
                         <label>
-                            Department
+                            Branch / Department
                         </label>
 
                         <input
@@ -913,43 +1027,26 @@
                     </div>
 
 
-
                     <div class="input-group">
 
                         <label>
-                            Mobile
+                            Roll Number
                         </label>
 
                         <input
                             type="text"
-                            id="faceMobile">
+                            id="faceRoll">
 
                     </div>
-
-
-
-                    <div class="input-group">
-
-                        <label>
-                            Email
-                        </label>
-
-                        <input
-                            type="email"
-                            id="faceEmail">
-
-                    </div>
-
 
 
                     <button
                         id="startFaceRegistrationButton"
                         class="primary-button">
 
-                        📷 Capture Face Automatically
+                        📷 Start Automatic Face Capture
 
                     </button>
-
 
 
                     <div
@@ -957,9 +1054,7 @@
                         class="auth-message">
                     </div>
 
-
                 </div>
-
 
 
                 <!-- CAMERA -->
@@ -973,7 +1068,6 @@
                             Face Camera
                         </h3>
 
-
                         <span id="registrationStatus">
                             Camera is OFF
                         </span>
@@ -981,9 +1075,7 @@
                     </div>
 
 
-
                     <div class="camera-wrapper">
-
 
                         <video
                             id="registrationCamera"
@@ -997,29 +1089,24 @@
                             <span></span>
                         </div>
 
-
                     </div>
 
 
-
                     <p>
-                        Look directly at the camera.
-                        Your face will be captured automatically.
+                        Position your face inside the guide.
+                        The camera will automatically capture
+                        when a face is detected.
                     </p>
-
 
                 </div>
 
-
             </div>
-
 
         </section>
 
 
-
         <!-- =================================================
-             ATTENDANCE
+             FACE ATTENDANCE
         ================================================= -->
 
         <section
@@ -1027,24 +1114,18 @@
             class="dashboard-section"
             style="display:none;">
 
-
             <div class="section-header">
 
-                <div>
+                <h2>
+                    📸 Face Attendance
+                </h2>
 
-                    <h2>
-                        Mark Attendance
-                    </h2>
-
-                    <p>
-                        Face recognition will automatically
-                        detect and mark your attendance.
-                    </p>
-
-                </div>
+                <p>
+                    Face recognition will automatically capture
+                    and mark attendance.
+                </p>
 
             </div>
-
 
 
             <div class="attendance-camera-card">
@@ -1056,7 +1137,6 @@
                         📸 Attendance Camera
                     </h3>
 
-
                     <span id="attendanceStatus">
                         Camera is OFF
                     </span>
@@ -1064,9 +1144,7 @@
                 </div>
 
 
-
                 <div class="camera-wrapper large-camera">
-
 
                     <video
                         id="attendanceCamera"
@@ -1080,19 +1158,16 @@
                         <span></span>
                     </div>
 
-
                 </div>
-
 
 
                 <button
                     id="startFaceAttendanceButton"
                     class="primary-button attendance-button">
 
-                    📸 Capture Face & Mark Attendance
+                    📸 Start Automatic Attendance
 
                 </button>
-
 
 
                 <div
@@ -1100,12 +1175,9 @@
                     class="attendance-result">
                 </div>
 
-
             </div>
 
-
         </section>
-
 
 
         <!-- =================================================
@@ -1117,23 +1189,17 @@
             class="dashboard-section"
             style="display:none;">
 
-
             <div class="section-header">
 
-                <div>
+                <h2>
+                    👥 Registered Students
+                </h2>
 
-                    <h2>
-                        Registered Students
-                    </h2>
-
-                    <p>
-                        View registered student details.
-                    </p>
-
-                </div>
+                <p>
+                    Admin can view registered student details.
+                </p>
 
             </div>
-
 
 
             <div class="search-box">
@@ -1141,10 +1207,9 @@
                 <input
                     type="text"
                     id="searchStudent"
-                    placeholder="🔍 Search by name or roll...">
+                    placeholder="🔍 Search by name, roll or branch...">
 
             </div>
-
 
 
             <div
@@ -1152,19 +1217,157 @@
                 class="student-list">
             </div>
 
+        </section>
+
+
+        <!-- =================================================
+             CHECK ATTENDANCE
+        ================================================= -->
+
+        <section
+            id="checkAttendanceSection"
+            class="dashboard-section"
+            style="display:none;">
+
+            <div class="section-header">
+
+                <h2>
+                    📊 Check Attendance
+                </h2>
+
+                <p>
+                    View attendance with date, day and time.
+                </p>
+
+            </div>
+
+
+            <div class="attendance-summary">
+
+
+                <div>
+
+                    <strong id="attendanceTotalDays">
+                        0
+                    </strong>
+
+                    <span>
+                        Total Days
+                    </span>
+
+                </div>
+
+
+                <div>
+
+                    <strong id="attendancePresentDays">
+                        0
+                    </strong>
+
+                    <span>
+                        Present
+                    </span>
+
+                </div>
+
+
+                <div>
+
+                    <strong id="attendanceAbsentDays">
+                        0
+                    </strong>
+
+                    <span>
+                        Absent
+                    </span>
+
+                </div>
+
+
+            </div>
+
+
+            <div
+                id="attendanceHistory">
+            </div>
 
         </section>
 
 
-    </main>
+        <!-- =================================================
+             ADMIN PANEL
+        ================================================= -->
 
+        <section
+            id="adminSection"
+            class="dashboard-section"
+            style="display:none;">
+
+            <div class="section-header">
+
+                <h2>
+                    👨‍💼 Admin Panel
+                </h2>
+
+                <p>
+                    Administrator: Ayush Chatterjee
+                </p>
+
+            </div>
+
+
+            <div class="details-card">
+
+                <h3>
+                    Admin Information
+                </h3>
+
+                <p>
+                    <strong>Name:</strong>
+                    Ayush Chatterjee
+                </p>
+
+                <p>
+                    <strong>Role:</strong>
+                    Administrator
+                </p>
+
+                <p>
+                    <strong>College:</strong>
+                    Hooghly Engineering & Technology College
+                </p>
+
+                <p>
+                    <strong>Access:</strong>
+                    Student Details & Attendance
+                </p>
+
+            </div>
+
+
+            <div class="section-title">
+
+                <h2>
+                    All Registered Students
+                </h2>
+
+            </div>
+
+
+            <div
+                id="adminStudentList"
+                class="student-list">
+            </div>
+
+        </section>
+
+    </main>
 
 </section>
 
 
-
 <!-- =========================================================
-     ATTENDANCE SUCCESS POPUP
+     ATTENDANCE POPUP
 ========================================================= -->
 
 <div
@@ -1172,16 +1375,12 @@
     class="popup-overlay"
     style="display:none;">
 
-
     <div class="popup-card">
-
 
         <div
             id="popupIcon"
             class="popup-icon">
-
             ✅
-
         </div>
 
 
@@ -1203,12 +1402,9 @@
 
         </button>
 
-
     </div>
 
-
 </div>
-
 
 
 <!-- =========================================================
@@ -1220,9 +1416,7 @@
     class="popup-overlay"
     style="display:none;">
 
-
     <div class="modal-card">
-
 
         <button
             id="closeStudentsModal"
@@ -1242,236 +1436,9 @@
             id="registeredStudentsList">
         </div>
 
-
     </div>
 
-
 </div>
-
-
-
-<!-- =========================================================
-     MY ATTENDANCE MODAL
-========================================================= -->
-
-<div
-    id="attendanceCheckModal"
-    class="popup-overlay"
-    style="display:none;">
-
-
-    <div class="modal-card">
-
-
-        <button
-            id="closeCheckAttendanceModal"
-            class="close-button">
-
-            ✕
-
-        </button>
-
-
-        <h2>
-            📊 My Attendance
-        </h2>
-
-
-
-        <div class="attendance-summary">
-
-
-            <div>
-
-                <strong id="attendanceTotalDays">
-                    0
-                </strong>
-
-                <span>
-                    Total Days
-                </span>
-
-            </div>
-
-
-
-            <div>
-
-                <strong id="attendancePresentDays">
-                    0
-                </strong>
-
-                <span>
-                    Present
-                </span>
-
-            </div>
-
-
-
-            <div>
-
-                <strong id="attendanceAbsentDays">
-                    0
-                </strong>
-
-                <span>
-                    Absent
-                </span>
-
-            </div>
-
-
-        </div>
-
-
-
-        <h3>
-            Attendance History
-        </h3>
-
-
-
-        <div
-            id="attendanceHistory">
-        </div>
-
-
-    </div>
-
-
-</div>
-
-
-
-<!-- =========================================================
-     EDIT DETAILS MODAL
-========================================================= -->
-
-<div
-    id="editDetailsModal"
-    class="popup-overlay"
-    style="display:none;">
-
-
-    <div class="modal-card">
-
-
-        <button
-            id="closeEditDetailsModal"
-            class="close-button">
-
-            ✕
-
-        </button>
-
-
-        <h2>
-            ✏️ Edit Details
-        </h2>
-
-
-
-        <div class="input-group">
-
-            <label>
-                Name
-            </label>
-
-            <input
-                type="text"
-                id="editName">
-
-        </div>
-
-
-
-        <div class="input-group">
-
-            <label>
-                Roll
-            </label>
-
-            <input
-                type="text"
-                id="editRoll">
-
-        </div>
-
-
-
-        <div class="input-group">
-
-            <label>
-                College
-            </label>
-
-            <input
-                type="text"
-                id="editCollege"
-                value="Hooghly Engineering & Technology College"
-                readonly>
-
-        </div>
-
-
-
-        <div class="input-group">
-
-            <label>
-                Department
-            </label>
-
-            <input
-                type="text"
-                id="editDepartment">
-
-        </div>
-
-
-
-        <div class="input-group">
-
-            <label>
-                Mobile
-            </label>
-
-            <input
-                type="text"
-                id="editMobile">
-
-        </div>
-
-
-
-        <div class="input-group">
-
-            <label>
-                Email
-            </label>
-
-            <input
-                type="email"
-                id="editEmail">
-
-        </div>
-
-
-
-        <button
-            id="saveEditedDetailsButton"
-            class="primary-button">
-
-            💾 Save Changes
-
-        </button>
-
-
-    </div>
-
-
-</div>
-
 
 
 <!-- =========================================================
