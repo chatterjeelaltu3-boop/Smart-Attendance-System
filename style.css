@@ -1,13 +1,7 @@
-```css
 /* ============================================================
    SMART ATTENDANCE SYSTEM
    style.css
-   Colorful Modern Interface
-============================================================ */
-
-
-/* ============================================================
-   GLOBAL
+   Colourful Modern Interface
 ============================================================ */
 
 * {
@@ -16,27 +10,33 @@
     box-sizing: border-box;
 }
 
-html {
-    scroll-behavior: smooth;
+:root {
+    --primary: #6c5ce7;
+    --primary-dark: #4834d4;
+    --secondary: #00b894;
+    --blue: #0984e3;
+    --pink: #e84393;
+    --orange: #fd9644;
+    --red: #d63031;
+    --purple: #8e44ad;
+    --dark: #2d3436;
+    --gray: #636e72;
+    --light: #f5f7fb;
+    --white: #ffffff;
+    --border: #e6e9f0;
+    --shadow: 0 15px 40px rgba(45, 52, 54, 0.12);
 }
 
 body {
-    font-family:
-        "Segoe UI",
-        Arial,
-        sans-serif;
-
-    background:
-        linear-gradient(
-            135deg,
-            #eef2ff,
-            #fdf2f8,
-            #ecfeff
-        );
-
-    color: #1f2937;
+    font-family: Arial, Helvetica, sans-serif;
+    background: linear-gradient(135deg, #eef2ff, #f8f9ff);
+    color: var(--dark);
     min-height: 100vh;
 }
+
+/* ============================================================
+   COMMON
+============================================================ */
 
 button,
 input {
@@ -49,193 +49,109 @@ button {
 }
 
 input {
+    width: 100%;
+    padding: 14px 16px;
+    border: 2px solid var(--border);
+    border-radius: 12px;
     outline: none;
+    background: #fff;
+    font-size: 15px;
+    transition: 0.25s;
 }
 
-
-/* ============================================================
-   COMMON PAGE
-============================================================ */
-
-.page {
-    min-height: 100vh;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    padding: 30px;
+input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px rgba(108, 92, 231, 0.10);
 }
 
+.input-group {
+    margin-bottom: 18px;
+}
+
+.input-group label {
+    display: block;
+    margin-bottom: 7px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #444;
+}
 
 /* ============================================================
    LOGIN PAGE
 ============================================================ */
 
-.login-page {
-    background:
-        radial-gradient(
-            circle at top left,
-            #6366f1 0%,
-            transparent 35%
-        ),
-        radial-gradient(
-            circle at bottom right,
-            #ec4899 0%,
-            transparent 35%
-        ),
-        linear-gradient(
-            135deg,
-            #312e81,
-            #7c3aed,
-            #db2777
-        );
+.page {
+    min-height: 100vh;
 }
 
+.login-page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 30px 15px;
+
+    background:
+        radial-gradient(circle at top left, rgba(108,92,231,.25), transparent 35%),
+        radial-gradient(circle at bottom right, rgba(0,184,148,.20), transparent 35%),
+        linear-gradient(135deg, #f4f1ff, #eefbff);
+}
 
 .login-card {
     width: 100%;
-    max-width: 440px;
-
-    background: rgba(255,255,255,0.96);
-
+    max-width: 460px;
+    background: rgba(255,255,255,.97);
     padding: 38px;
-
     border-radius: 28px;
-
-    box-shadow:
-        0 25px 70px rgba(0,0,0,0.25);
-
+    box-shadow: var(--shadow);
     text-align: center;
-
-    backdrop-filter: blur(15px);
 }
-
 
 .college-logo-area {
     margin-bottom: 25px;
 }
 
-
 .college-logo {
-    width: 75px;
-    height: 75px;
-
-    margin: auto;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
+    width: 82px;
+    height: 82px;
+    margin: 0 auto 15px;
     border-radius: 22px;
 
-    font-size: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    background:
-        linear-gradient(
-            135deg,
-            #6366f1,
-            #8b5cf6,
-            #ec4899
-        );
+    background: linear-gradient(
+        135deg,
+        var(--primary),
+        var(--pink)
+    );
+
+    color: white;
+    font-size: 40px;
 
     box-shadow:
-        0 12px 25px rgba(99,102,241,0.35);
+        0 12px 25px rgba(108,92,231,.30);
 }
 
-
-.login-card h1 {
-    margin-top: 15px;
-
-    font-size: 28px;
-
-    background:
-        linear-gradient(
-            90deg,
-            #4f46e5,
-            #9333ea,
-            #db2777
-        );
-
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+.college-logo-area h1 {
+    font-size: 30px;
+    margin-bottom: 6px;
 }
-
 
 .college-name {
-    margin-top: 5px;
-
-    color: #64748b;
-
-    font-size: 14px;
+    color: var(--primary);
+    font-weight: 700;
 }
-
 
 .login-card h2 {
     margin-top: 20px;
-
     font-size: 25px;
 }
 
-
 .login-subtitle {
-    color: #64748b;
-
+    color: var(--gray);
     margin: 8px 0 25px;
 }
-
-
-/* ============================================================
-   INPUT
-============================================================ */
-
-.input-group {
-    text-align: left;
-
-    margin-bottom: 17px;
-}
-
-
-.input-group label {
-    display: block;
-
-    margin-bottom: 7px;
-
-    font-size: 14px;
-
-    font-weight: 600;
-
-    color: #374151;
-}
-
-
-.input-group input {
-    width: 100%;
-
-    padding: 14px 16px;
-
-    border: 2px solid #e5e7eb;
-
-    border-radius: 13px;
-
-    background: #f9fafb;
-
-    font-size: 15px;
-
-    transition:
-        0.25s ease;
-}
-
-
-.input-group input:focus {
-    border-color: #6366f1;
-
-    background: white;
-
-    box-shadow:
-        0 0 0 4px rgba(99,102,241,0.12);
-}
-
 
 /* ============================================================
    BUTTONS
@@ -243,194 +159,135 @@ input {
 
 .primary-button {
     width: 100%;
-
     padding: 14px 18px;
-
-    border-radius: 13px;
-
+    border-radius: 12px;
     color: white;
-
     font-size: 15px;
-
     font-weight: 700;
 
-    background:
-        linear-gradient(
-            135deg,
-            #4f46e5,
-            #7c3aed,
-            #db2777
-        );
+    background: linear-gradient(
+        135deg,
+        var(--primary),
+        var(--primary-dark)
+    );
 
-    box-shadow:
-        0 10px 20px rgba(99,102,241,0.25);
-
-    transition:
-        0.25s ease;
+    box-shadow: 0 8px 18px rgba(108,92,231,.25);
+    transition: .25s;
 }
-
 
 .primary-button:hover {
     transform: translateY(-2px);
-
-    box-shadow:
-        0 14px 28px rgba(99,102,241,0.35);
+    box-shadow: 0 12px 24px rgba(108,92,231,.32);
 }
-
 
 .secondary-button {
     width: 100%;
-
+    padding: 14px 18px;
     margin-top: 12px;
+    border-radius: 12px;
 
-    padding: 13px;
+    background: linear-gradient(
+        135deg,
+        #00b894,
+        #00cec9
+    );
 
-    border-radius: 13px;
-
-    background: #eef2ff;
-
-    color: #4f46e5;
-
+    color: white;
+    font-size: 15px;
     font-weight: 700;
 
-    transition: 0.25s;
+    transition: .25s;
 }
 
-
 .secondary-button:hover {
-    background: #e0e7ff;
-
     transform: translateY(-2px);
 }
 
-
 .text-button {
-    margin-top: 15px;
-
     background: transparent;
-
-    color: #6366f1;
-
-    font-weight: 600;
-
+    color: var(--primary);
+    margin-top: 18px;
+    font-weight: 700;
     font-size: 14px;
 }
 
-
 .text-button:hover {
-    color: #db2777;
-
     text-decoration: underline;
 }
 
-
 /* ============================================================
-   MESSAGE
+   MESSAGES
 ============================================================ */
 
 .auth-message {
-    min-height: 22px;
-
     margin-top: 15px;
-
+    min-height: 22px;
     font-size: 14px;
-
     font-weight: 600;
 }
 
-
 .auth-message.success {
-    color: #16a34a;
+    color: #008f72;
 }
-
 
 .auth-message.error {
-    color: #dc2626;
+    color: var(--red);
 }
-
 
 .auth-message.info {
-    color: #2563eb;
+    color: var(--blue);
 }
-
 
 /* ============================================================
-   CREATE ACCOUNT
+   CREATE / FORGOT PAGE
 ============================================================ */
 
-.create-page {
-    background:
-        linear-gradient(
-            135deg,
-            #eef2ff,
-            #fce7f3,
-            #ecfeff
-        );
-}
+.create-page,
+#forgotPinPage {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 35px 15px;
 
+    background:
+        radial-gradient(circle at top right, rgba(232,67,147,.16), transparent 35%),
+        radial-gradient(circle at bottom left, rgba(9,132,227,.15), transparent 35%),
+        #f7f8ff;
+}
 
 .form-card {
     width: 100%;
-
-    max-width: 650px;
-
+    max-width: 620px;
+    background: white;
     padding: 35px;
-
-    border-radius: 26px;
-
-    background: rgba(255,255,255,0.97);
-
-    box-shadow:
-        0 20px 60px rgba(0,0,0,0.12);
+    border-radius: 25px;
+    box-shadow: var(--shadow);
 }
-
 
 .page-header {
     display: flex;
-
     align-items: center;
-
     gap: 18px;
-
     margin-bottom: 28px;
 }
-
 
 .small-logo {
     width: 65px;
     height: 65px;
-
+    min-width: 65px;
     margin: 0;
-
     font-size: 30px;
-
-    flex-shrink: 0;
+    border-radius: 18px;
 }
-
 
 .page-header h1 {
-    font-size: 27px;
-
-    background:
-        linear-gradient(
-            90deg,
-            #4f46e5,
-            #9333ea,
-            #db2777
-        );
-
-    -webkit-background-clip: text;
-
-    -webkit-text-fill-color: transparent;
+    font-size: 28px;
 }
-
 
 .page-header p {
-    color: #64748b;
-
+    color: var(--gray);
     margin-top: 5px;
 }
-
 
 /* ============================================================
    DASHBOARD
@@ -438,316 +295,214 @@ input {
 
 .dashboard-page {
     min-height: 100vh;
-
     display: flex;
-
-    background:
-        #f5f7ff;
+    background: #f5f7fb;
 }
-
 
 /* ============================================================
    SIDEBAR
 ============================================================ */
 
 .sidebar {
-    width: 270px;
-
+    width: 255px;
     min-height: 100vh;
-
     padding: 25px 18px;
 
-    position: fixed;
+    background:
+        linear-gradient(
+            180deg,
+            #302b63,
+            #24243e
+        );
 
+    color: white;
+
+    position: fixed;
     left: 0;
     top: 0;
     bottom: 0;
 
     display: flex;
-
     flex-direction: column;
-
-    background:
-        linear-gradient(
-            180deg,
-            #312e81,
-            #4f46e5,
-            #7c3aed,
-            #9333ea
-        );
-
-    color: white;
-
-    box-shadow:
-        10px 0 35px rgba(79,70,229,0.18);
-
-    z-index: 100;
 }
-
 
 .sidebar-logo {
     text-align: center;
-
     padding-bottom: 25px;
-
-    border-bottom:
-        1px solid rgba(255,255,255,0.15);
+    border-bottom: 1px solid rgba(255,255,255,.12);
 }
-
 
 .sidebar-logo .college-logo {
-    width: 60px;
-    height: 60px;
-
-    font-size: 28px;
-
-    background:
-        rgba(255,255,255,0.18);
-
-    box-shadow: none;
+    width: 65px;
+    height: 65px;
+    font-size: 30px;
 }
-
 
 .sidebar-logo h2 {
     font-size: 20px;
-
-    margin-top: 12px;
 }
-
 
 .sidebar-logo p {
-    font-size: 12px;
-
-    opacity: 0.75;
-
+    color: #c9c8df;
     margin-top: 5px;
+    font-size: 13px;
 }
-
-
-/* ============================================================
-   SIDE MENU
-============================================================ */
 
 .side-menu {
     margin-top: 25px;
-
-    display: flex;
-
-    flex-direction: column;
-
-    gap: 9px;
 }
-
 
 .menu-item {
     width: 100%;
-
     padding: 13px 15px;
+    margin-bottom: 8px;
 
     border-radius: 12px;
 
     background: transparent;
-
-    color: rgba(255,255,255,0.82);
+    color: #dcdbea;
 
     text-align: left;
-
     font-size: 14px;
-
     font-weight: 600;
 
-    transition: 0.25s;
-
+    transition: .25s;
 }
-
 
 .menu-item:hover,
 .menu-item.active {
-    background:
-        rgba(255,255,255,0.18);
+    background: linear-gradient(
+        135deg,
+        rgba(108,92,231,.95),
+        rgba(232,67,147,.85)
+    );
 
     color: white;
-
-    transform: translateX(3px);
 }
-
 
 .logout-button {
     margin-top: auto;
-
     padding: 13px;
-
     border-radius: 12px;
 
-    background:
-        rgba(239,68,68,0.18);
-
-    color: white;
+    background: rgba(214,48,49,.18);
+    color: #ff7675;
 
     font-weight: 700;
-
-    transition: 0.25s;
+    transition: .25s;
 }
-
 
 .logout-button:hover {
-    background:
-        rgba(239,68,68,0.35);
+    background: var(--red);
+    color: white;
 }
-
 
 /* ============================================================
    MAIN CONTENT
 ============================================================ */
 
 .main-content {
-    margin-left: 270px;
-
-    width: calc(100% - 270px);
-
-    min-height: 100vh;
-
-    padding: 28px 35px;
+    margin-left: 255px;
+    width: calc(100% - 255px);
+    padding: 25px 35px;
 }
-
-
-/* ============================================================
-   TOPBAR
-============================================================ */
 
 .topbar {
-    display: flex;
+    background: white;
+    border-radius: 18px;
+    padding: 18px 22px;
+    margin-bottom: 25px;
 
+    display: flex;
+    align-items: center;
     justify-content: space-between;
 
-    align-items: center;
-
-    margin-bottom: 28px;
+    box-shadow: 0 5px 20px rgba(0,0,0,.05);
 }
-
 
 .topbar h1 {
-    font-size: 30px;
-
-    color: #1e1b4b;
+    font-size: 26px;
 }
-
 
 .topbar p {
-    margin-top: 5px;
-
-    color: #64748b;
-
+    color: var(--gray);
     font-size: 14px;
+    margin-top: 4px;
 }
-
 
 .profile-area {
     display: flex;
-
     align-items: center;
-
     gap: 10px;
-
-    padding: 8px 14px;
-
-    background: white;
-
-    border-radius: 15px;
-
-    box-shadow:
-        0 5px 20px rgba(0,0,0,0.06);
 }
 
-
 .profile-icon {
-    width: 42px;
-    height: 42px;
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
 
     display: flex;
-
     align-items: center;
     justify-content: center;
 
-    border-radius: 12px;
+    background: linear-gradient(
+        135deg,
+        var(--primary),
+        var(--pink)
+    );
 
-    background: #eef2ff;
-
-    font-size: 22px;
+    color: white;
 }
-
 
 .profile-area strong {
     display: block;
-
-    font-size: 14px;
 }
-
 
 .profile-area small {
-    color: #64748b;
+    color: var(--gray);
 }
-
 
 /* ============================================================
    WELCOME
 ============================================================ */
 
 .welcome-card {
-    padding: 28px;
-
-    border-radius: 22px;
-
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: center;
-
-    color: white;
-
     background:
         linear-gradient(
             135deg,
-            #4f46e5,
-            #7c3aed,
-            #db2777
+            #6c5ce7,
+            #8e44ad,
+            #e84393
         );
 
-    box-shadow:
-        0 15px 35px rgba(99,102,241,0.25);
+    color: white;
+    border-radius: 22px;
+    padding: 28px;
 
-    margin-bottom: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    box-shadow: 0 12px 30px rgba(108,92,231,.25);
 }
 
-
 .welcome-card span {
-    opacity: 0.8;
-
+    opacity: .85;
     font-size: 14px;
 }
 
-
 .welcome-card h2 {
-    margin-top: 5px;
-
-    font-size: 28px;
+    font-size: 29px;
+    margin: 6px 0;
 }
-
 
 .welcome-card p {
-    margin-top: 7px;
-
-    opacity: 0.85;
+    opacity: .9;
 }
-
 
 .welcome-icon {
     font-size: 65px;
-
-    opacity: 0.9;
 }
-
 
 /* ============================================================
    STATS
@@ -755,102 +510,98 @@ input {
 
 .stats-grid {
     display: grid;
-
-    grid-template-columns:
-        repeat(4, 1fr);
-
+    grid-template-columns: repeat(4, 1fr);
     gap: 18px;
-
-    margin-bottom: 30px;
+    margin: 25px 0;
 }
-
 
 .stat-card {
+    background: white;
+    border-radius: 18px;
     padding: 20px;
 
-    border-radius: 18px;
-
     display: flex;
-
     align-items: center;
-
     gap: 15px;
 
-    background: white;
+    box-shadow: 0 7px 20px rgba(0,0,0,.06);
 
-    box-shadow:
-        0 8px 25px rgba(0,0,0,0.06);
-
-    border-left: 5px solid;
+    transition: .25s;
 }
 
-
-.stat-card.blue {
-    border-color: #3b82f6;
+.stat-card:hover {
+    transform: translateY(-4px);
 }
-
-
-.stat-card.green {
-    border-color: #22c55e;
-}
-
-
-.stat-card.red {
-    border-color: #ef4444;
-}
-
-
-.stat-card.purple {
-    border-color: #a855f7;
-}
-
 
 .stat-icon {
-    width: 48px;
-    height: 48px;
+    width: 52px;
+    height: 52px;
+    border-radius: 15px;
 
     display: flex;
-
-    justify-content: center;
     align-items: center;
-
-    border-radius: 14px;
+    justify-content: center;
 
     font-size: 23px;
-
-    background: #f1f5f9;
 }
 
+.stat-card.blue .stat-icon {
+    background: #e7f1ff;
+}
+
+.stat-card.green .stat-icon {
+    background: #e4fff7;
+}
+
+.stat-card.red .stat-icon {
+    background: #ffe9e9;
+}
+
+.stat-card.purple .stat-icon {
+    background: #f1e9ff;
+}
 
 .stat-card p {
-    color: #64748b;
-
-    font-size: 12px;
+    color: var(--gray);
+    font-size: 13px;
 }
-
 
 .stat-card h2 {
+    font-size: 27px;
     margin-top: 3px;
-
-    font-size: 25px;
 }
 
-
 /* ============================================================
-   SECTION TITLE
+   SECTIONS
 ============================================================ */
 
 .section-title {
-    margin-bottom: 15px;
+    margin: 25px 0 15px;
 }
-
 
 .section-title h2 {
     font-size: 21px;
-
-    color: #1e1b4b;
 }
 
+.dashboard-section {
+    margin-bottom: 25px;
+}
+
+.section-header {
+    background: white;
+    padding: 22px;
+    border-radius: 18px;
+    margin-bottom: 20px;
+}
+
+.section-header h2 {
+    font-size: 23px;
+}
+
+.section-header p {
+    color: var(--gray);
+    margin-top: 5px;
+}
 
 /* ============================================================
    QUICK ACTIONS
@@ -858,555 +609,295 @@ input {
 
 .quick-actions {
     display: grid;
-
-    grid-template-columns:
-        repeat(3, 1fr);
-
+    grid-template-columns: repeat(3, 1fr);
     gap: 18px;
 }
 
-
 .action-card {
-    padding: 24px;
-
+    background: white;
+    border-radius: 18px;
+    padding: 25px;
     text-align: left;
 
-    border-radius: 20px;
+    box-shadow: 0 7px 20px rgba(0,0,0,.06);
 
-    background: white;
-
-    box-shadow:
-        0 8px 25px rgba(0,0,0,0.06);
-
-    transition:
-        0.25s ease;
-
-    border: 2px solid transparent;
+    transition: .25s;
 }
-
 
 .action-card:hover {
     transform: translateY(-5px);
-
-    border-color: #c4b5fd;
-
-    box-shadow:
-        0 15px 30px rgba(99,102,241,0.14);
+    box-shadow: 0 14px 30px rgba(0,0,0,.10);
 }
-
 
 .action-icon {
     display: block;
-
     font-size: 35px;
-
-    margin-bottom: 12px;
+    margin-bottom: 14px;
 }
-
 
 .action-card strong {
     display: block;
-
     font-size: 17px;
-
-    color: #1e1b4b;
 }
-
 
 .action-card small {
     display: block;
-
     margin-top: 6px;
-
-    color: #64748b;
-
-    line-height: 1.5;
+    color: var(--gray);
 }
-
 
 /* ============================================================
-   DASHBOARD SECTION
-============================================================ */
-
-.dashboard-section {
-    animation:
-        fadeIn 0.3s ease;
-}
-
-
-@keyframes fadeIn {
-
-    from {
-        opacity: 0;
-
-        transform:
-            translateY(8px);
-    }
-
-    to {
-        opacity: 1;
-
-        transform:
-            translateY(0);
-    }
-}
-
-
-.section-header {
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: center;
-
-    margin-bottom: 22px;
-}
-
-
-.section-header h2 {
-    font-size: 25px;
-
-    color: #1e1b4b;
-}
-
-
-.section-header p {
-    color: #64748b;
-
-    margin-top: 5px;
-}
-
-
-/* ============================================================
-   FACE LAYOUT
+   FACE REGISTRATION
 ============================================================ */
 
 .face-layout {
     display: grid;
-
-    grid-template-columns:
-        1fr 1.2fr;
-
+    grid-template-columns: 1fr 1.2fr;
     gap: 22px;
 }
-
 
 .details-card,
 .camera-card,
 .attendance-camera-card {
     background: white;
-
-    border-radius: 22px;
-
-    padding: 25px;
-
-    box-shadow:
-        0 8px 30px rgba(0,0,0,0.06);
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow: 0 7px 20px rgba(0,0,0,.06);
 }
-
 
 .details-card h3,
 .camera-card h3 {
     margin-bottom: 20px;
-
-    color: #1e1b4b;
 }
-
-
-/* ============================================================
-   CAMERA
-============================================================ */
 
 .camera-title {
     display: flex;
-
-    justify-content: space-between;
-
     align-items: center;
-
+    justify-content: space-between;
     margin-bottom: 15px;
 }
 
-
 .camera-title span {
-    padding: 6px 10px;
-
+    background: #e9fff8;
+    color: #008f72;
+    padding: 7px 10px;
     border-radius: 20px;
-
-    background: #ecfdf5;
-
-    color: #16a34a;
-
-    font-size: 11px;
-
+    font-size: 12px;
     font-weight: 700;
 }
 
-
 .camera-wrapper {
     position: relative;
-
-    width: 100%;
-
-    min-height: 300px;
-
     overflow: hidden;
-
     border-radius: 18px;
-
-    background:
-        linear-gradient(
-            135deg,
-            #111827,
-            #312e81
-        );
-
-    display: flex;
-
-    justify-content: center;
-
-    align-items: center;
+    background: #151525;
+    min-height: 300px;
 }
-
 
 .camera-wrapper video {
     width: 100%;
-
     height: 100%;
-
     min-height: 300px;
-
     object-fit: cover;
-
     display: block;
 }
 
-
-/* ============================================================
-   FACE GUIDE
-============================================================ */
-
 .face-guide {
     position: absolute;
-
-    width: 185px;
-
-    height: 235px;
-
-    border:
-        3px solid rgba(255,255,255,0.8);
-
-    border-radius:
-        48% 48% 45% 45%;
-
+    inset: 12% 20%;
+    border: 3px solid rgba(255,255,255,.75);
+    border-radius: 48%;
     pointer-events: none;
-
-    box-shadow:
-        0 0 0 9999px rgba(0,0,0,0.12);
 }
-
 
 .face-guide span {
     position: absolute;
-
-    width: 100%;
-
-    height: 2px;
-
-    top: 50%;
-
-    left: 0;
-
-    background:
-        rgba(255,255,255,0.35);
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #00ffb3;
+    top: 10px;
+    right: 10px;
+    box-shadow: 0 0 15px #00ffb3;
 }
-
 
 .camera-card > p {
-    margin-top: 12px;
-
-    color: #64748b;
-
+    color: var(--gray);
     font-size: 13px;
-
-    text-align: center;
+    margin-top: 14px;
+    line-height: 1.5;
 }
 
-
 /* ============================================================
-   ATTENDANCE CAMERA
+   ATTENDANCE
 ============================================================ */
 
 .attendance-camera-card {
     max-width: 850px;
-
     margin: auto;
-
-    text-align: center;
 }
-
 
 .large-camera {
-    min-height: 420px;
-
-    max-height: 500px;
+    min-height: 430px;
 }
-
 
 .large-camera video {
-    min-height: 420px;
+    min-height: 430px;
 }
 
-
 .attendance-button {
-    max-width: 450px;
-
     margin-top: 20px;
 }
 
-
 .attendance-result {
-    min-height: 30px;
-
+    text-align: center;
     margin-top: 15px;
-
-    font-size: 16px;
-
+    padding: 13px;
+    border-radius: 12px;
+    background: #f3f4ff;
+    color: var(--primary);
     font-weight: 700;
-
-    color: #16a34a;
 }
-
-
-/* ============================================================
-   SEARCH
-============================================================ */
-
-.search-box {
-    margin-bottom: 20px;
-}
-
-
-.search-box input {
-    width: 100%;
-
-    max-width: 500px;
-
-    padding: 14px 17px;
-
-    border:
-        2px solid #e5e7eb;
-
-    border-radius: 14px;
-
-    background: white;
-
-    font-size: 14px;
-}
-
-
-.search-box input:focus {
-    border-color: #6366f1;
-
-    box-shadow:
-        0 0 0 4px rgba(99,102,241,0.1);
-}
-
 
 /* ============================================================
    STUDENTS
 ============================================================ */
 
+.search-box {
+    background: white;
+    padding: 15px;
+    border-radius: 15px;
+    margin-bottom: 18px;
+}
+
 .student-list {
     display: grid;
-
-    grid-template-columns:
-        repeat(2, 1fr);
-
-    gap: 18px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
 }
-
 
 .student-item {
-    padding: 20px;
-
     background: white;
+    padding: 20px;
+    border-radius: 17px;
+    border-left: 5px solid var(--primary);
 
-    border-radius: 18px;
-
-    box-shadow:
-        0 7px 22px rgba(0,0,0,0.06);
-
-    border-left:
-        4px solid #6366f1;
+    box-shadow: 0 6px 18px rgba(0,0,0,.05);
 }
 
-
 .student-item h3 {
-    color: #312e81;
-
     margin-bottom: 10px;
 }
 
-
 .student-item p {
-    color: #64748b;
-
-    font-size: 13px;
-
-    margin-top: 6px;
+    margin-top: 7px;
+    color: var(--gray);
+    font-size: 14px;
 }
 
-
 /* ============================================================
-   POPUP
+   POPUPS / MODALS
 ============================================================ */
 
 .popup-overlay {
     position: fixed;
-
     inset: 0;
 
-    background:
-        rgba(15,23,42,0.65);
-
-    backdrop-filter:
-        blur(6px);
+    background: rgba(20,20,40,.60);
+    backdrop-filter: blur(5px);
 
     display: flex;
-
     align-items: center;
-
     justify-content: center;
 
     padding: 20px;
-
-    z-index: 1000;
+    z-index: 9999;
 }
-
 
 .popup-card {
     width: 100%;
-
-    max-width: 400px;
-
-    padding: 35px;
-
+    max-width: 420px;
     background: white;
-
-    border-radius: 25px;
-
+    border-radius: 24px;
+    padding: 35px;
     text-align: center;
 
-    box-shadow:
-        0 25px 70px rgba(0,0,0,0.25);
+    box-shadow: 0 25px 70px rgba(0,0,0,.25);
 
-    animation:
-        popupIn 0.25s ease;
+    animation: popup .25s ease;
 }
 
-
-@keyframes popupIn {
-
+@keyframes popup {
     from {
         opacity: 0;
-
-        transform:
-            scale(0.9);
+        transform: scale(.85);
     }
 
     to {
         opacity: 1;
-
-        transform:
-            scale(1);
+        transform: scale(1);
     }
 }
 
-
 .popup-icon {
-    font-size: 60px;
+    width: 75px;
+    height: 75px;
+    margin: 0 auto 15px;
 
-    margin-bottom: 10px;
+    border-radius: 50%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #e7fff7;
+    font-size: 38px;
 }
-
 
 .popup-card h2 {
-    color: #1e1b4b;
-
     margin-bottom: 10px;
 }
 
-
 .popup-card p {
-    color: #64748b;
-
-    line-height: 1.6;
-
+    color: var(--gray);
+    line-height: 1.5;
     margin-bottom: 20px;
 }
-
-
-/* ============================================================
-   MODAL
-============================================================ */
 
 .modal-card {
-    position: relative;
-
     width: 100%;
-
     max-width: 650px;
-
     max-height: 85vh;
-
     overflow-y: auto;
 
-    padding: 30px;
-
     background: white;
+    border-radius: 22px;
+    padding: 28px;
 
-    border-radius: 24px;
+    position: relative;
 
-    box-shadow:
-        0 25px 70px rgba(0,0,0,0.25);
+    box-shadow: 0 25px 70px rgba(0,0,0,.25);
 }
-
-
-.modal-card h2 {
-    margin-bottom: 20px;
-
-    color: #1e1b4b;
-}
-
 
 .close-button {
     position: absolute;
-
-    top: 15px;
-
-    right: 15px;
+    right: 18px;
+    top: 18px;
 
     width: 35px;
-
     height: 35px;
 
-    border-radius: 10px;
-
-    background: #f1f5f9;
-
-    color: #475569;
+    border-radius: 50%;
+    background: #f1f2f6;
+    color: #555;
 
     font-size: 16px;
 }
 
-
 .close-button:hover {
-    background: #fee2e2;
-
-    color: #dc2626;
+    background: var(--red);
+    color: white;
 }
-
 
 /* ============================================================
    ATTENDANCE SUMMARY
@@ -1414,86 +905,58 @@ input {
 
 .attendance-summary {
     display: grid;
-
-    grid-template-columns:
-        repeat(3, 1fr);
-
+    grid-template-columns: repeat(3, 1fr);
     gap: 12px;
-
-    margin-bottom: 25px;
+    margin: 20px 0;
 }
-
 
 .attendance-summary > div {
-    padding: 18px 10px;
-
-    border-radius: 15px;
-
+    background: #f6f7fb;
+    border-radius: 14px;
+    padding: 18px;
     text-align: center;
-
-    background: #f8fafc;
 }
-
 
 .attendance-summary strong {
     display: block;
-
-    font-size: 25px;
-
-    color: #4f46e5;
+    font-size: 27px;
+    color: var(--primary);
 }
 
-
 .attendance-summary span {
-    display: block;
-
-    margin-top: 4px;
-
-    color: #64748b;
-
+    color: var(--gray);
     font-size: 12px;
 }
 
-
-/* ============================================================
-   ATTENDANCE HISTORY
-============================================================ */
-
 .attendance-history-item {
-    display: flex;
-
-    justify-content: space-between;
-
-    align-items: center;
-
-    gap: 10px;
-
-    padding: 13px;
-
-    margin-bottom: 9px;
-
+    padding: 14px;
     border-radius: 12px;
+    background: #f7f8fc;
+    margin-top: 10px;
 
-    background: #f8fafc;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
 
+.attendance-history-item span {
+    color: var(--gray);
     font-size: 13px;
 }
 
-
-.attendance-history-item strong {
-    color: #334155;
-}
-
-
-.attendance-history-item span {
-    color: #64748b;
-}
-
-
 .attendance-history-item b {
-    color: #16a34a;
+    color: #00a884;
+    font-size: 13px;
 }
 
+/* ============================================================
+   EDIT MODAL
+============================================================ */
+
+#editDetailsModal .modal-card {
+    max-width: 600px;
+}
 
 /* ============================================================
    SCROLLBAR
@@ -1503,298 +966,144 @@ input {
     width: 8px;
 }
 
-
 ::-webkit-scrollbar-track {
-    background: #f1f5f9;
+    background: #f1f2f6;
 }
 
-
 ::-webkit-scrollbar-thumb {
-    background: #a78bfa;
-
+    background: #b2bec3;
     border-radius: 10px;
 }
 
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary);
+}
 
 /* ============================================================
-   TABLET
+   RESPONSIVE
 ============================================================ */
 
-@media (max-width: 1050px) {
-
-    .sidebar {
-        width: 230px;
-    }
-
-    .main-content {
-        margin-left: 230px;
-
-        width:
-            calc(100% - 230px);
-
-        padding: 25px;
-    }
+@media (max-width: 1000px) {
 
     .stats-grid {
-        grid-template-columns:
-            repeat(2, 1fr);
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .quick-actions {
+        grid-template-columns: 1fr;
     }
 
     .face-layout {
-        grid-template-columns:
-            1fr;
+        grid-template-columns: 1fr;
     }
 
+    .student-list {
+        grid-template-columns: 1fr;
+    }
 }
-
-
-/* ============================================================
-   MOBILE
-============================================================ */
 
 @media (max-width: 750px) {
 
-    .page {
-        padding: 15px;
-    }
-
-
-    .login-card,
-    .form-card {
-        padding: 25px 20px;
-
-        border-radius: 22px;
-    }
-
-
-    .dashboard-page {
-        display: block;
-    }
-
-
     .sidebar {
-        position: relative;
-
-        width: 100%;
-
-        min-height: auto;
-
-        padding: 15px;
-
-        border-radius: 0;
+        width: 210px;
     }
-
-
-    .sidebar-logo {
-        display: flex;
-
-        align-items: center;
-
-        gap: 12px;
-
-        padding-bottom: 15px;
-    }
-
-
-    .sidebar-logo .college-logo {
-        width: 50px;
-        height: 50px;
-    }
-
-
-    .sidebar-logo h2 {
-        margin: 0;
-
-        font-size: 17px;
-    }
-
-
-    .sidebar-logo p {
-        display: none;
-    }
-
-
-    .side-menu {
-        display: grid;
-
-        grid-template-columns:
-            repeat(2, 1fr);
-
-        margin-top: 15px;
-    }
-
-
-    .logout-button {
-        margin-top: 15px;
-    }
-
 
     .main-content {
-        margin-left: 0;
-
-        width: 100%;
-
-        padding: 20px 15px;
+        margin-left: 210px;
+        width: calc(100% - 210px);
+        padding: 18px;
     }
-
 
     .topbar {
-        align-items: flex-start;
-
-        gap: 15px;
+        padding: 15px;
     }
-
-
-    .topbar h1 {
-        font-size: 25px;
-    }
-
-
-    .profile-area {
-        padding: 6px;
-    }
-
-
-    .profile-area div:last-child {
-        display: none;
-    }
-
 
     .welcome-card {
         padding: 22px;
     }
 
-
     .welcome-icon {
-        font-size: 45px;
+        display: none;
+    }
+}
+
+@media (max-width: 600px) {
+
+    .login-card,
+    .form-card {
+        padding: 25px 20px;
     }
 
+    .sidebar {
+        position: relative;
+        width: 100%;
+        min-height: auto;
+    }
+
+    .dashboard-page {
+        display: block;
+    }
+
+    .main-content {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    .sidebar-logo {
+        padding-bottom: 15px;
+    }
+
+    .side-menu {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 7px;
+    }
+
+    .menu-item {
+        margin: 0;
+    }
+
+    .logout-button {
+        margin-top: 15px;
+    }
 
     .stats-grid {
-        grid-template-columns:
-            repeat(2, 1fr);
-
-        gap: 12px;
+        grid-template-columns: 1fr;
     }
 
-
-    .stat-card {
-        padding: 15px;
-
-        gap: 10px;
+    .topbar {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
     }
-
-
-    .stat-icon {
-        width: 40px;
-        height: 40px;
-
-        font-size: 18px;
-    }
-
-
-    .stat-card h2 {
-        font-size: 21px;
-    }
-
-
-    .quick-actions {
-        grid-template-columns:
-            1fr;
-    }
-
-
-    .student-list {
-        grid-template-columns:
-            1fr;
-    }
-
 
     .attendance-summary {
-        grid-template-columns:
-            repeat(3, 1fr);
+        grid-template-columns: 1fr;
     }
-
-
-    .attendance-history-item {
-        flex-direction: column;
-
-        align-items: flex-start;
-    }
-
-
-    .camera-wrapper,
-    .camera-wrapper video {
-        min-height: 280px;
-    }
-
 
     .large-camera,
     .large-camera video {
-        min-height: 330px;
+        min-height: 300px;
     }
-
-
-    .face-guide {
-        width: 150px;
-
-        height: 195px;
-    }
-
 }
 
+@media (max-width: 400px) {
 
-/* ============================================================
-   SMALL MOBILE
-============================================================ */
-
-@media (max-width: 480px) {
-
-    .side-menu {
-        grid-template-columns:
-            1fr;
+    .login-card,
+    .form-card {
+        padding: 20px 15px;
+        border-radius: 18px;
     }
 
-
-    .stats-grid {
-        grid-template-columns:
-            1fr;
+    .college-logo-area h1 {
+        font-size: 25px;
     }
-
 
     .page-header {
         align-items: flex-start;
     }
 
-
     .page-header h1 {
         font-size: 23px;
     }
-
-
-    .welcome-card {
-        align-items: flex-start;
-    }
-
-
-    .welcome-card h2 {
-        font-size: 23px;
-    }
-
-
-    .welcome-icon {
-        display: none;
-    }
-
-
-    .attendance-summary strong {
-        font-size: 21px;
-    }
-
-
-    .attendance-summary span {
-        font-size: 10px;
-    }
-
 }
-```
