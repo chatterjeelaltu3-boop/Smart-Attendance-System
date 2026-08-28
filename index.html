@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,15 +8,15 @@
 
     <link rel="stylesheet" href="style.css">
 
-    <!-- Face Recognition Library -->
+    <!-- Face API -->
     <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
 </head>
 
 <body>
 
-<!-- =========================================================
-     STUDENT LOGIN
-========================================================= -->
+<!-- =====================================================
+     LOGIN PAGE
+===================================================== -->
 
 <section id="loginPage" class="page login-page">
 
@@ -25,10 +24,9 @@
 
         <div class="college-logo-area">
 
-            <!-- SAME HETC LOGO -->
             <img
                 src="Screenshot 2026-08-28 160906.png"
-                alt="Hooghly Engineering & Technology College Logo"
+                alt="HETC Logo"
                 class="college-logo-img">
 
             <h1>Smart Attendance</h1>
@@ -46,68 +44,45 @@
         </p>
 
 
-        <!-- NAME -->
+        <!-- STUDENT LOGIN -->
 
         <div class="input-group">
-
-            <label for="loginName">
-                Full Name
-            </label>
+            <label>Full Name</label>
 
             <input
                 type="text"
                 id="loginName"
-                placeholder="Enter your name"
-                autocomplete="name">
-
+                placeholder="Enter your name">
         </div>
 
 
-        <!-- MOBILE / EMAIL -->
-
         <div class="input-group">
-
-            <label for="loginIdentity">
-                Mobile Number or Email
-            </label>
+            <label>Mobile Number or Email</label>
 
             <input
                 type="text"
                 id="loginIdentity"
-                placeholder="Mobile number or email"
-                autocomplete="username">
-
+                placeholder="Mobile number or email">
         </div>
 
 
-        <!-- PIN -->
-
         <div class="input-group">
-
-            <label for="loginPin">
-                4 Digit PIN
-            </label>
+            <label>4 Digit PIN</label>
 
             <input
                 type="password"
                 id="loginPin"
                 maxlength="4"
                 inputmode="numeric"
-                placeholder="Enter 4 digit PIN"
-                autocomplete="current-password">
-
+                placeholder="Enter 4 digit PIN">
         </div>
 
-
-        <!-- STUDENT LOGIN -->
 
         <button
             type="button"
             id="loginButton"
             class="primary-button">
-
             🔐 Student Login
-
         </button>
 
 
@@ -117,9 +92,7 @@
             type="button"
             id="createAccountButton"
             class="secondary-button">
-
             ✨ Create Account
-
         </button>
 
 
@@ -129,9 +102,7 @@
             type="button"
             id="adminLoginButton"
             class="admin-login-button">
-
             👨‍💼 Admin Login
-
         </button>
 
 
@@ -141,9 +112,7 @@
             type="button"
             id="forgotPinButton"
             class="text-button">
-
             Forgot PIN?
-
         </button>
 
 
@@ -157,9 +126,102 @@
 </section>
 
 
-<!-- =========================================================
+
+<!-- =====================================================
+     ADMIN LOGIN
+===================================================== -->
+
+<section
+    id="adminLoginPage"
+    class="page login-page"
+    style="display:none;">
+
+    <div class="login-card">
+
+        <div class="college-logo-area">
+
+            <img
+                src="Screenshot 2026-08-28 160906.png"
+                alt="HETC Logo"
+                class="college-logo-img">
+
+            <h1>Admin Login</h1>
+
+            <p class="college-name">
+                Smart Attendance Administration
+            </p>
+
+        </div>
+
+
+        <h2>Welcome Admin 👨‍💼</h2>
+
+        <p class="login-subtitle">
+            Login as Administrator
+        </p>
+
+
+        <div class="input-group">
+
+            <label>Admin Name</label>
+
+            <input
+                type="text"
+                id="adminName"
+                value="Ayush Chatterjee"
+                placeholder="Admin name">
+
+        </div>
+
+
+        <div class="input-group">
+
+            <label>Admin PIN</label>
+
+            <input
+                type="password"
+                id="adminPin"
+                maxlength="4"
+                inputmode="numeric"
+                placeholder="Enter admin PIN">
+
+        </div>
+
+
+        <button
+            type="button"
+            id="adminLoginSubmit"
+            class="primary-button">
+
+            👨‍💼 Login as Admin
+
+        </button>
+
+
+        <button
+            type="button"
+            id="adminBackToLogin"
+            class="text-button">
+
+            ← Back to Student Login
+
+        </button>
+
+
+        <div
+            id="adminLoginMessage"
+            class="auth-message">
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<!-- =====================================================
      CREATE ACCOUNT
-========================================================= -->
+===================================================== -->
 
 <section
     id="createAccountPage"
@@ -167,7 +229,6 @@
     style="display:none;">
 
     <div class="form-card">
-
 
         <div class="page-header">
 
@@ -189,13 +250,9 @@
         </div>
 
 
-        <!-- NAME -->
-
         <div class="input-group">
 
-            <label for="createName">
-                Full Name *
-            </label>
+            <label>Full Name *</label>
 
             <input
                 type="text"
@@ -205,13 +262,9 @@
         </div>
 
 
-        <!-- MOBILE -->
-
         <div class="input-group">
 
-            <label for="createMobile">
-                Mobile Number *
-            </label>
+            <label>Mobile Number *</label>
 
             <input
                 type="tel"
@@ -223,13 +276,9 @@
         </div>
 
 
-        <!-- EMAIL -->
-
         <div class="input-group">
 
-            <label for="createEmail">
-                Email Address
-            </label>
+            <label>Email Address</label>
 
             <input
                 type="email"
@@ -239,13 +288,9 @@
         </div>
 
 
-        <!-- PIN -->
-
         <div class="input-group">
 
-            <label for="createPin">
-                Create 4 Digit PIN *
-            </label>
+            <label>Create 4 Digit PIN *</label>
 
             <input
                 type="password"
@@ -257,13 +302,9 @@
         </div>
 
 
-        <!-- CONFIRM PIN -->
-
         <div class="input-group">
 
-            <label for="confirmPin">
-                Confirm 4 Digit PIN *
-            </label>
+            <label>Confirm 4 Digit PIN *</label>
 
             <input
                 type="password"
@@ -275,13 +316,9 @@
         </div>
 
 
-        <!-- COLLEGE -->
-
         <div class="input-group">
 
-            <label for="createCollege">
-                College Name *
-            </label>
+            <label>College Name *</label>
 
             <input
                 type="text"
@@ -292,13 +329,9 @@
         </div>
 
 
-        <!-- DEPARTMENT -->
-
         <div class="input-group">
 
-            <label for="createDepartment">
-                Branch / Department *
-            </label>
+            <label>Branch / Department *</label>
 
             <input
                 type="text"
@@ -308,13 +341,9 @@
         </div>
 
 
-        <!-- ROLL -->
-
         <div class="input-group">
 
-            <label for="createRoll">
-                Roll Number *
-            </label>
+            <label>Roll Number *</label>
 
             <input
                 type="text"
@@ -323,8 +352,6 @@
 
         </div>
 
-
-        <!-- CREATE -->
 
         <button
             type="button"
@@ -335,8 +362,6 @@
 
         </button>
 
-
-        <!-- BACK -->
 
         <button
             type="button"
@@ -358,120 +383,10 @@
 </section>
 
 
-<!-- =========================================================
-     ADMIN LOGIN
-========================================================= -->
 
-<section
-    id="adminLoginPage"
-    class="page admin-login-page"
-    style="display:none;">
-
-    <div class="form-card admin-login-card">
-
-
-        <div class="college-logo-area">
-
-            <img
-                src="Screenshot 2026-08-28 160906.png"
-                alt="HETC Logo"
-                class="college-logo-img">
-
-            <h1>Admin Login</h1>
-
-            <p class="college-name">
-                Hooghly Engineering & Technology College
-            </p>
-
-        </div>
-
-
-        <div class="admin-profile-preview">
-
-            <div class="admin-avatar">
-                👨‍💼
-            </div>
-
-            <h2>
-                Ayush Chatterjee
-            </h2>
-
-            <p>
-                Administrator
-            </p>
-
-        </div>
-
-
-        <!-- ADMIN NAME -->
-
-        <div class="input-group">
-
-            <label for="adminName">
-                Admin Name
-            </label>
-
-            <input
-                type="text"
-                id="adminName"
-                value="Ayush Chatterjee"
-                readonly>
-
-        </div>
-
-
-        <!-- ADMIN PIN -->
-
-        <div class="input-group">
-
-            <label for="adminPin">
-                Admin 4 Digit PIN
-            </label>
-
-            <input
-                type="password"
-                id="adminPin"
-                maxlength="4"
-                inputmode="numeric"
-                placeholder="Enter admin PIN"
-                autocomplete="current-password">
-
-        </div>
-
-
-        <button
-            type="button"
-            id="adminLoginSubmit"
-            class="primary-button">
-
-            🔐 Login as Admin
-
-        </button>
-
-
-        <button
-            type="button"
-            id="backFromAdminButton"
-            class="text-button">
-
-            ← Back to Student Login
-
-        </button>
-
-
-        <div
-            id="adminLoginMessage"
-            class="auth-message">
-        </div>
-
-    </div>
-
-</section>
-
-
-<!-- =========================================================
+<!-- =====================================================
      FORGOT PIN
-========================================================= -->
+===================================================== -->
 
 <section
     id="forgotPinPage"
@@ -480,7 +395,6 @@
 
     <div class="form-card">
 
-
         <div class="college-logo-area">
 
             <img
@@ -488,24 +402,18 @@
                 alt="HETC Logo"
                 class="college-logo-img">
 
-            <h1>
-                Reset PIN
-            </h1>
+            <h1>Reset PIN</h1>
 
             <p>
-                Reset your Smart Attendance PIN
+                Hooghly Engineering & Technology College
             </p>
 
         </div>
 
 
-        <!-- NAME -->
-
         <div class="input-group">
 
-            <label for="forgotName">
-                Name
-            </label>
+            <label>Name</label>
 
             <input
                 type="text"
@@ -515,13 +423,9 @@
         </div>
 
 
-        <!-- IDENTITY -->
-
         <div class="input-group">
 
-            <label for="forgotIdentity">
-                Mobile Number or Email
-            </label>
+            <label>Mobile Number or Email</label>
 
             <input
                 type="text"
@@ -531,13 +435,9 @@
         </div>
 
 
-        <!-- NEW PIN -->
-
         <div class="input-group">
 
-            <label for="newPin">
-                New 4 Digit PIN
-            </label>
+            <label>New 4 Digit PIN</label>
 
             <input
                 type="password"
@@ -549,13 +449,9 @@
         </div>
 
 
-        <!-- CONFIRM -->
-
         <div class="input-group">
 
-            <label for="confirmNewPin">
-                Confirm New PIN
-            </label>
+            <label>Confirm New PIN</label>
 
             <input
                 type="password"
@@ -597,9 +493,10 @@
 </section>
 
 
-<!-- =========================================================
+
+<!-- =====================================================
      DASHBOARD
-========================================================= -->
+===================================================== -->
 
 <section
     id="dashboardPage"
@@ -607,9 +504,33 @@
     style="display:none;">
 
 
-    <!-- =====================================================
-         SIDEBAR
-    ====================================================== -->
+    <!-- MOBILE TOP BAR -->
+
+    <header class="mobile-topbar">
+
+        <button
+            type="button"
+            id="hamburgerButton"
+            class="hamburger-button">
+
+            ☰
+
+        </button>
+
+
+        <div class="mobile-title">
+
+            <strong>
+                Smart Attendance
+            </strong>
+
+        </div>
+
+    </header>
+
+
+
+    <!-- SIDEBAR -->
 
     <aside
         id="sidebar"
@@ -632,6 +553,7 @@
             </p>
 
         </div>
+
 
 
         <!-- MENU -->
@@ -721,7 +643,7 @@
 
             <button
                 type="button"
-                class="menu-item admin-menu-item"
+                class="menu-item"
                 id="adminMenuButton">
 
                 👨‍💼 Admin — Ayush Chatterjee
@@ -729,7 +651,7 @@
             </button>
 
 
-            <!-- LOGOUT AT BOTTOM -->
+            <!-- LOGOUT LAST -->
 
             <button
                 type="button"
@@ -745,32 +667,28 @@
     </aside>
 
 
-    <!-- =====================================================
+
+    <!-- SIDEBAR OVERLAY -->
+
+    <div
+        id="sidebarOverlay"
+        class="sidebar-overlay">
+    </div>
+
+
+
+    <!-- =================================================
          MAIN CONTENT
-    ====================================================== -->
+    ================================================= -->
 
     <main class="main-content">
 
 
-        <!-- TOPBAR -->
+        <!-- TOP BAR -->
 
         <header class="topbar">
 
-
-            <!-- 3 HORIZONTAL BAR -->
-
-            <button
-                type="button"
-                id="menuToggleButton"
-                class="menu-toggle-button"
-                aria-label="Open menu">
-
-                ☰
-
-            </button>
-
-
-            <div class="topbar-title">
+            <div>
 
                 <h1 id="dashboardTitle">
                     Dashboard
@@ -783,32 +701,25 @@
             </div>
 
 
-            <!-- PROFILE -->
-
             <div class="profile-area">
 
                 <div
-                    id="profileIcon"
-                    class="profile-icon">
+                    class="profile-icon"
+                    id="profileIcon">
 
                     👤
 
                 </div>
 
+
                 <div>
 
-                    <strong
-                        id="dashboardUserName">
-
+                    <strong id="dashboardUserName">
                         Student
-
                     </strong>
 
-                    <small
-                        id="dashboardUserRoll">
-
+                    <small id="dashboardUserRoll">
                         Roll
-
                     </small>
 
                 </div>
@@ -818,16 +729,15 @@
         </header>
 
 
+
         <!-- =================================================
              DASHBOARD HOME
-        ================================================== -->
+        ================================================= -->
 
         <section
             id="dashboardHome"
             class="dashboard-section">
 
-
-            <!-- WELCOME -->
 
             <div class="welcome-card">
 
@@ -855,7 +765,8 @@
             </div>
 
 
-            <!-- STATS -->
+
+            <!-- STATISTICS -->
 
             <div class="stats-grid">
 
@@ -881,6 +792,7 @@
                 </div>
 
 
+
                 <div class="stat-card green">
 
                     <div class="stat-icon">
@@ -900,6 +812,7 @@
                     </div>
 
                 </div>
+
 
 
                 <div class="stat-card red">
@@ -923,6 +836,7 @@
                 </div>
 
 
+
                 <div class="stat-card purple">
 
                     <div class="stat-icon">
@@ -944,6 +858,7 @@
                 </div>
 
             </div>
+
 
 
             <!-- QUICK ACTIONS -->
@@ -980,6 +895,7 @@
                 </button>
 
 
+
                 <button
                     type="button"
                     id="quickAttendance"
@@ -998,6 +914,7 @@
                     </small>
 
                 </button>
+
 
 
                 <button
@@ -1024,9 +941,10 @@
         </section>
 
 
+
         <!-- =================================================
              EDIT PROFILE
-        ================================================== -->
+        ================================================= -->
 
         <section
             id="editProfileSection"
@@ -1047,7 +965,6 @@
 
 
             <div class="details-card">
-
 
                 <div class="input-group">
 
@@ -1102,9 +1019,10 @@
         </section>
 
 
+
         <!-- =================================================
-             EDIT CONTACT
-        ================================================== -->
+             EDIT MOBILE EMAIL
+        ================================================= -->
 
         <section
             id="editContactSection"
@@ -1118,14 +1036,13 @@
                 </h2>
 
                 <p>
-                    Update your contact information.
+                    Update your contact details.
                 </p>
 
             </div>
 
 
             <div class="details-card">
-
 
                 <div class="input-group">
 
@@ -1174,9 +1091,10 @@
         </section>
 
 
+
         <!-- =================================================
              PERSONAL DETAILS
-        ================================================== -->
+        ================================================= -->
 
         <section
             id="personalDetailsSection"
@@ -1198,42 +1116,35 @@
 
             <div class="details-card">
 
-
                 <p>
                     <strong>Name:</strong>
                     <span id="personalName">-</span>
                 </p>
-
 
                 <p>
                     <strong>Mobile:</strong>
                     <span id="personalMobile">-</span>
                 </p>
 
-
                 <p>
                     <strong>Email:</strong>
                     <span id="personalEmail">-</span>
                 </p>
-
 
                 <p>
                     <strong>College:</strong>
                     Hooghly Engineering & Technology College
                 </p>
 
-
                 <p>
                     <strong>Branch:</strong>
                     <span id="personalDepartment">-</span>
                 </p>
 
-
                 <p>
                     <strong>Roll:</strong>
                     <span id="personalRoll">-</span>
                 </p>
-
 
                 <p>
                     <strong>Account Type:</strong>
@@ -1247,9 +1158,10 @@
         </section>
 
 
+
         <!-- =================================================
              FACE REGISTRATION
-        ================================================== -->
+        ================================================= -->
 
         <section
             id="faceRegistrationSection"
@@ -1263,7 +1175,7 @@
                 </h2>
 
                 <p>
-                    Your face will be captured automatically.
+                    Keep your face inside the guide. Capture will happen automatically.
                 </p>
 
             </div>
@@ -1302,7 +1214,8 @@
 
                         <input
                             type="tel"
-                            id="faceMobile">
+                            id="faceMobile"
+                            maxlength="10">
 
                     </div>
 
@@ -1379,10 +1292,10 @@
                 </div>
 
 
+
                 <!-- CAMERA -->
 
                 <div class="camera-card">
-
 
                     <div class="camera-title">
 
@@ -1418,8 +1331,7 @@
 
                     <p>
                         Look directly at the camera.
-                        The camera is mirrored like a selfie camera.
-                        Your face will be captured automatically.
+                        The camera works like a selfie mirror.
                     </p>
 
                 </div>
@@ -1429,9 +1341,10 @@
         </section>
 
 
+
         <!-- =================================================
              FACE ATTENDANCE
-        ================================================== -->
+        ================================================= -->
 
         <section
             id="attendanceSection"
@@ -1445,8 +1358,7 @@
                 </h2>
 
                 <p>
-                    Face recognition will automatically
-                    capture and mark attendance.
+                    Face recognition will automatically capture and mark your attendance.
                 </p>
 
             </div>
@@ -1470,7 +1382,7 @@
 
                 <!-- SAME SQUARE CAMERA -->
 
-                <div class="camera-wrapper square-camera">
+                <div class="camera-wrapper square-camera attendance-square-camera">
 
                     <video
                         id="attendanceCamera"
@@ -1489,7 +1401,6 @@
 
                 <p class="camera-help-text">
                     Look directly at the camera.
-                    The camera is mirrored like a selfie camera.
                     Attendance will be captured automatically.
                 </p>
 
@@ -1504,6 +1415,8 @@
                 </button>
 
 
+                <!-- ATTENDANCE RESULT -->
+
                 <div
                     id="attendanceResult"
                     class="attendance-result">
@@ -1514,9 +1427,10 @@
         </section>
 
 
+
         <!-- =================================================
-             STUDENTS
-        ================================================== -->
+             REGISTERED STUDENTS
+        ================================================= -->
 
         <section
             id="studentsSection"
@@ -1554,9 +1468,10 @@
         </section>
 
 
+
         <!-- =================================================
              CHECK ATTENDANCE
-        ================================================== -->
+        ================================================= -->
 
         <section
             id="checkAttendanceSection"
@@ -1627,9 +1542,10 @@
         </section>
 
 
+
         <!-- =================================================
              ADMIN PANEL
-        ================================================== -->
+        ================================================= -->
 
         <section
             id="adminSection"
@@ -1672,7 +1588,7 @@
 
                 <p>
                     <strong>Access:</strong>
-                    All Registered Students & Attendance
+                    Student Details & Attendance
                 </p>
 
             </div>
@@ -1699,9 +1615,10 @@
 </section>
 
 
-<!-- =========================================================
-     ATTENDANCE POPUP
-========================================================= -->
+
+<!-- =====================================================
+     ATTENDANCE SUCCESS / ERROR POPUP
+===================================================== -->
 
 <div
     id="attendancePopup"
@@ -1730,6 +1647,14 @@
         </p>
 
 
+        <!-- DATE TIME -->
+
+        <div
+            id="popupDateTime"
+            class="popup-date-time">
+        </div>
+
+
         <button
             type="button"
             id="closeAttendancePopup"
@@ -1744,9 +1669,10 @@
 </div>
 
 
-<!-- =========================================================
+
+<!-- =====================================================
      STUDENTS MODAL
-========================================================= -->
+===================================================== -->
 
 <div
     id="studentsModal"
@@ -1754,7 +1680,6 @@
     style="display:none;">
 
     <div class="modal-card">
-
 
         <button
             type="button"
@@ -1780,12 +1705,92 @@
 </div>
 
 
-<!-- =========================================================
+
+<!-- =====================================================
+     EDIT DETAILS MODAL
+===================================================== -->
+
+<div
+    id="editDetailsModal"
+    class="popup-overlay"
+    style="display:none;">
+
+    <div class="modal-card">
+
+        <button
+            type="button"
+            id="closeEditDetailsModal"
+            class="close-button">
+
+            ✕
+
+        </button>
+
+
+        <h2>
+            ✏️ Edit Details
+        </h2>
+
+
+        <div class="input-group">
+
+            <label>
+                Name
+            </label>
+
+            <input
+                type="text"
+                id="modalEditName">
+
+        </div>
+
+
+        <div class="input-group">
+
+            <label>
+                Roll
+            </label>
+
+            <input
+                type="text"
+                id="modalEditRoll">
+
+        </div>
+
+
+        <div class="input-group">
+
+            <label>
+                Department
+            </label>
+
+            <input
+                type="text"
+                id="modalEditDepartment">
+
+        </div>
+
+
+        <button
+            type="button"
+            id="modalSaveDetailsButton"
+            class="primary-button">
+
+            💾 Save Changes
+
+        </button>
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
      JAVASCRIPT
-========================================================= -->
+===================================================== -->
 
 <script src="script.js"></script>
 
 </body>
-
 </html>
