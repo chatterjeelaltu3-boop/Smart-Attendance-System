@@ -70,6 +70,7 @@
             opacity: 0.88;
         }
 
+
         /* =====================================================
            MODAL
         ===================================================== */
@@ -126,6 +127,7 @@
             font-size: 18px;
         }
 
+
         /* =====================================================
            CAMERA
         ===================================================== */
@@ -137,13 +139,31 @@
             text-align: center;
         }
 
+        /*
+           IMPORTANT:
+           Camera preview is MIRRORED.
+           This makes it look exactly like a mirror.
+        */
+
         .camera-box video {
             width: 100%;
             max-width: 640px;
+            height: auto;
+            min-height: 300px;
+
+            object-fit: cover;
+
+            /*
+               MIRROR EFFECT
+            */
+            transform: scaleX(-1);
+
             border-radius: 16px;
             background: #111827;
             display: block;
             margin: auto;
+
+            border: 3px solid #2563eb;
         }
 
         .camera-status {
@@ -154,6 +174,7 @@
         .face-message {
             margin-top: 15px;
         }
+
 
         /* =====================================================
            SUCCESS MESSAGE
@@ -173,6 +194,7 @@
             font-size: 50px;
             margin-bottom: 10px;
         }
+
 
         /* =====================================================
            ATTENDANCE SUMMARY
@@ -213,6 +235,7 @@
             border: 2px solid #2563eb;
         }
 
+
         /* =====================================================
            REGISTERED STUDENT
         ===================================================== */
@@ -225,6 +248,7 @@
             margin-bottom: 12px;
         }
 
+
         /* =====================================================
            ADMIN
         ===================================================== */
@@ -236,6 +260,7 @@
             border-radius: 12px;
             line-height: 1.8;
         }
+
 
         /* =====================================================
            MOBILE
@@ -255,6 +280,10 @@
             .main-menu {
                 width: 260px;
             }
+
+            .camera-box video {
+                min-height: 220px;
+            }
         }
 
     </style>
@@ -273,8 +302,6 @@
     ===================================================== -->
 
     <header style="position:relative;">
-
-        <!-- LEFT THREE LINE MENU -->
 
         <div class="menu-container">
 
@@ -324,8 +351,6 @@
                 </button>
 
 
-                <!-- ADMIN LAST -->
-
                 <button
                     type="button"
                     onclick="showAdminDetails()"
@@ -354,38 +379,23 @@
     <section class="dashboard">
 
         <div class="card">
-
             <h3>Total Students</h3>
-
             <h2 id="totalStudents">0</h2>
-
         </div>
 
-
         <div class="card">
-
             <h3>Present</h3>
-
             <h2 id="presentStudents">0</h2>
-
         </div>
 
-
         <div class="card">
-
             <h3>Absent</h3>
-
             <h2 id="absentStudents">0</h2>
-
         </div>
 
-
         <div class="card">
-
             <h3>Attendance</h3>
-
             <h2 id="attendancePercentage">0%</h2>
-
         </div>
 
     </section>
@@ -430,8 +440,6 @@
         >
 
 
-        <!-- CAMERA -->
-
         <div class="camera-box">
 
             <video
@@ -450,8 +458,6 @@
 
         </div>
 
-
-        <!-- ONLY FACE REGISTRATION BUTTON -->
 
         <button
             type="button"
@@ -497,8 +503,6 @@
 
         </div>
 
-
-        <!-- ONLY CAPTURE FACE BUTTON -->
 
         <button
             type="button"
@@ -559,9 +563,7 @@
             ✕
         </button>
 
-
         <h2>✏️ Edit My Details</h2>
-
 
         <input
             type="text"
@@ -569,13 +571,11 @@
             placeholder="Name"
         >
 
-
         <input
             type="text"
             id="editRoll"
             placeholder="Roll"
         >
-
 
         <input
             type="text"
@@ -583,20 +583,17 @@
             placeholder="College"
         >
 
-
         <input
             type="text"
             id="editDepartment"
             placeholder="Department"
         >
 
-
         <input
             type="tel"
             id="editMobile"
             placeholder="Mobile Number"
         >
-
 
         <button
             type="button"
@@ -629,9 +626,7 @@
             ✕
         </button>
 
-
         <h2>👥 Registered Students</h2>
-
 
         <div
             id="registeredStudentsList"
@@ -661,9 +656,7 @@
             ✕
         </button>
 
-
         <h2>📊 Check Attendance</h2>
-
 
         <div
             class="attendance-summary"
@@ -672,39 +665,24 @@
             <div
                 class="attendance-summary-box total-summary"
             >
-
                 <h3>Total Days</h3>
-
-                <h2 id="attendanceTotalDays">
-                    0
-                </h2>
-
+                <h2 id="attendanceTotalDays">0</h2>
             </div>
 
 
             <div
                 class="attendance-summary-box present-summary"
             >
-
                 <h3>Present</h3>
-
-                <h2 id="attendancePresentDays">
-                    0
-                </h2>
-
+                <h2 id="attendancePresentDays">0</h2>
             </div>
 
 
             <div
                 class="attendance-summary-box absent-summary"
             >
-
                 <h3>Absent</h3>
-
-                <h2 id="attendanceAbsentDays">
-                    0
-                </h2>
-
+                <h2 id="attendanceAbsentDays">0</h2>
             </div>
 
         </div>
@@ -736,9 +714,7 @@
             ✕
         </button>
 
-
         <h2>👑 Admin Details</h2>
-
 
         <div class="admin-info">
 
