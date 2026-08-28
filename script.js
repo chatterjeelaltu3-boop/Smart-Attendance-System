@@ -33,6 +33,7 @@ function getAttendanceDateTime() {
     const time = now.toLocaleTimeString("en-IN", {
         hour: "numeric",
         minute: "2-digit",
+        second: "2-digit",
         hour12: true
     });
 
@@ -45,7 +46,7 @@ function getAttendanceDateTime() {
 
 
 // =====================================================
-// SHOW TODAY'S DATE
+// TODAY'S DATE
 // =====================================================
 
 function showCurrentDate() {
@@ -57,16 +58,14 @@ function showCurrentDate() {
 
     const today = new Date();
 
-    const options = {
-        weekday: "long",
-        day: "numeric",
-        month: "long",
-        year: "numeric"
-    };
-
     dateElement.innerText =
         "📅 " +
-        today.toLocaleDateString("en-IN", options);
+        today.toLocaleDateString("en-IN", {
+            weekday: "long",
+            day: "numeric",
+            month: "long",
+            year: "numeric"
+        });
 }
 
 
@@ -97,13 +96,7 @@ function addStudent() {
             : "";
 
 
-    if (
-        !name ||
-        !roll ||
-        !college ||
-        !department ||
-        !mobile
-    ) {
+    if (!name || !roll || !college || !department || !mobile) {
 
         alert(
             "Please fill Name, Roll, College, Department and Mobile Number."
@@ -120,7 +113,9 @@ function addStudent() {
         college: college,
         department: department,
         mobile: mobile,
+
         status: "Not Marked",
+
         attendanceDate: "",
         attendanceDay: "",
         attendanceTime: ""
@@ -139,7 +134,6 @@ function addStudent() {
 
 
     displayStudents();
-
     updateDashboard();
 }
 
@@ -208,6 +202,7 @@ function displayStudents() {
 
 
         let attendanceInfo = "";
+
 
         if (student.attendanceDate) {
 
@@ -312,7 +307,7 @@ function displayStudents() {
 
 
 // =====================================================
-// MARK PRESENT
+// PRESENT
 // =====================================================
 
 function markPresent(index) {
@@ -335,13 +330,12 @@ function markPresent(index) {
 
 
     displayStudents();
-
     updateDashboard();
 }
 
 
 // =====================================================
-// MARK ABSENT
+// ABSENT
 // =====================================================
 
 function markAbsent(index) {
@@ -351,13 +345,12 @@ function markAbsent(index) {
 
 
     displayStudents();
-
     updateDashboard();
 }
 
 
 // =====================================================
-// DELETE STUDENT
+// DELETE
 // =====================================================
 
 function deleteStudent(index) {
@@ -365,7 +358,6 @@ function deleteStudent(index) {
     students.splice(index, 1);
 
     displayStudents();
-
     updateDashboard();
 }
 
@@ -424,18 +416,15 @@ function updateDashboard() {
 
 
     if (totalElement)
-        totalElement.innerText =
-            total;
+        totalElement.innerText = total;
 
 
     if (presentElement)
-        presentElement.innerText =
-            present;
+        presentElement.innerText = present;
 
 
     if (absentElement)
-        absentElement.innerText =
-            absent;
+        absentElement.innerText = absent;
 
 
     if (percentageElement)
@@ -445,7 +434,7 @@ function updateDashboard() {
 
 
 // =====================================================
-// FACE API MODEL URL
+// FACE API
 // =====================================================
 
 const MODEL_URL =
@@ -459,66 +448,23 @@ const MODEL_URL =
 async function loadFaceModels() {
 
     if (faceModelLoaded) {
-
         return true;
     }
 
 
     try {
 
-        const registrationStatus =
-            document.getElementById(
-                "registrationStatus"
-            );
-
-        const attendanceStatus =
-            document.getElementById(
-                "attendanceStatus"
-            );
-
-
-        if (registrationStatus) {
-
-            registrationStatus.innerText =
-                "Loading face detection...";
-        }
-
-
-        if (attendanceStatus) {
-
-            attendanceStatus.innerText =
-                "Loading face detection...";
-        }
-
-
         await faceapi.nets.tinyFaceDetector
             .loadFromUri(MODEL_URL);
 
-
         await faceapi.nets.faceLandmark68Net
             .loadFromUri(MODEL_URL);
-
 
         await faceapi.nets.faceRecognitionNet
             .loadFromUri(MODEL_URL);
 
 
         faceModelLoaded = true;
-
-
-        if (registrationStatus) {
-
-            registrationStatus.innerText =
-                "Face detection ready ✅";
-        }
-
-
-        if (attendanceStatus) {
-
-            attendanceStatus.innerText =
-                "Face detection ready ✅";
-        }
-
 
         return true;
 
@@ -530,14 +476,13 @@ async function loadFaceModels() {
             error
         );
 
-
         return false;
     }
 }
 
 
 // =====================================================
-// CAMERA FUNCTION
+// CAMERA
 // =====================================================
 
 async function startCameraForVideo(
@@ -552,15 +497,7 @@ async function startCameraForVideo(
         document.getElementById(statusId);
 
 
-    if (!video) {
-
-        console.error(
-            "Video not found:",
-            videoId
-        );
-
-        return null;
-    }
+    if (!video) return null;
 
 
     try {
@@ -570,17 +507,13 @@ async function startCameraForVideo(
                 .getUserMedia({
 
                     video: {
-
                         facingMode: "user",
-
                         width: {
                             ideal: 640
                         },
-
                         height: {
                             ideal: 480
                         }
-
                     },
 
                     audio: false
@@ -607,10 +540,7 @@ async function startCameraForVideo(
 
     } catch (error) {
 
-        console.error(
-            "Camera error:",
-            error
-        );
+        console.error(error);
 
 
         if (status) {
@@ -632,35 +562,15 @@ async function startCameraForVideo(
 async function startRegistrationCamera() {
 
     if (registrationStream) {
-
         return;
     }
 
 
     registrationStream =
         await startCameraForVideo(
-
             "registrationCamera",
-
             "registrationStatus"
-
         );
-
-
-    if (registrationStream) {
-
-        const status =
-            document.getElementById(
-                "registrationStatus"
-            );
-
-
-        if (status) {
-
-            status.innerText =
-                "Camera ON — ready for face registration 📷";
-        }
-    }
 }
 
 
@@ -671,40 +581,20 @@ async function startRegistrationCamera() {
 async function startAttendanceCamera() {
 
     if (attendanceStream) {
-
         return;
     }
 
 
     attendanceStream =
         await startCameraForVideo(
-
             "attendanceCamera",
-
             "attendanceStatus"
-
         );
-
-
-    if (attendanceStream) {
-
-        const status =
-            document.getElementById(
-                "attendanceStatus"
-            );
-
-
-        if (status) {
-
-            status.innerText =
-                "Camera ON — ready for attendance 📷";
-        }
-    }
 }
 
 
 // =====================================================
-// FACE REGISTRATION
+// AUTOMATIC FACE REGISTRATION
 // =====================================================
 
 async function startAutomaticFaceRegistration() {
@@ -778,7 +668,7 @@ async function startAutomaticFaceRegistration() {
     ) {
 
         message.innerText =
-            "Please enter Name, Roll, College, Department and Mobile Number.";
+            "Please fill all student details.";
 
         return;
     }
@@ -793,6 +683,9 @@ async function startAutomaticFaceRegistration() {
 
     if (!modelsReady) {
 
+        message.innerText =
+            "Face detection model could not load.";
+
         button.disabled = false;
 
         return;
@@ -803,11 +696,8 @@ async function startAutomaticFaceRegistration() {
 
         registrationStream =
             await startCameraForVideo(
-
                 "registrationCamera",
-
                 "registrationStatus"
-
             );
 
 
@@ -821,40 +711,36 @@ async function startAutomaticFaceRegistration() {
 
 
     status.innerText =
-        "Camera ON — looking for your face...";
+        "Looking for your face...";
 
 
-    registrationRunning = true;
+    registrationRunning =
+        true;
 
 
     detectRegistrationFace(
-
         name,
         roll,
         college,
         department,
         mobile
-
     );
 }
 
 
 // =====================================================
-// AUTOMATIC FACE REGISTRATION DETECTION
+// REGISTRATION FACE DETECTION
 // =====================================================
 
 async function detectRegistrationFace(
-
     name,
     roll,
     college,
     department,
     mobile
-
 ) {
 
     if (!registrationRunning) {
-
         return;
     }
 
@@ -875,31 +761,21 @@ async function detectRegistrationFace(
 
         const detection =
             await faceapi
-
                 .detectSingleFace(
-
                     video,
-
-                    new faceapi
-                        .TinyFaceDetectorOptions({
-
-                            inputSize: 320,
-
-                            scoreThreshold: 0.5
-
-                        })
-
+                    new faceapi.TinyFaceDetectorOptions({
+                        inputSize: 320,
+                        scoreThreshold: 0.5
+                    })
                 )
-
                 .withFaceLandmarks()
-
                 .withFaceDescriptor();
 
 
         if (detection) {
 
             status.innerText =
-                "Face detected ✅ Capturing...";
+                "Face detected ✅ Registering...";
 
 
             const descriptor =
@@ -911,37 +787,27 @@ async function detectRegistrationFace(
             const registeredFace = {
 
                 name: name,
-
                 roll: roll,
-
                 college: college,
-
                 department: department,
-
                 mobile: mobile,
-
                 descriptor: descriptor
 
             };
 
 
             localStorage.setItem(
-
                 "registeredFaceStudent",
-
                 JSON.stringify(
                     registeredFace
                 )
-
             );
 
 
             const existingStudent =
                 students.find(
-
                     student =>
                         student.roll === roll
-
                 );
 
 
@@ -964,21 +830,15 @@ async function detectRegistrationFace(
                 students.push({
 
                     name: name,
-
                     roll: roll,
-
                     college: college,
-
                     department: department,
-
                     mobile: mobile,
 
                     status: "Not Marked",
 
                     attendanceDate: "",
-
                     attendanceDay: "",
-
                     attendanceTime: ""
 
                 });
@@ -986,22 +846,10 @@ async function detectRegistrationFace(
 
 
             displayStudents();
-
             updateDashboard();
 
 
-            setTimeout(
-
-                () => {
-
-                    registrationSuccessful();
-
-                },
-
-                800
-
-            );
-
+            registrationSuccessful();
 
             return;
         }
@@ -1012,23 +860,18 @@ async function detectRegistrationFace(
 
 
         setTimeout(
-
             () => {
 
                 detectRegistrationFace(
-
                     name,
                     roll,
                     college,
                     department,
                     mobile
-
                 );
 
             },
-
             300
-
         );
 
 
@@ -1036,34 +879,15 @@ async function detectRegistrationFace(
 
         console.error(error);
 
-
         status.innerText =
             "Face detection error ❌";
-
 
         registrationRunning =
             false;
 
-
         buttonEnable(
             "registerFaceButton"
         );
-    }
-}
-
-
-// =====================================================
-// ENABLE BUTTON
-// =====================================================
-
-function buttonEnable(id) {
-
-    const button =
-        document.getElementById(id);
-
-    if (button) {
-
-        button.disabled = false;
     }
 }
 
@@ -1090,12 +914,6 @@ function registrationSuccessful() {
         );
 
 
-    const button =
-        document.getElementById(
-            "registerFaceButton"
-        );
-
-
     if (status) {
 
         status.innerText =
@@ -1119,7 +937,8 @@ function registrationSuccessful() {
                     track.stop()
             );
 
-        registrationStream = null;
+        registrationStream =
+            null;
     }
 
 
@@ -1131,13 +950,30 @@ function registrationSuccessful() {
 
     if (video) {
 
-        video.srcObject = null;
+        video.srcObject =
+            null;
     }
 
 
+    buttonEnable(
+        "registerFaceButton"
+    );
+}
+
+
+// =====================================================
+// BUTTON ENABLE
+// =====================================================
+
+function buttonEnable(id) {
+
+    const button =
+        document.getElementById(id);
+
     if (button) {
 
-        button.disabled = false;
+        button.disabled =
+            false;
     }
 }
 
@@ -1181,7 +1017,7 @@ async function startFaceAttendance() {
     if (!savedData) {
 
         result.innerHTML =
-            "❌ No face registered. Please register a face first.";
+            "❌ No face registered. Please register first.";
 
         return;
     }
@@ -1191,7 +1027,8 @@ async function startFaceAttendance() {
         JSON.parse(savedData);
 
 
-    button.disabled = true;
+    button.disabled =
+        true;
 
 
     const modelsReady =
@@ -1200,7 +1037,8 @@ async function startFaceAttendance() {
 
     if (!modelsReady) {
 
-        button.disabled = false;
+        button.disabled =
+            false;
 
         return;
     }
@@ -1210,17 +1048,15 @@ async function startFaceAttendance() {
 
         attendanceStream =
             await startCameraForVideo(
-
                 "attendanceCamera",
-
                 "attendanceStatus"
-
             );
 
 
         if (!attendanceStream) {
 
-            button.disabled = false;
+            button.disabled =
+                false;
 
             return;
         }
@@ -1231,7 +1067,8 @@ async function startFaceAttendance() {
         "Camera ON — looking for your face...";
 
 
-    attendanceRunning = true;
+    attendanceRunning =
+        true;
 
 
     detectAttendanceFace(
@@ -1241,7 +1078,7 @@ async function startFaceAttendance() {
 
 
 // =====================================================
-// AUTOMATIC ATTENDANCE FACE DETECTION
+// AUTOMATIC ATTENDANCE DETECTION
 // =====================================================
 
 async function detectAttendanceFace(
@@ -1249,7 +1086,6 @@ async function detectAttendanceFace(
 ) {
 
     if (!attendanceRunning) {
-
         return;
     }
 
@@ -1270,24 +1106,14 @@ async function detectAttendanceFace(
 
         const detection =
             await faceapi
-
                 .detectSingleFace(
-
                     video,
-
-                    new faceapi
-                        .TinyFaceDetectorOptions({
-
-                            inputSize: 320,
-
-                            scoreThreshold: 0.5
-
-                        })
-
+                    new faceapi.TinyFaceDetectorOptions({
+                        inputSize: 320,
+                        scoreThreshold: 0.5
+                    })
                 )
-
                 .withFaceLandmarks()
-
                 .withFaceDescriptor();
 
 
@@ -1298,7 +1124,6 @@ async function detectAttendanceFace(
 
 
             setTimeout(
-
                 () => {
 
                     detectAttendanceFace(
@@ -1306,9 +1131,7 @@ async function detectAttendanceFace(
                     );
 
                 },
-
                 300
-
             );
 
 
@@ -1328,18 +1151,9 @@ async function detectAttendanceFace(
 
         const distance =
             faceapi.euclideanDistance(
-
                 detection.descriptor,
-
                 registeredDescriptor
-
             );
-
-
-        console.log(
-            "Face distance:",
-            distance
-        );
 
 
         if (distance < 0.55) {
@@ -1351,7 +1165,7 @@ async function detectAttendanceFace(
         } else {
 
             status.innerText =
-                "Face does not match registered student ❌";
+                "Face does not match ❌";
 
 
             attendanceRunning =
@@ -1397,30 +1211,28 @@ function showAttendanceSuccess(student) {
         false;
 
 
+    // GET DATE + DAY + EXACT TIME
+
+    const attendance =
+        getAttendanceDateTime();
+
+
     const result =
         document.getElementById(
             "attendanceResult"
         );
 
 
-    // Get current date and time
-
-    const attendance =
-        getAttendanceDateTime();
-
-
-    // Find student
+    // FIND STUDENT
 
     let studentIndex =
         students.findIndex(
-
             s =>
                 s.roll === student.roll
-
         );
 
 
-    // If student exists
+    // UPDATE EXISTING STUDENT
 
     if (studentIndex !== -1) {
 
@@ -1436,21 +1248,13 @@ function showAttendanceSuccess(student) {
         students[studentIndex].attendanceTime =
             attendance.time;
 
-
-        // Update mobile if available
-
-        if (
-            student.mobile &&
-            !student.mobile.trim()
-        ) {
-
-            student.mobile =
-                students[studentIndex].mobile;
-        }
+        students[studentIndex].mobile =
+            student.mobile || students[studentIndex].mobile || "";
 
     }
 
-    // If student doesn't exist
+
+    // ADD STUDENT IF NOT FOUND
 
     else {
 
@@ -1485,15 +1289,15 @@ function showAttendanceSuccess(student) {
     }
 
 
-    // Show success result
+    // SUCCESS MESSAGE
 
     result.innerHTML = `
 
         <div
             style="
-                padding:20px;
+                padding:22px;
                 margin-top:20px;
-                border-radius:15px;
+                border-radius:16px;
                 background:#ecfdf5;
                 border:2px solid #22c55e;
                 text-align:center;
@@ -1623,7 +1427,8 @@ function stopAttendanceCamera() {
                     track.stop()
             );
 
-        attendanceStream = null;
+        attendanceStream =
+            null;
     }
 
 
@@ -1635,7 +1440,8 @@ function stopAttendanceCamera() {
 
     if (video) {
 
-        video.srcObject = null;
+        video.srcObject =
+            null;
     }
 }
 
