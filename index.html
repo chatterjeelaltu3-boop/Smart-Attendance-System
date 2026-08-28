@@ -4,28 +4,31 @@
 <head>
 
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
     <title>Smart Attendance System</title>
 
     <link rel="stylesheet" href="style.css">
 
-    <!-- FACE API -->
     <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
 
 </head>
+
 
 <body>
 
 <div class="container">
 
+
     <!-- =====================================================
          HEADER
-    ===================================================== -->
+    ====================================================== -->
 
     <header>
 
-        <!-- LEFT THREE LINE MENU -->
+        <!-- LEFT MENU -->
 
         <div class="menu-container">
 
@@ -37,53 +40,33 @@
                 ☰
             </button>
 
+
             <div
                 id="mainMenu"
                 class="main-menu"
             >
 
-                <!-- 1 -->
-
-                <button
-                    type="button"
-                    onclick="openEditDetails()"
-                >
+                <button onclick="openEditDetails()">
                     ✏️ Edit My Details
                 </button>
 
-                <!-- 2 -->
 
-                <button
-                    type="button"
-                    onclick="openMobileUpdate()"
-                >
+                <button onclick="openMobileUpdate()">
                     📱 Add / Update Mobile
                 </button>
 
-                <!-- 3 -->
 
-                <button
-                    type="button"
-                    onclick="showRegisteredStudents()"
-                >
+                <button onclick="showRegisteredStudents()">
                     👥 Registered Students
                 </button>
 
-                <!-- 4 -->
 
-                <button
-                    type="button"
-                    onclick="showCheckAttendance()"
-                >
+                <button onclick="showCheckAttendance()">
                     📊 Check Attendance
                 </button>
 
-                <!-- 5 ADMIN LAST -->
 
-                <button
-                    type="button"
-                    onclick="showAdminDetails()"
-                >
+                <button onclick="showAdminDetails()">
                     👑 Admin: Ayush Chatterjee
                 </button>
 
@@ -101,11 +84,13 @@
     </header>
 
 
+
     <!-- =====================================================
          DASHBOARD
-    ===================================================== -->
+    ====================================================== -->
 
     <section class="dashboard">
+
 
         <div class="card">
 
@@ -142,19 +127,22 @@
 
         </div>
 
+
     </section>
+
 
 
     <!-- =====================================================
          FACE REGISTRATION
-    ===================================================== -->
+    ====================================================== -->
 
     <section class="section">
 
         <h2>📸 Face Registration</h2>
 
-        <p>
-            Enter your details and capture your face.
+        <p class="info-text">
+            Enter your details and click the button.
+            Camera will start and your face will be captured automatically.
         </p>
 
 
@@ -189,7 +177,16 @@
         <input
             type="tel"
             id="faceMobile"
-            placeholder="Mobile Number"
+            placeholder="Mobile Number (10 digits)"
+            maxlength="10"
+            inputmode="numeric"
+        >
+
+
+        <input
+            type="email"
+            id="faceEmail"
+            placeholder="Email Address (Optional)"
         >
 
 
@@ -204,6 +201,7 @@
                 playsinline
             ></video>
 
+
             <div
                 id="registrationStatus"
                 class="camera-status"
@@ -214,42 +212,41 @@
         </div>
 
 
-        <!-- ONLY REGISTRATION BUTTON -->
+        <!-- ONLY ONE BUTTON -->
 
         <button
             type="button"
             id="registerFaceButton"
+            class="primary-button"
             onclick="startAutomaticFaceRegistration()"
         >
             📸 Capture Face & Register
         </button>
 
 
-        <!-- REGISTRATION MESSAGE -->
-
         <div
             id="registrationMessage"
             class="face-message"
         ></div>
 
+
     </section>
+
 
 
     <!-- =====================================================
          FACE ATTENDANCE
-    ===================================================== -->
+    ====================================================== -->
 
     <section class="section">
 
         <h2>📸 Face Attendance</h2>
 
-        <p>
-            Look at the camera and capture your face.
-            Attendance will be marked automatically.
+        <p class="info-text">
+            Click Capture Face. Camera will start automatically
+            and attendance will be marked when your face is recognized.
         </p>
 
-
-        <!-- ATTENDANCE CAMERA -->
 
         <div class="camera-box">
 
@@ -259,6 +256,7 @@
                 muted
                 playsinline
             ></video>
+
 
             <div
                 id="attendanceStatus"
@@ -270,30 +268,31 @@
         </div>
 
 
-        <!-- ONLY CAPTURE FACE BUTTON -->
+        <!-- ONLY CAPTURE BUTTON -->
 
         <button
             type="button"
             id="attendanceButton"
+            class="primary-button"
             onclick="startFaceAttendance()"
         >
             📸 Capture Face
         </button>
 
 
-        <!-- ATTENDANCE SUCCESS MESSAGE -->
-
         <div
             id="attendanceResult"
             class="face-message"
         ></div>
 
+
     </section>
+
 
 
     <!-- =====================================================
          STUDENT LIST
-    ===================================================== -->
+    ====================================================== -->
 
     <section class="section">
 
@@ -316,9 +315,10 @@
 </div>
 
 
+
 <!-- =====================================================
      EDIT DETAILS MODAL
-===================================================== -->
+====================================================== -->
 
 <div
     id="editDetailsModal"
@@ -328,7 +328,6 @@
     <div class="modal-content">
 
         <button
-            type="button"
             class="close-modal"
             onclick="closeEditDetails()"
         >
@@ -370,12 +369,21 @@
         <input
             type="tel"
             id="editMobile"
-            placeholder="Mobile Number"
+            placeholder="Mobile Number (10 digits)"
+            maxlength="10"
+            inputmode="numeric"
+        >
+
+
+        <input
+            type="email"
+            id="editEmail"
+            placeholder="Email Address (Optional)"
         >
 
 
         <button
-            type="button"
+            class="primary-button"
             onclick="saveEditedDetails()"
         >
             💾 Save Changes
@@ -386,9 +394,10 @@
 </div>
 
 
+
 <!-- =====================================================
      REGISTERED STUDENTS MODAL
-===================================================== -->
+====================================================== -->
 
 <div
     id="studentsModal"
@@ -398,7 +407,6 @@
     <div class="modal-content">
 
         <button
-            type="button"
             class="close-modal"
             onclick="closeRegisteredStudents()"
         >
@@ -409,28 +417,26 @@
         <h2>👥 Registered Students</h2>
 
 
-        <div
-            id="registeredStudentsList"
-        ></div>
+        <div id="registeredStudentsList"></div>
 
     </div>
 
 </div>
 
 
+
 <!-- =====================================================
      CHECK ATTENDANCE MODAL
-===================================================== -->
+====================================================== -->
 
 <div
     id="attendanceCheckModal"
     class="modal"
 >
 
-    <div class="modal-content">
+    <div class="modal-content attendance-modal">
 
         <button
-            type="button"
             class="close-modal"
             onclick="closeCheckAttendance()"
         >
@@ -444,11 +450,7 @@
         <div class="attendance-summary">
 
 
-            <!-- TOTAL DAYS -->
-
-            <div
-                class="attendance-summary-box total-summary"
-            >
+            <div class="attendance-summary-box total-summary">
 
                 <h3>Total Days</h3>
 
@@ -459,11 +461,7 @@
             </div>
 
 
-            <!-- PRESENT DAYS -->
-
-            <div
-                class="attendance-summary-box present-summary"
-            >
+            <div class="attendance-summary-box present-summary">
 
                 <h3>Present</h3>
 
@@ -474,11 +472,7 @@
             </div>
 
 
-            <!-- ABSENT DAYS -->
-
-            <div
-                class="attendance-summary-box absent-summary"
-            >
+            <div class="attendance-summary-box absent-summary">
 
                 <h3>Absent</h3>
 
@@ -492,20 +486,18 @@
         </div>
 
 
-        <!-- ATTENDANCE HISTORY -->
+        <div id="attendanceHistory"></div>
 
-        <div
-            id="attendanceHistory"
-        ></div>
 
     </div>
 
 </div>
 
 
+
 <!-- =====================================================
      ADMIN MODAL
-===================================================== -->
+====================================================== -->
 
 <div
     id="adminModal"
@@ -515,7 +507,6 @@
     <div class="modal-content">
 
         <button
-            type="button"
             class="close-modal"
             onclick="closeAdminDetails()"
         >
@@ -548,12 +539,8 @@
 </div>
 
 
-<!-- =====================================================
-     JAVASCRIPT
-===================================================== -->
 
 <script src="script.js"></script>
-
 
 </body>
 
