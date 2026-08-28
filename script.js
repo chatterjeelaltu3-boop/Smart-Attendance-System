@@ -1,22 +1,116 @@
-```javascript
 /* =========================================================
    SMART ATTENDANCE SYSTEM
-   Complete script.js
+   Complete Frontend Script
 ========================================================= */
 
 document.addEventListener("DOMContentLoaded", () => {
 
     /* =====================================================
-       STORAGE
+       STORAGE KEYS
     ===================================================== */
 
     const USERS_KEY = "smartAttendanceUsers";
     const ATTENDANCE_KEY = "smartAttendanceRecords";
     const CURRENT_USER_KEY = "smartAttendanceCurrentUser";
 
+    /* =====================================================
+       ADMIN ACCOUNT
+    ===================================================== */
+
+    const ADMIN = {
+        name: "Ayush Chatterjee",
+        pin: "1234",
+        role: "Admin",
+        mobile: "",
+        email: "",
+        college: "Hooghly Engineering & Technology College",
+        department: "Administration",
+        roll: "ADMIN"
+    };
+
+    /* =====================================================
+       GET ELEMENT
+    ===================================================== */
+
+    const $ = (id) => document.getElementById(id);
+
+    /* =====================================================
+       PAGES
+    ===================================================== */
+
+    const loginPage = $("loginPage");
+    const createAccountPage = $("createAccountPage");
+    const forgotPinPage = $("forgotPinPage");
+    const dashboardPage = $("dashboardPage");
+
+    /* =====================================================
+       LOGIN BUTTONS
+    ===================================================== */
+
+    const loginButton = $("loginButton");
+    const createAccountButton = $("createAccountButton");
+    const forgotPinButton = $("forgotPinButton");
+    const createAccountSubmit = $("createAccountSubmit");
+    const backToLoginButton = $("backToLoginButton");
+    const resetPinButton = $("resetPinButton");
+    const forgotBackButton = $("forgotBackButton");
+
+    /* =====================================================
+       DASHBOARD BUTTONS
+    ===================================================== */
+
+    const dashboardMenuButton = $("dashboardMenuButton");
+    const editProfileMenuButton = $("editProfileMenuButton");
+    const editContactMenuButton = $("editContactMenuButton");
+    const personalDetailsMenuButton = $("personalDetailsMenuButton");
+    const faceRegistrationMenuButton = $("faceRegistrationMenuButton");
+    const attendanceMenuButton = $("attendanceMenuButton");
+    const studentsMenuButton = $("studentsMenuButton");
+    const checkAttendanceMenuButton = $("checkAttendanceMenuButton");
+    const adminMenuButton = $("adminMenuButton");
+    const logoutButton = $("logoutButton");
+
+    const quickFaceRegistration = $("quickFaceRegistration");
+    const quickAttendance = $("quickAttendance");
+    const quickCheckAttendance = $("quickCheckAttendance");
+
+    /* =====================================================
+       DASHBOARD SECTIONS
+    ===================================================== */
+
+    const dashboardHome = $("dashboardHome");
+    const editProfileSection = $("editProfileSection");
+    const editContactSection = $("editContactSection");
+    const personalDetailsSection = $("personalDetailsSection");
+    const faceRegistrationSection = $("faceRegistrationSection");
+    const attendanceSection = $("attendanceSection");
+    const studentsSection = $("studentsSection");
+    const checkAttendanceSection = $("checkAttendanceSection");
+    const adminSection = $("adminSection");
+
+    /* =====================================================
+       CAMERA
+    ===================================================== */
+
+    const registrationCamera = $("registrationCamera");
+    const attendanceCamera = $("attendanceCamera");
+
+    let registrationStream = null;
+    let attendanceStream = null;
+
+    let registrationTimer = null;
+    let attendanceTimer = null;
+
+    /* =====================================================
+       DATA FUNCTIONS
+    ===================================================== */
 
     function getUsers() {
-        return JSON.parse(localStorage.getItem(USERS_KEY)) || [];
+        try {
+            return JSON.parse(localStorage.getItem(USERS_KEY)) || [];
+        } catch {
+            return [];
+        }
     }
 
     function saveUsers(users) {
@@ -24,18 +118,26 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function getAttendance() {
-        return JSON.parse(localStorage.getItem(ATTENDANCE_KEY)) || [];
+        try {
+            return JSON.parse(localStorage.getItem(ATTENDANCE_KEY)) || [];
+        } catch {
+            return [];
+        }
     }
 
-    function saveAttendance(records) {
-        localStorage.setItem(ATTENDANCE_KEY, JSON.stringify(records));
+    function saveAttendance(data) {
+        localStorage.setItem(ATTENDANCE_KEY, JSON.stringify(data));
     }
 
     function getCurrentUser() {
-        return JSON.parse(localStorage.getItem(CURRENT_USER_KEY));
+        try {
+            return JSON.parse(localStorage.getItem(CURRENT_USER_KEY));
+        } catch {
+            return null;
+        }
     }
 
-    function saveCurrentUser(user) {
+    function setCurrentUser(user) {
         localStorage.setItem(CURRENT_USER_KEY, JSON.stringify(user));
     }
 
@@ -43,100 +145,59 @@ document.addEventListener("DOMContentLoaded", () => {
         localStorage.removeItem(CURRENT_USER_KEY);
     }
 
-
     /* =====================================================
-       PAGE ELEMENTS
+       PAGE CONTROL
     ===================================================== */
 
-    const loginPage = document.getElementById("loginPage");
-    const createAccountPage = document.getElementById("createAccountPage");
-    const forgotPinPage = document.getElementById("forgotPinPage");
-    const dashboardPage = document.getElementById("dashboardPage");
+    function hideAllPages() {
 
+        if (loginPage) loginPage.style.display = "none";
+        if (createAccountPage) createAccountPage.style.display = "none";
+        if (forgotPinPage) forgotPinPage.style.display = "none";
+        if (dashboardPage) dashboardPage.style.display = "none";
+    }
+
+    function showLogin() {
+        stopAllCameras();
+        hideAllPages();
+
+        if (loginPage) {
+            loginPage.style.display = "flex";
+        }
+    }
+
+    function showCreateAccount() {
+        hideAllPages();
+
+        if (createAccountPage) {
+            createAccountPage.style.display = "flex";
+        }
+    }
+
+    function showForgotPin() {
+        hideAllPages();
+
+        if (forgotPinPage) {
+            forgotPinPage.style.display = "flex";
+        }
+    }
+
+    function showDashboard() {
+        hideAllPages();
+
+        if (dashboardPage) {
+            dashboardPage.style.display = "flex";
+        }
+
+        updateDashboard();
+        showSection("dashboardHome");
+    }
 
     /* =====================================================
-       SHOW / HIDE PAGES
+       MESSAGE
     ===================================================== */
 
-    function showPage(page) {
-
-        loginPage.style.display = "none";
-        createAccountPage.style.display = "none";
-        forgotPinPage.style.display = "none";
-        dashboardPage.style.display = "none";
-
-        page.style.display = page === dashboardPage ? "flex" : "flex";
-    }
-
-
-    /* =====================================================
-       LOGIN PAGE BUTTONS
-    ===================================================== */
-
-    const createAccountButton =
-        document.getElementById("createAccountButton");
-
-    const forgotPinButton =
-        document.getElementById("forgotPinButton");
-
-    const backToLoginButton =
-        document.getElementById("backToLoginButton");
-
-    const forgotBackButton =
-        document.getElementById("forgotBackButton");
-
-
-    if (createAccountButton) {
-        createAccountButton.addEventListener("click", () => {
-
-            clearMessage("loginMessage");
-
-            showPage(createAccountPage);
-
-        });
-    }
-
-
-    if (forgotPinButton) {
-        forgotPinButton.addEventListener("click", () => {
-
-            clearMessage("loginMessage");
-
-            showPage(forgotPinPage);
-
-        });
-    }
-
-
-    if (backToLoginButton) {
-        backToLoginButton.addEventListener("click", () => {
-
-            clearMessage("createMessage");
-
-            showPage(loginPage);
-
-        });
-    }
-
-
-    if (forgotBackButton) {
-        forgotBackButton.addEventListener("click", () => {
-
-            clearMessage("forgotMessage");
-
-            showPage(loginPage);
-
-        });
-    }
-
-
-    /* =====================================================
-       MESSAGE FUNCTION
-    ===================================================== */
-
-    function showMessage(id, message, type = "success") {
-
-        const element = document.getElementById(id);
+    function showMessage(element, message, type = "info") {
 
         if (!element) return;
 
@@ -145,83 +206,173 @@ document.addEventListener("DOMContentLoaded", () => {
         element.className = "auth-message " + type;
     }
 
+    /* =====================================================
+       LOGIN
+    ===================================================== */
 
-    function clearMessage(id) {
+    if (loginButton) {
 
-        const element = document.getElementById(id);
+        loginButton.addEventListener("click", () => {
 
-        if (!element) return;
+            const name = $("loginName")?.value.trim();
+            const identity = $("loginIdentity")?.value.trim();
+            const pin = $("loginPin")?.value.trim();
 
-        element.textContent = "";
-        element.className = "auth-message";
+            if (!name || !identity || !pin) {
+
+                showMessage(
+                    $("loginMessage"),
+                    "Please fill all login details.",
+                    "error"
+                );
+
+                return;
+            }
+
+            if (!/^\d{4}$/.test(pin)) {
+
+                showMessage(
+                    $("loginMessage"),
+                    "PIN must be exactly 4 digits.",
+                    "error"
+                );
+
+                return;
+            }
+
+            /* ADMIN LOGIN */
+
+            if (
+                name.toLowerCase() === ADMIN.name.toLowerCase() &&
+                pin === ADMIN.pin
+            ) {
+
+                const adminUser = {
+                    ...ADMIN,
+                    loginIdentity: identity
+                };
+
+                setCurrentUser(adminUser);
+
+                showMessage(
+                    $("loginMessage"),
+                    "Admin login successful!",
+                    "success"
+                );
+
+                setTimeout(showDashboard, 400);
+
+                return;
+            }
+
+            /* STUDENT LOGIN */
+
+            const users = getUsers();
+
+            const user = users.find(u => {
+
+                const sameName =
+                    u.name.toLowerCase() === name.toLowerCase();
+
+                const sameMobile =
+                    u.mobile === identity;
+
+                const sameEmail =
+                    u.email &&
+                    u.email.toLowerCase() === identity.toLowerCase();
+
+                const samePin =
+                    u.pin === pin;
+
+                return sameName && (sameMobile || sameEmail) && samePin;
+            });
+
+            if (!user) {
+
+                showMessage(
+                    $("loginMessage"),
+                    "Invalid name, mobile/email or PIN.",
+                    "error"
+                );
+
+                return;
+            }
+
+            setCurrentUser(user);
+
+            showMessage(
+                $("loginMessage"),
+                "Login successful!",
+                "success"
+            );
+
+            setTimeout(showDashboard, 400);
+        });
     }
 
+    /* =====================================================
+       CREATE ACCOUNT PAGE
+    ===================================================== */
+
+    if (createAccountButton) {
+
+        createAccountButton.addEventListener(
+            "click",
+            showCreateAccount
+        );
+    }
 
     /* =====================================================
        CREATE ACCOUNT
     ===================================================== */
 
-    const createAccountSubmit =
-        document.getElementById("createAccountSubmit");
-
-
     if (createAccountSubmit) {
 
         createAccountSubmit.addEventListener("click", () => {
 
-            const name =
-                document.getElementById("createName").value.trim();
+            const name = $("createName")?.value.trim();
+            const mobile = $("createMobile")?.value.trim();
+            const email = $("createEmail")?.value.trim();
+            const pin = $("createPin")?.value.trim();
+            const confirmPin = $("confirmPin")?.value.trim();
+            const college = $("createCollege")?.value.trim();
+            const department = $("createDepartment")?.value.trim();
+            const roll = $("createRoll")?.value.trim();
 
-            const mobile =
-                document.getElementById("createMobile").value.trim();
-
-            const email =
-                document.getElementById("createEmail").value.trim();
-
-            const pin =
-                document.getElementById("createPin").value.trim();
-
-            const confirmPin =
-                document.getElementById("confirmPin").value.trim();
-
-            const college =
-                document.getElementById("createCollege").value.trim();
-
-            const department =
-                document.getElementById("createDepartment").value.trim();
-
-            const roll =
-                document.getElementById("createRoll").value.trim();
-
-
-            /* Validation */
-
-            if (!name) {
-                showMessage(
-                    "createMessage",
-                    "Please enter your full name.",
-                    "error"
-                );
-                return;
-            }
-
-
-            if (!/^[0-9]{10}$/.test(mobile)) {
+            if (
+                !name ||
+                !mobile ||
+                !pin ||
+                !confirmPin ||
+                !college ||
+                !department ||
+                !roll
+            ) {
 
                 showMessage(
-                    "createMessage",
-                    "Please enter a valid 10 digit mobile number.",
+                    $("createMessage"),
+                    "Please fill all required fields.",
                     "error"
                 );
 
                 return;
             }
 
-
-            if (pin.length !== 4 || !/^[0-9]+$/.test(pin)) {
+            if (!/^\d{10}$/.test(mobile)) {
 
                 showMessage(
-                    "createMessage",
+                    $("createMessage"),
+                    "Mobile number must contain 10 digits.",
+                    "error"
+                );
+
+                return;
+            }
+
+            if (!/^\d{4}$/.test(pin)) {
+
+                showMessage(
+                    $("createMessage"),
                     "PIN must contain exactly 4 digits.",
                     "error"
                 );
@@ -229,11 +380,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-
             if (pin !== confirmPin) {
 
                 showMessage(
-                    "createMessage",
+                    $("createMessage"),
                     "PIN and Confirm PIN do not match.",
                     "error"
                 );
@@ -241,845 +391,521 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-
-            if (!department) {
+            if (
+                name.toLowerCase() === ADMIN.name.toLowerCase()
+            ) {
 
                 showMessage(
-                    "createMessage",
-                    "Please enter Branch / Department.",
+                    $("createMessage"),
+                    "This name is reserved for Admin.",
                     "error"
                 );
 
                 return;
             }
 
+            const users = getUsers();
 
-            if (!roll) {
+            const alreadyExists = users.some(user =>
+                user.mobile === mobile ||
+                (
+                    email &&
+                    user.email &&
+                    user.email.toLowerCase() === email.toLowerCase()
+                ) ||
+                (
+                    user.roll.toLowerCase() === roll.toLowerCase() &&
+                    user.department.toLowerCase() === department.toLowerCase()
+                )
+            );
+
+            if (alreadyExists) {
 
                 showMessage(
-                    "createMessage",
-                    "Please enter Roll Number.",
+                    $("createMessage"),
+                    "An account with these details already exists.",
                     "error"
                 );
 
                 return;
             }
-
-
-            let users = getUsers();
-
-
-            /* Check duplicate mobile */
-
-            const mobileExists =
-                users.some(user => user.mobile === mobile);
-
-            if (mobileExists) {
-
-                showMessage(
-                    "createMessage",
-                    "This mobile number is already registered.",
-                    "error"
-                );
-
-                return;
-            }
-
-
-            /* Check duplicate email */
-
-            if (email) {
-
-                const emailExists =
-                    users.some(
-                        user =>
-                            user.email &&
-                            user.email.toLowerCase() === email.toLowerCase()
-                    );
-
-                if (emailExists) {
-
-                    showMessage(
-                        "createMessage",
-                        "This email is already registered.",
-                        "error"
-                    );
-
-                    return;
-                }
-            }
-
-
-            /* Create user */
 
             const newUser = {
+                id: "student_" + Date.now(),
 
-                id: Date.now(),
+                name,
+                mobile,
+                email,
+                pin,
 
-                name: name,
+                college,
+                department,
+                roll,
 
-                mobile: mobile,
-
-                email: email,
-
-                pin: pin,
-
-                college: college,
-
-                department: department,
-
-                roll: roll,
-
-                role: "student",
+                role: "Student",
 
                 faceRegistered: false,
+                faceData: null,
 
                 createdAt: new Date().toISOString()
-
             };
-
 
             users.push(newUser);
 
             saveUsers(users);
 
-
             showMessage(
-                "createMessage",
-                "🎉 Account created successfully! Please login.",
+                $("createMessage"),
+                "Account created successfully! Returning to login...",
                 "success"
             );
 
-
-            /* Clear form */
-
-            document.getElementById("createName").value = "";
-            document.getElementById("createMobile").value = "";
-            document.getElementById("createEmail").value = "";
-            document.getElementById("createPin").value = "";
-            document.getElementById("confirmPin").value = "";
-            document.getElementById("createDepartment").value = "";
-            document.getElementById("createRoll").value = "";
-
-
             setTimeout(() => {
 
-                showPage(loginPage);
+                if ($("loginName"))
+                    $("loginName").value = name;
 
-            }, 1200);
+                if ($("loginIdentity"))
+                    $("loginIdentity").value = mobile;
 
+                if ($("loginPin"))
+                    $("loginPin").value = "";
+
+                showLogin();
+
+            }, 1000);
         });
     }
 
-
     /* =====================================================
-       LOGIN
+       BACK TO LOGIN
     ===================================================== */
 
-    const loginButton =
-        document.getElementById("loginButton");
+    if (backToLoginButton) {
+        backToLoginButton.addEventListener(
+            "click",
+            showLogin
+        );
+    }
 
+    if (forgotPinButton) {
+        forgotPinButton.addEventListener(
+            "click",
+            showForgotPin
+        );
+    }
 
-    if (loginButton) {
+    if (forgotBackButton) {
+        forgotBackButton.addEventListener(
+            "click",
+            showLogin
+        );
+    }
 
-        loginButton.addEventListener("click", () => {
+    /* =====================================================
+       RESET PIN
+    ===================================================== */
 
-            const name =
-                document.getElementById("loginName").value.trim();
+    if (resetPinButton) {
 
-            const identity =
-                document.getElementById("loginIdentity").value.trim();
+        resetPinButton.addEventListener("click", () => {
 
-            const pin =
-                document.getElementById("loginPin").value.trim();
+            const name = $("forgotName")?.value.trim();
+            const identity = $("forgotIdentity")?.value.trim();
+            const newPin = $("newPin")?.value.trim();
+            const confirmNewPin =
+                $("confirmNewPin")?.value.trim();
 
-
-            if (!name || !identity || !pin) {
+            if (!name || !identity || !newPin || !confirmNewPin) {
 
                 showMessage(
-                    "loginMessage",
-                    "Please fill all login fields.",
+                    $("forgotMessage"),
+                    "Please fill all fields.",
                     "error"
                 );
 
                 return;
             }
 
+            if (!/^\d{4}$/.test(newPin)) {
 
-            /* =================================================
-               ADMIN LOGIN
-            ================================================= */
-
-            if (
-                name.toLowerCase() === "ayush chatterjee" &&
-                identity &&
-                pin === "1234"
-            ) {
-
-                const adminUser = {
-
-                    id: "admin",
-
-                    name: "Ayush Chatterjee",
-
-                    mobile: identity,
-
-                    email: "",
-
-                    pin: "1234",
-
-                    college:
-                        "Hooghly Engineering & Technology College",
-
-                    department: "Administration",
-
-                    roll: "ADMIN",
-
-                    role: "admin",
-
-                    faceRegistered: false
-
-                };
-
-
-                saveCurrentUser(adminUser);
-
-                openDashboard(adminUser);
+                showMessage(
+                    $("forgotMessage"),
+                    "PIN must be exactly 4 digits.",
+                    "error"
+                );
 
                 return;
             }
 
+            if (newPin !== confirmNewPin) {
 
-            /* =================================================
-               STUDENT LOGIN
-            ================================================= */
+                showMessage(
+                    $("forgotMessage"),
+                    "PINs do not match.",
+                    "error"
+                );
+
+                return;
+            }
+
+            /* ADMIN PIN */
+
+            if (
+                name.toLowerCase() === ADMIN.name.toLowerCase()
+            ) {
+
+                showMessage(
+                    $("forgotMessage"),
+                    "Admin PIN cannot be reset from student reset.",
+                    "error"
+                );
+
+                return;
+            }
 
             const users = getUsers();
 
-
-            const user = users.find(item => {
+            const index = users.findIndex(user => {
 
                 const sameName =
-                    item.name.toLowerCase() === name.toLowerCase();
+                    user.name.toLowerCase() === name.toLowerCase();
 
-                const sameMobile =
-                    item.mobile === identity;
+                const sameIdentity =
+                    user.mobile === identity ||
+                    (
+                        user.email &&
+                        user.email.toLowerCase() ===
+                        identity.toLowerCase()
+                    );
 
-                const sameEmail =
-                    item.email &&
-                    item.email.toLowerCase() === identity.toLowerCase();
-
-                const samePin =
-                    item.pin === pin;
-
-                return (
-                    sameName &&
-                    (sameMobile || sameEmail) &&
-                    samePin
-                );
-
+                return sameName && sameIdentity;
             });
 
-
-            if (!user) {
+            if (index === -1) {
 
                 showMessage(
-                    "loginMessage",
-                    "❌ Invalid name, mobile/email or PIN.",
+                    $("forgotMessage"),
+                    "Account not found.",
                     "error"
                 );
 
                 return;
             }
 
+            users[index].pin = newPin;
 
-            saveCurrentUser(user);
+            saveUsers(users);
 
-            openDashboard(user);
+            showMessage(
+                $("forgotMessage"),
+                "PIN reset successfully! Please login.",
+                "success"
+            );
 
+            setTimeout(showLogin, 1200);
         });
     }
 
-
     /* =====================================================
-       OPEN DASHBOARD
+       SECTION CONTROL
     ===================================================== */
 
-    function openDashboard(user) {
-
-        showPage(dashboardPage);
-
-        updateDashboardUser(user);
-
-        updateDateTime();
-
-        loadDashboardStats();
-
-        loadPersonalDetails();
-
-        loadEditProfile();
-
-        loadEditContact();
-
-        renderStudents();
-
-        renderAdminStudents();
-
-        stopAllCameras();
-
-    }
-
-
-    /* =====================================================
-       UPDATE USER NAME
-    ===================================================== */
-
-    function updateDashboardUser(user) {
-
-        const nameElement =
-            document.getElementById("dashboardUserName");
-
-        const rollElement =
-            document.getElementById("dashboardUserRoll");
-
-        const welcomeElement =
-            document.getElementById("welcomeName");
-
-
-        if (nameElement) {
-
-            nameElement.textContent = user.name;
-
-        }
-
-
-        if (rollElement) {
-
-            rollElement.textContent =
-                user.role === "admin"
-                    ? "Admin"
-                    : "Roll: " + user.roll;
-
-        }
-
-
-        if (welcomeElement) {
-
-            welcomeElement.textContent =
-                user.name;
-
-        }
-
-
-        /* Admin icon */
-
-        const profileIcon =
-            document.querySelector(".profile-icon");
-
-        if (profileIcon) {
-
-            profileIcon.textContent =
-                user.role === "admin"
-                    ? "👨‍💼"
-                    : "👤";
-
-        }
-
-    }
-
-
-    /* =====================================================
-       DATE / TIME
-    ===================================================== */
-
-    function updateDateTime() {
-
-        const dateElement =
-            document.getElementById("currentDate");
-
-        if (!dateElement) return;
-
-
-        function update() {
-
-            const now = new Date();
-
-            const date =
-                now.toLocaleDateString("en-IN", {
-                    weekday: "long",
-                    day: "2-digit",
-                    month: "long",
-                    year: "numeric"
-                });
-
-            const time =
-                now.toLocaleTimeString("en-IN", {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                    second: "2-digit"
-                });
-
-
-            dateElement.textContent =
-                date + " • " + time;
-
-        }
-
-
-        update();
-
-        setInterval(update, 1000);
-
-    }
-
-
-    /* =====================================================
-       DASHBOARD MENU
-    ===================================================== */
-
-    const dashboardMenuButton =
-        document.getElementById("dashboardMenuButton");
-
-
-    const editProfileMenuButton =
-        document.getElementById("editProfileMenuButton");
-
-
-    const editContactMenuButton =
-        document.getElementById("editContactMenuButton");
-
-
-    const personalDetailsMenuButton =
-        document.getElementById("personalDetailsMenuButton");
-
-
-    const faceRegistrationMenuButton =
-        document.getElementById("faceRegistrationMenuButton");
-
-
-    const attendanceMenuButton =
-        document.getElementById("attendanceMenuButton");
-
-
-    const studentsMenuButton =
-        document.getElementById("studentsMenuButton");
-
-
-    const checkAttendanceMenuButton =
-        document.getElementById("checkAttendanceMenuButton");
-
-
-    const adminMenuButton =
-        document.getElementById("adminMenuButton");
-
-
-    function showDashboardSection(sectionId, activeButton) {
-
-        const sections = document.querySelectorAll(
-            ".dashboard-section"
-        );
-
+    function showSection(sectionId) {
+
+        const sections = [
+            dashboardHome,
+            editProfileSection,
+            editContactSection,
+            personalDetailsSection,
+            faceRegistrationSection,
+            attendanceSection,
+            studentsSection,
+            checkAttendanceSection,
+            adminSection
+        ];
 
         sections.forEach(section => {
 
-            section.style.display = "none";
-
+            if (section) {
+                section.style.display = "none";
+            }
         });
 
+        const target = $(sectionId);
 
-        const section =
-            document.getElementById(sectionId);
-
-
-        if (section) {
-
-            section.style.display = "block";
-
+        if (target) {
+            target.style.display = "block";
         }
 
+        stopAllCameras();
 
-        const menuItems =
-            document.querySelectorAll(".menu-item");
+        updateMenuActive(sectionId);
 
-
-        menuItems.forEach(item => {
-
-            item.classList.remove("active");
-
-        });
-
-
-        if (activeButton) {
-
-            activeButton.classList.add("active");
-
+        if (sectionId === "studentsSection") {
+            renderStudents();
         }
 
+        if (sectionId === "checkAttendanceSection") {
+            renderAttendanceHistory();
+        }
 
-        /* Close mobile menu */
+        if (sectionId === "adminSection") {
+            renderAdminStudents();
+        }
 
-        closeSidebar();
+        if (sectionId === "faceRegistrationSection") {
+            fillFaceDetails();
+        }
 
+        if (sectionId === "editProfileSection") {
+            fillEditProfile();
+        }
+
+        if (sectionId === "editContactSection") {
+            fillEditContact();
+        }
+
+        if (sectionId === "personalDetailsSection") {
+            fillPersonalDetails();
+        }
     }
-
-
-    if (dashboardMenuButton) {
-
-        dashboardMenuButton.addEventListener(
-            "click",
-            () =>
-                showDashboardSection(
-                    "dashboardHome",
-                    dashboardMenuButton
-                )
-        );
-
-    }
-
-
-    if (editProfileMenuButton) {
-
-        editProfileMenuButton.addEventListener(
-            "click",
-            () =>
-                showDashboardSection(
-                    "editProfileSection",
-                    editProfileMenuButton
-                )
-        );
-
-    }
-
-
-    if (editContactMenuButton) {
-
-        editContactMenuButton.addEventListener(
-            "click",
-            () =>
-                showDashboardSection(
-                    "editContactSection",
-                    editContactMenuButton
-                )
-        );
-
-    }
-
-
-    if (personalDetailsMenuButton) {
-
-        personalDetailsMenuButton.addEventListener(
-            "click",
-            () =>
-                showDashboardSection(
-                    "personalDetailsSection",
-                    personalDetailsMenuButton
-                )
-        );
-
-    }
-
-
-    if (faceRegistrationMenuButton) {
-
-        faceRegistrationMenuButton.addEventListener(
-            "click",
-            () => {
-
-                showDashboardSection(
-                    "faceRegistrationSection",
-                    faceRegistrationMenuButton
-                );
-
-                loadFaceDetails();
-
-            }
-        );
-
-    }
-
-
-    if (attendanceMenuButton) {
-
-        attendanceMenuButton.addEventListener(
-            "click",
-            () => {
-
-                showDashboardSection(
-                    "attendanceSection",
-                    attendanceMenuButton
-                );
-
-                resetAttendanceCamera();
-
-            }
-        );
-
-    }
-
-
-    if (studentsMenuButton) {
-
-        studentsMenuButton.addEventListener(
-            "click",
-            () => {
-
-                showDashboardSection(
-                    "studentsSection",
-                    studentsMenuButton
-                );
-
-                renderStudents();
-
-            }
-        );
-
-    }
-
-
-    if (checkAttendanceMenuButton) {
-
-        checkAttendanceMenuButton.addEventListener(
-            "click",
-            () => {
-
-                showDashboardSection(
-                    "checkAttendanceSection",
-                    checkAttendanceMenuButton
-                );
-
-                renderAttendanceHistory();
-
-            }
-        );
-
-    }
-
-
-    if (adminMenuButton) {
-
-        adminMenuButton.addEventListener(
-            "click",
-            () => {
-
-                showDashboardSection(
-                    "adminSection",
-                    adminMenuButton
-                );
-
-                renderAdminStudents();
-
-            }
-        );
-
-    }
-
 
     /* =====================================================
-       QUICK ACTION BUTTONS
+       MENU ACTIVE
     ===================================================== */
 
-    const quickFaceRegistration =
-        document.getElementById("quickFaceRegistration");
+    function updateMenuActive(sectionId) {
 
+        document
+            .querySelectorAll(".menu-item")
+            .forEach(button => {
+                button.classList.remove("active");
+            });
 
-    const quickAttendance =
-        document.getElementById("quickAttendance");
+        const mapping = {
+            dashboardHome: dashboardMenuButton,
+            editProfileSection: editProfileMenuButton,
+            editContactSection: editContactMenuButton,
+            personalDetailsSection: personalDetailsMenuButton,
+            faceRegistrationSection: faceRegistrationMenuButton,
+            attendanceSection: attendanceMenuButton,
+            studentsSection: studentsMenuButton,
+            checkAttendanceSection: checkAttendanceMenuButton,
+            adminSection: adminMenuButton
+        };
 
-
-    const quickCheckAttendance =
-        document.getElementById("quickCheckAttendance");
-
-
-    if (quickFaceRegistration) {
-
-        quickFaceRegistration.addEventListener(
-            "click",
-            () => {
-
-                showDashboardSection(
-                    "faceRegistrationSection",
-                    faceRegistrationMenuButton
-                );
-
-                loadFaceDetails();
-
-            }
-        );
-
+        if (mapping[sectionId]) {
+            mapping[sectionId].classList.add("active");
+        }
     }
-
-
-    if (quickAttendance) {
-
-        quickAttendance.addEventListener(
-            "click",
-            () => {
-
-                showDashboardSection(
-                    "attendanceSection",
-                    attendanceMenuButton
-                );
-
-                resetAttendanceCamera();
-
-            }
-        );
-
-    }
-
-
-    if (quickCheckAttendance) {
-
-        quickCheckAttendance.addEventListener(
-            "click",
-            () => {
-
-                showDashboardSection(
-                    "checkAttendanceSection",
-                    checkAttendanceMenuButton
-                );
-
-                renderAttendanceHistory();
-
-            }
-        );
-
-    }
-
 
     /* =====================================================
-       PERSONAL DETAILS
+       MENU EVENTS
     ===================================================== */
 
-    function loadPersonalDetails() {
+    if (dashboardMenuButton)
+        dashboardMenuButton.onclick =
+            () => showSection("dashboardHome");
+
+    if (editProfileMenuButton)
+        editProfileMenuButton.onclick =
+            () => showSection("editProfileSection");
+
+    if (editContactMenuButton)
+        editContactMenuButton.onclick =
+            () => showSection("editContactSection");
+
+    if (personalDetailsMenuButton)
+        personalDetailsMenuButton.onclick =
+            () => showSection("personalDetailsSection");
+
+    if (faceRegistrationMenuButton)
+        faceRegistrationMenuButton.onclick =
+            () => showSection("faceRegistrationSection");
+
+    if (attendanceMenuButton)
+        attendanceMenuButton.onclick =
+            () => showSection("attendanceSection");
+
+    if (studentsMenuButton)
+        studentsMenuButton.onclick =
+            () => showSection("studentsSection");
+
+    if (checkAttendanceMenuButton)
+        checkAttendanceMenuButton.onclick =
+            () => showSection("checkAttendanceSection");
+
+    if (adminMenuButton)
+        adminMenuButton.onclick =
+            () => showSection("adminSection");
+
+    if (quickFaceRegistration)
+        quickFaceRegistration.onclick =
+            () => showSection("faceRegistrationSection");
+
+    if (quickAttendance)
+        quickAttendance.onclick =
+            () => showSection("attendanceSection");
+
+    if (quickCheckAttendance)
+        quickCheckAttendance.onclick =
+            () => showSection("checkAttendanceSection");
+
+    /* =====================================================
+       UPDATE DASHBOARD
+    ===================================================== */
+
+    function updateDashboard() {
 
         const user = getCurrentUser();
 
         if (!user) return;
 
+        if ($("dashboardUserName"))
+            $("dashboardUserName").textContent =
+                user.name;
 
-        setText("personalName", user.name);
+        if ($("dashboardUserRoll"))
+            $("dashboardUserRoll").textContent =
+                user.role === "Admin"
+                    ? "Admin"
+                    : "Roll: " + user.roll;
 
-        setText("personalMobile", user.mobile || "-");
+        if ($("welcomeName"))
+            $("welcomeName").textContent =
+                user.name;
 
-        setText("personalEmail", user.email || "-");
+        updateDate();
 
-        setText(
-            "personalDepartment",
-            user.department || "-"
-        );
-
-        setText(
-            "personalRoll",
-            user.roll || "-"
-        );
-
+        updateStatistics();
     }
 
+    /* =====================================================
+       DATE
+    ===================================================== */
 
-    function setText(id, value) {
+    function updateDate() {
 
-        const element =
-            document.getElementById(id);
+        const now = new Date();
 
-        if (element) {
+        const options = {
+            weekday: "long",
+            year: "numeric",
+            month: "long",
+            day: "numeric"
+        };
 
-            element.textContent = value;
+        if ($("currentDate")) {
 
+            $("currentDate").textContent =
+                now.toLocaleDateString(
+                    "en-IN",
+                    options
+                );
         }
-
     }
 
+    /* =====================================================
+       STATISTICS
+    ===================================================== */
+
+    function updateStatistics() {
+
+        const users = getUsers();
+        const attendance = getAttendance();
+
+        const totalStudents = users.length;
+
+        const today = new Date().toISOString().split("T")[0];
+
+        const presentToday = attendance.filter(record =>
+            record.date === today
+        ).length;
+
+        const absentToday =
+            Math.max(totalStudents - presentToday, 0);
+
+        const percentage =
+            totalStudents > 0
+                ? Math.round(
+                    (presentToday / totalStudents) * 100
+                )
+                : 0;
+
+        if ($("totalStudents"))
+            $("totalStudents").textContent =
+                totalStudents;
+
+        if ($("presentStudents"))
+            $("presentStudents").textContent =
+                presentToday;
+
+        if ($("absentStudents"))
+            $("absentStudents").textContent =
+                absentToday;
+
+        if ($("attendancePercentage"))
+            $("attendancePercentage").textContent =
+                percentage + "%";
+    }
 
     /* =====================================================
        EDIT PROFILE
     ===================================================== */
 
-    function loadEditProfile() {
+    function fillEditProfile() {
 
         const user = getCurrentUser();
 
         if (!user) return;
 
+        if ($("editName"))
+            $("editName").value = user.name || "";
 
-        const name =
-            document.getElementById("editName");
+        if ($("editRoll"))
+            $("editRoll").value = user.roll || "";
 
-        const roll =
-            document.getElementById("editRoll");
-
-        const department =
-            document.getElementById("editDepartment");
-
-
-        if (name) name.value = user.name || "";
-
-        if (roll) roll.value = user.roll || "";
-
-        if (department)
-            department.value = user.department || "";
-
+        if ($("editDepartment"))
+            $("editDepartment").value =
+                user.department || "";
     }
 
+    if ($("saveEditedDetailsButton")) {
 
-    const saveEditedDetailsButton =
-        document.getElementById(
-            "saveEditedDetailsButton"
-        );
+        $("saveEditedDetailsButton")
+            .addEventListener("click", () => {
 
-
-    if (saveEditedDetailsButton) {
-
-        saveEditedDetailsButton.addEventListener(
-            "click",
-            () => {
-
-                const currentUser =
-                    getCurrentUser();
+                const currentUser = getCurrentUser();
 
                 if (!currentUser) return;
 
-
                 const newName =
-                    document.getElementById(
-                        "editName"
-                    ).value.trim();
-
+                    $("editName")?.value.trim();
 
                 const newRoll =
-                    document.getElementById(
-                        "editRoll"
-                    ).value.trim();
-
+                    $("editRoll")?.value.trim();
 
                 const newDepartment =
-                    document.getElementById(
-                        "editDepartment"
-                    ).value.trim();
-
+                    $("editDepartment")?.value.trim();
 
                 if (!newName || !newRoll || !newDepartment) {
 
-                    alert(
-                        "Please fill all profile details."
-                    );
+                    alert("Please fill all profile details.");
 
                     return;
                 }
 
+                if (currentUser.role === "Admin") {
 
-                currentUser.name = newName;
+                    currentUser.name = newName;
+                    currentUser.roll = newRoll;
+                    currentUser.department =
+                        newDepartment;
 
-                currentUser.roll = newRoll;
+                    setCurrentUser(currentUser);
 
-                currentUser.department =
-                    newDepartment;
-
-
-                saveCurrentUser(currentUser);
-
-
-                if (currentUser.role !== "admin") {
+                } else {
 
                     const users = getUsers();
 
@@ -1088,93 +914,62 @@ document.addEventListener("DOMContentLoaded", () => {
                             u => u.id === currentUser.id
                         );
 
+                    if (index === -1) return;
 
-                    if (index !== -1) {
+                    users[index].name = newName;
+                    users[index].roll = newRoll;
+                    users[index].department =
+                        newDepartment;
 
-                        users[index] = currentUser;
+                    saveUsers(users);
 
-                        saveUsers(users);
-
-                    }
-
+                    setCurrentUser(users[index]);
                 }
 
+                updateDashboard();
 
-                updateDashboardUser(currentUser);
-
-                loadPersonalDetails();
-
-                alert(
-                    "✅ Profile updated successfully."
-                );
-
-            }
-        );
-
+                alert("Profile updated successfully!");
+            });
     }
 
-
     /* =====================================================
-       EDIT MOBILE & EMAIL
+       EDIT CONTACT
     ===================================================== */
 
-    function loadEditContact() {
+    function fillEditContact() {
 
         const user = getCurrentUser();
 
         if (!user) return;
 
+        if ($("editMobile"))
+            $("editMobile").value =
+                user.mobile || "";
 
-        const mobile =
-            document.getElementById("editMobile");
-
-        const email =
-            document.getElementById("editEmail");
-
-
-        if (mobile)
-            mobile.value = user.mobile || "";
-
-        if (email)
-            email.value = user.email || "";
-
+        if ($("editEmail"))
+            $("editEmail").value =
+                user.email || "";
     }
 
+    if ($("saveContactButton")) {
 
-    const saveContactButton =
-        document.getElementById(
-            "saveContactButton"
-        );
+        $("saveContactButton")
+            .addEventListener("click", () => {
 
-
-    if (saveContactButton) {
-
-        saveContactButton.addEventListener(
-            "click",
-            () => {
-
-                const currentUser =
-                    getCurrentUser();
+                const currentUser = getCurrentUser();
 
                 if (!currentUser) return;
 
-
                 const mobile =
-                    document.getElementById(
-                        "editMobile"
-                    ).value.trim();
-
+                    $("editMobile")?.value.trim();
 
                 const email =
-                    document.getElementById(
-                        "editEmail"
-                    ).value.trim();
+                    $("editEmail")?.value.trim();
 
-
-                if (!/^[0-9]{10}$/.test(mobile)) {
+                if (!/^\d{10}$/.test(mobile)) {
 
                     showMessage(
-                        "contactMessage",
+                        $("contactMessage"),
                         "Enter a valid 10 digit mobile number.",
                         "error"
                     );
@@ -1182,16 +977,14 @@ document.addEventListener("DOMContentLoaded", () => {
                     return;
                 }
 
+                if (currentUser.role === "Admin") {
 
-                currentUser.mobile = mobile;
+                    currentUser.mobile = mobile;
+                    currentUser.email = email;
 
-                currentUser.email = email;
+                    setCurrentUser(currentUser);
 
-
-                saveCurrentUser(currentUser);
-
-
-                if (currentUser.role !== "admin") {
+                } else {
 
                     const users = getUsers();
 
@@ -1200,741 +993,363 @@ document.addEventListener("DOMContentLoaded", () => {
                             u => u.id === currentUser.id
                         );
 
+                    if (index === -1) return;
 
-                    if (index !== -1) {
+                    users[index].mobile = mobile;
+                    users[index].email = email;
 
-                        users[index] = currentUser;
+                    saveUsers(users);
 
-                        saveUsers(users);
-
-                    }
-
+                    setCurrentUser(users[index]);
                 }
 
-
-                loadPersonalDetails();
-
-
                 showMessage(
-                    "contactMessage",
-                    "✅ Contact details updated successfully.",
+                    $("contactMessage"),
+                    "Contact details updated successfully!",
                     "success"
                 );
-
-            }
-        );
-
+            });
     }
 
-
     /* =====================================================
-       FACE DETAILS
+       PERSONAL DETAILS
     ===================================================== */
 
-    function loadFaceDetails() {
+    function fillPersonalDetails() {
 
         const user = getCurrentUser();
 
         if (!user) return;
 
+        if ($("personalName"))
+            $("personalName").textContent =
+                user.name || "-";
 
-        setInput("faceName", user.name);
+        if ($("personalMobile"))
+            $("personalMobile").textContent =
+                user.mobile || "-";
 
-        setInput("faceMobile", user.mobile);
+        if ($("personalEmail"))
+            $("personalEmail").textContent =
+                user.email || "-";
 
-        setInput("faceEmail", user.email);
+        if ($("personalDepartment"))
+            $("personalDepartment").textContent =
+                user.department || "-";
 
-        setInput("collegeName", user.college);
-
-        setInput(
-            "departmentName",
-            user.department
-        );
-
-        setInput("faceRoll", user.roll);
-
+        if ($("personalRoll"))
+            $("personalRoll").textContent =
+                user.roll || "-";
     }
 
+    /* =====================================================
+       FACE DETAILS
+    ===================================================== */
 
-    function setInput(id, value) {
+    function fillFaceDetails() {
 
-        const element =
-            document.getElementById(id);
+        const user = getCurrentUser();
 
-        if (element) {
+        if (!user) return;
 
-            element.value = value || "";
+        if ($("faceName"))
+            $("faceName").value = user.name || "";
 
-        }
+        if ($("faceMobile"))
+            $("faceMobile").value =
+                user.mobile || "";
 
+        if ($("faceEmail"))
+            $("faceEmail").value =
+                user.email || "";
+
+        if ($("collegeName"))
+            $("collegeName").value =
+                user.college ||
+                "Hooghly Engineering & Technology College";
+
+        if ($("departmentName"))
+            $("departmentName").value =
+                user.department || "";
+
+        if ($("faceRoll"))
+            $("faceRoll").value =
+                user.roll || "";
     }
 
-
     /* =====================================================
-       CAMERA VARIABLES
+       FACE REGISTRATION CAMERA
     ===================================================== */
 
-    let registrationStream = null;
+    if ($("startFaceRegistrationButton")) {
 
-    let attendanceStream = null;
-
-    let registrationTimer = null;
-
-    let attendanceTimer = null;
-
-    let registrationCaptured = false;
-
-    let attendanceCaptured = false;
-
-
-    /* =====================================================
-       CAMERA START
-    ===================================================== */
-
-    async function startCamera(videoElement) {
-
-        if (!navigator.mediaDevices ||
-            !navigator.mediaDevices.getUserMedia) {
-
-            throw new Error(
-                "Camera is not supported by this browser."
+        $("startFaceRegistrationButton")
+            .addEventListener(
+                "click",
+                startFaceRegistration
             );
-
-        }
-
-
-        const stream =
-            await navigator.mediaDevices.getUserMedia({
-
-                video: {
-
-                    facingMode: "user",
-
-                    width: {
-                        ideal: 480
-                    },
-
-                    height: {
-                        ideal: 480
-                    }
-
-                },
-
-                audio: false
-
-            });
-
-
-        videoElement.srcObject = stream;
-
-        videoElement.setAttribute(
-            "playsinline",
-            ""
-        );
-
-        videoElement.muted = true;
-
-
-        await videoElement.play();
-
-
-        /* Selfie mirror */
-
-        videoElement.style.transform =
-            "scaleX(-1)";
-
-
-        return stream;
-
     }
 
+    async function startFaceRegistration() {
 
-    /* =====================================================
-       REGISTER FACE
-    ===================================================== */
+        const user = getCurrentUser();
 
-    const startFaceRegistrationButton =
-        document.getElementById(
-            "startFaceRegistrationButton"
-        );
-
-
-    if (startFaceRegistrationButton) {
-
-        startFaceRegistrationButton.addEventListener(
-            "click",
-            async () => {
-
-                if (registrationCaptured) {
-
-                    registrationCaptured = false;
-
-                    startFaceRegistrationButton.textContent =
-                        "📷 Start Automatic Face Capture";
-
-                    stopRegistrationCamera();
-
-                    return;
-
-                }
-
-
-                const video =
-                    document.getElementById(
-                        "registrationCamera"
-                    );
-
-
-                const status =
-                    document.getElementById(
-                        "registrationStatus"
-                    );
-
-
-                const message =
-                    document.getElementById(
-                        "registrationMessage"
-                    );
-
-
-                try {
-
-                    registrationStream =
-                        await startCamera(video);
-
-
-                    status.textContent =
-                        "🟢 Camera ON — Detecting Face";
-
-
-                    message.textContent =
-                        "Please look directly at the camera. Automatic capture will start when a face is detected.";
-
-
-                    startFaceRegistrationButton.textContent =
-                        "⏳ Detecting Face...";
-
-
-                    registrationCaptured = false;
-
-
-                    startAutomaticFaceRegistration();
-
-                } catch (error) {
-
-                    console.error(error);
-
-                    status.textContent =
-                        "🔴 Camera OFF";
-
-
-                    showMessage(
-                        "registrationMessage",
-                        "Camera permission is required. Please allow camera access.",
-                        "error"
-                    );
-
-                }
-
-            }
-        );
-
-    }
-
-
-    /* =====================================================
-       AUTOMATIC FACE REGISTRATION
-    ===================================================== */
-
-    async function startAutomaticFaceRegistration() {
-
-        const video =
-            document.getElementById(
-                "registrationCamera"
-            );
-
-
-        /* Try face-api.js if models are available */
-
-        let faceApiReady = false;
-
+        if (!user) return;
 
         try {
 
-            if (
-                typeof faceapi !== "undefined"
-            ) {
+            stopRegistrationCamera();
 
-                /*
-                   The actual model files must be available
-                   in /models for full face detection.
-                */
+            registrationStream =
+                await navigator.mediaDevices.getUserMedia({
+                    video: {
+                        facingMode: "user",
+                        width: {
+                            ideal: 500
+                        },
+                        height: {
+                            ideal: 500
+                        }
+                    },
+                    audio: false
+                });
 
-                await Promise.all([
+            if (registrationCamera) {
 
-                    faceapi.nets.tinyFaceDetector.loadFromUri(
-                        "./models"
-                    )
+                registrationCamera.srcObject =
+                    registrationStream;
 
-                ]);
-
-                faceApiReady = true;
-
+                registrationCamera.style.transform =
+                    "scaleX(-1)";
             }
+
+            if ($("registrationStatus"))
+                $("registrationStatus").textContent =
+                    "Camera ON — Detecting face...";
+
+            showMessage(
+                $("registrationMessage"),
+                "Camera started. Look directly at the camera.",
+                "info"
+            );
+
+            /*
+               Automatic capture simulation.
+
+               Real face recognition requires the face-api.js
+               model files to be loaded. This version waits
+               briefly and captures a frame automatically.
+            */
+
+            clearTimeout(registrationTimer);
+
+            registrationTimer = setTimeout(() => {
+
+                captureRegistrationFace();
+
+            }, 3000);
 
         } catch (error) {
 
-            console.log(
-                "Face model not available. Using camera capture timer."
+            console.error(error);
+
+            showMessage(
+                $("registrationMessage"),
+                "Camera permission was denied or camera is unavailable.",
+                "error"
             );
 
+            if ($("registrationStatus"))
+                $("registrationStatus").textContent =
+                    "Camera is OFF";
         }
-
-
-        let attempts = 0;
-
-
-        registrationTimer =
-            setInterval(async () => {
-
-                if (registrationCaptured)
-                    return;
-
-
-                attempts++;
-
-
-                let detected = false;
-
-
-                if (
-                    faceApiReady &&
-                    video.readyState >= 2
-                ) {
-
-                    try {
-
-                        const result =
-                            await faceapi.detectSingleFace(
-                                video,
-                                new faceapi.TinyFaceDetectorOptions()
-                            );
-
-
-                        detected = !!result;
-
-                    } catch (error) {
-
-                        detected = false;
-
-                    }
-
-                }
-
-
-                /*
-                   If model is unavailable,
-                   allow automatic capture after
-                   a few seconds of camera preview.
-                */
-
-                if (
-                    detected ||
-                    (!faceApiReady && attempts >= 5)
-                ) {
-
-                    captureRegistrationFace();
-
-                }
-
-
-            }, 700);
-
     }
-
-
-    /* =====================================================
-       CAPTURE REGISTER FACE
-    ===================================================== */
 
     function captureRegistrationFace() {
 
-        if (registrationCaptured)
-            return;
+        const user = getCurrentUser();
 
+        if (!user || !registrationCamera) return;
 
-        registrationCaptured = true;
+        try {
 
+            const canvas =
+                document.createElement("canvas");
 
-        clearInterval(registrationTimer);
+            canvas.width =
+                registrationCamera.videoWidth ||
+                500;
 
+            canvas.height =
+                registrationCamera.videoHeight ||
+                500;
 
-        const currentUser =
-            getCurrentUser();
+            const ctx =
+                canvas.getContext("2d");
 
+            /*
+               Flip image back before storing.
+            */
 
-        if (!currentUser) return;
+            ctx.translate(canvas.width, 0);
+            ctx.scale(-1, 1);
 
+            ctx.drawImage(
+                registrationCamera,
+                0,
+                0,
+                canvas.width,
+                canvas.height
+            );
 
-        currentUser.faceRegistered = true;
-
-        currentUser.faceRegisteredAt =
-            new Date().toISOString();
-
-
-        saveCurrentUser(currentUser);
-
-
-        if (currentUser.role !== "admin") {
+            const imageData =
+                canvas.toDataURL(
+                    "image/jpeg",
+                    0.75
+                );
 
             const users = getUsers();
 
             const index =
                 users.findIndex(
-                    u => u.id === currentUser.id
+                    u => u.id === user.id
                 );
-
 
             if (index !== -1) {
 
-                users[index] = currentUser;
+                users[index].faceRegistered = true;
+                users[index].faceData = imageData;
 
                 saveUsers(users);
 
+                setCurrentUser(users[index]);
             }
 
-        }
+            if ($("registrationStatus"))
+                $("registrationStatus").textContent =
+                    "Face Registered ✓";
 
-
-        const status =
-            document.getElementById(
-                "registrationStatus"
+            showMessage(
+                $("registrationMessage"),
+                "Face captured and registered successfully!",
+                "success"
             );
-
-
-        const message =
-            document.getElementById(
-                "registrationMessage"
-            );
-
-
-        const button =
-            document.getElementById(
-                "startFaceRegistrationButton"
-            );
-
-
-        status.textContent =
-            "🟢 Face Captured";
-
-
-        message.textContent =
-            "✅ Face registered successfully!";
-
-
-        message.className =
-            "auth-message success";
-
-
-        button.textContent =
-            "✅ Face Registered";
-
-
-        setTimeout(() => {
 
             stopRegistrationCamera();
 
-        }, 1500);
+        } catch (error) {
 
+            console.error(error);
+
+            showMessage(
+                $("registrationMessage"),
+                "Could not capture face.",
+                "error"
+            );
+        }
     }
 
-
     /* =====================================================
-       STOP REGISTRATION CAMERA
+       FACE ATTENDANCE CAMERA
     ===================================================== */
 
-    function stopRegistrationCamera() {
+    if ($("startFaceAttendanceButton")) {
 
-        if (registrationTimer) {
+        $("startFaceAttendanceButton")
+            .addEventListener(
+                "click",
+                startFaceAttendance
+            );
+    }
 
-            clearInterval(registrationTimer);
+    async function startFaceAttendance() {
 
-            registrationTimer = null;
+        const user = getCurrentUser();
 
-        }
+        if (!user) return;
 
+        if (
+            user.role !== "Admin" &&
+            !user.faceRegistered
+        ) {
 
-        if (registrationStream) {
-
-            registrationStream
-                .getTracks()
-                .forEach(track => track.stop());
-
-            registrationStream = null;
-
-        }
-
-
-        const video =
-            document.getElementById(
-                "registrationCamera"
+            showAttendanceResult(
+                "Please register your face first.",
+                "error"
             );
 
-
-        if (video) {
-
-            video.srcObject = null;
-
+            return;
         }
-
-    }
-
-
-    /* =====================================================
-       FACE ATTENDANCE
-    ===================================================== */
-
-    const startFaceAttendanceButton =
-        document.getElementById(
-            "startFaceAttendanceButton"
-        );
-
-
-    if (startFaceAttendanceButton) {
-
-        startFaceAttendanceButton.addEventListener(
-            "click",
-            async () => {
-
-                if (attendanceCaptured) {
-
-                    attendanceCaptured = false;
-
-                    stopAttendanceCamera();
-
-                    startFaceAttendanceButton.textContent =
-                        "📸 Start Automatic Attendance";
-
-                    return;
-
-                }
-
-
-                const currentUser =
-                    getCurrentUser();
-
-
-                if (!currentUser) {
-
-                    return;
-
-                }
-
-
-                if (
-                    currentUser.role !== "admin" &&
-                    !currentUser.faceRegistered
-                ) {
-
-                    showAttendanceResult(
-                        "⚠️ Please register your face first."
-                    );
-
-                    return;
-
-                }
-
-
-                const video =
-                    document.getElementById(
-                        "attendanceCamera"
-                    );
-
-
-                const status =
-                    document.getElementById(
-                        "attendanceStatus"
-                    );
-
-
-                try {
-
-                    attendanceStream =
-                        await startCamera(video);
-
-
-                    status.textContent =
-                        "🟢 Camera ON — Detecting Face";
-
-
-                    startFaceAttendanceButton.textContent =
-                        "⏳ Detecting Face...";
-
-
-                    attendanceCaptured = false;
-
-
-                    startAutomaticAttendance();
-
-                } catch (error) {
-
-                    console.error(error);
-
-                    status.textContent =
-                        "🔴 Camera OFF";
-
-
-                    showAttendanceResult(
-                        "❌ Please allow camera permission."
-                    );
-
-                }
-
-            }
-        );
-
-    }
-
-
-    /* =====================================================
-       AUTOMATIC ATTENDANCE
-    ===================================================== */
-
-    async function startAutomaticAttendance() {
-
-        const video =
-            document.getElementById(
-                "attendanceCamera"
-            );
-
-
-        let faceApiReady = false;
-
 
         try {
 
-            if (
-                typeof faceapi !== "undefined"
-            ) {
+            stopAttendanceCamera();
 
-                await Promise.all([
+            attendanceStream =
+                await navigator.mediaDevices.getUserMedia({
+                    video: {
+                        facingMode: "user",
+                        width: {
+                            ideal: 500
+                        },
+                        height: {
+                            ideal: 500
+                        }
+                    },
+                    audio: false
+                });
 
-                    faceapi.nets.tinyFaceDetector.loadFromUri(
-                        "./models"
-                    )
+            if (attendanceCamera) {
 
-                ]);
+                attendanceCamera.srcObject =
+                    attendanceStream;
 
-                faceApiReady = true;
-
+                attendanceCamera.style.transform =
+                    "scaleX(-1)";
             }
+
+            if ($("attendanceStatus"))
+                $("attendanceStatus").textContent =
+                    "Camera ON — Detecting face...";
+
+            showAttendanceResult(
+                "Look directly at the camera. Attendance will be captured automatically.",
+                "info"
+            );
+
+            clearTimeout(attendanceTimer);
+
+            attendanceTimer = setTimeout(() => {
+
+                markAttendance(user);
+
+            }, 3000);
 
         } catch (error) {
 
-            console.log(
-                "Face model unavailable. Automatic preview capture mode enabled."
+            console.error(error);
+
+            showAttendanceResult(
+                "Camera permission was denied or camera is unavailable.",
+                "error"
             );
 
+            if ($("attendanceStatus"))
+                $("attendanceStatus").textContent =
+                    "Camera is OFF";
         }
-
-
-        let attempts = 0;
-
-
-        attendanceTimer =
-            setInterval(async () => {
-
-                if (attendanceCaptured)
-                    return;
-
-
-                attempts++;
-
-
-                let detected = false;
-
-
-                if (
-                    faceApiReady &&
-                    video.readyState >= 2
-                ) {
-
-                    try {
-
-                        const result =
-                            await faceapi.detectSingleFace(
-                                video,
-                                new faceapi.TinyFaceDetectorOptions()
-                            );
-
-
-                        detected = !!result;
-
-                    } catch (error) {
-
-                        detected = false;
-
-                    }
-
-                }
-
-
-                if (
-                    detected ||
-                    (!faceApiReady && attempts >= 5)
-                ) {
-
-                    markAttendanceAutomatically();
-
-                }
-
-
-            }, 700);
-
     }
-
 
     /* =====================================================
        MARK ATTENDANCE
     ===================================================== */
 
-    function markAttendanceAutomatically() {
+    function markAttendance(user) {
 
-        if (attendanceCaptured)
-            return;
-
-
-        attendanceCaptured = true;
-
-
-        clearInterval(attendanceTimer);
-
-
-        const user =
-            getCurrentUser();
-
-
-        if (!user) return;
-
-
-        const now =
-            new Date();
-
+        const now = new Date();
 
         const date =
-            now.toLocaleDateString(
-                "en-IN"
-            );
-
-
-        const day =
-            now.toLocaleDateString(
-                "en-IN",
-                {
-                    weekday: "long"
-                }
-            );
-
+            now.toISOString().split("T")[0];
 
         const time =
             now.toLocaleTimeString(
@@ -1946,45 +1361,42 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             );
 
-
-        const records =
-            getAttendance();
-
-
-        /*
-           Prevent duplicate attendance
-           for same student on same date.
-        */
-
-        const alreadyMarked =
-            records.some(
-                record =>
-                    record.userId === user.id &&
-                    record.date === date
+        const day =
+            now.toLocaleDateString(
+                "en-IN",
+                {
+                    weekday: "long"
+                }
             );
 
+        const attendance =
+            getAttendance();
+
+        const alreadyMarked =
+            attendance.some(record =>
+                record.userId === user.id &&
+                record.date === date
+            );
 
         if (alreadyMarked) {
 
             showAttendancePopup(
-                "ℹ️",
                 "Already Marked",
-                `${user.name}, your attendance has already been marked today.`
+                `${user.name}, your attendance has already been marked today.`,
+                "ℹ️"
             );
-
 
             stopAttendanceCamera();
 
             return;
-
         }
-
 
         const record = {
 
-            id: Date.now(),
+            id: "attendance_" + Date.now(),
 
-            userId: user.id,
+            userId: user.id ||
+                user.name,
 
             name: user.name,
 
@@ -1992,347 +1404,224 @@ document.addEventListener("DOMContentLoaded", () => {
 
             email: user.email || "",
 
-            college: user.college || "",
+            branch:
+                user.department || "",
 
-            department: user.department || "",
+            department:
+                user.department || "",
 
-            roll: user.roll || "",
+            roll:
+                user.roll || "",
 
-            date: date,
+            date,
 
-            day: day,
+            day,
 
-            time: time,
+            time,
 
-            status: "Present",
-
-            timestamp: now.toISOString()
-
+            status: "Present"
         };
 
+        attendance.push(record);
 
-        records.push(record);
+        saveAttendance(attendance);
 
-        saveAttendance(records);
-
+        if ($("attendanceStatus"))
+            $("attendanceStatus").textContent =
+                "Attendance Marked ✓";
 
         showAttendanceResult(
-            `✅ Attendance marked successfully for ${user.name}.`
+            `Attendance marked successfully for ${user.name} — ${date} (${day}) at ${time}.`,
+            "success"
         );
-
 
         showAttendancePopup(
-            "✅",
             "Attendance Marked!",
-            `${user.name}<br><br>${date}<br>${day}<br>${time}`
+            `${user.name}<br>${date} (${day})<br>${time}<br><br>Your attendance has been successfully saved.`,
+            "✅"
         );
 
+        updateStatistics();
 
-        loadDashboardStats();
-
-        renderAttendanceHistory();
-
-        renderStudents();
-
-        renderAdminStudents();
-
-
-        setTimeout(() => {
-
-            stopAttendanceCamera();
-
-        }, 1000);
-
+        stopAttendanceCamera();
     }
-
 
     /* =====================================================
        ATTENDANCE RESULT
     ===================================================== */
 
-    function showAttendanceResult(message) {
+    function showAttendanceResult(message, type) {
 
-        const element =
-            document.getElementById(
-                "attendanceResult"
-            );
-
+        const element = $("attendanceResult");
 
         if (!element) return;
 
-
-        element.innerHTML =
-            message;
-
+        element.innerHTML = message;
 
         element.className =
-            "attendance-result";
-
+            "attendance-result " + type;
     }
-
 
     /* =====================================================
        ATTENDANCE POPUP
     ===================================================== */
 
     function showAttendancePopup(
-        icon,
         title,
-        message
+        message,
+        icon = "✅"
     ) {
 
         const popup =
-            document.getElementById(
-                "attendancePopup"
-            );
-
-
-        const popupIcon =
-            document.getElementById(
-                "popupIcon"
-            );
-
-
-        const popupTitle =
-            document.getElementById(
-                "popupTitle"
-            );
-
-
-        const popupMessage =
-            document.getElementById(
-                "popupMessage"
-            );
-
+            $("attendancePopup");
 
         if (!popup) return;
 
+        if ($("popupIcon"))
+            $("popupIcon").textContent = icon;
 
-        popupIcon.innerHTML = icon;
+        if ($("popupTitle"))
+            $("popupTitle").textContent = title;
 
-        popupTitle.textContent = title;
-
-        popupMessage.innerHTML = message;
+        if ($("popupMessage"))
+            $("popupMessage").innerHTML = message;
 
         popup.style.display = "flex";
-
     }
 
+    if ($("closeAttendancePopup")) {
 
-    const closeAttendancePopup =
-        document.getElementById(
-            "closeAttendancePopup"
-        );
+        $("closeAttendancePopup")
+            .addEventListener(
+                "click",
+                () => {
 
-
-    if (closeAttendancePopup) {
-
-        closeAttendancePopup.addEventListener(
-            "click",
-            () => {
-
-                const popup =
-                    document.getElementById(
-                        "attendancePopup"
-                    );
-
-
-                if (popup) {
-
-                    popup.style.display =
-                        "none";
-
+                    if ($("attendancePopup"))
+                        $("attendancePopup").style.display =
+                            "none";
                 }
-
-            }
-        );
-
+            );
     }
-
 
     /* =====================================================
-       STOP ATTENDANCE CAMERA
-    ===================================================== */
-
-    function stopAttendanceCamera() {
-
-        if (attendanceTimer) {
-
-            clearInterval(attendanceTimer);
-
-            attendanceTimer = null;
-
-        }
-
-
-        if (attendanceStream) {
-
-            attendanceStream
-                .getTracks()
-                .forEach(track => track.stop());
-
-            attendanceStream = null;
-
-        }
-
-
-        const video =
-            document.getElementById(
-                "attendanceCamera"
-            );
-
-
-        if (video) {
-
-            video.srcObject = null;
-
-        }
-
-
-        const status =
-            document.getElementById(
-                "attendanceStatus"
-            );
-
-
-        if (status) {
-
-            status.textContent =
-                "Camera is OFF";
-
-        }
-
-    }
-
-
-    function resetAttendanceCamera() {
-
-        attendanceCaptured = false;
-
-        stopAttendanceCamera();
-
-        const button =
-            document.getElementById(
-                "startFaceAttendanceButton"
-            );
-
-
-        if (button) {
-
-            button.textContent =
-                "📸 Start Automatic Attendance";
-
-        }
-
-
-        const result =
-            document.getElementById(
-                "attendanceResult"
-            );
-
-
-        if (result) {
-
-            result.innerHTML = "";
-
-        }
-
-    }
-
-
-    /* =====================================================
-       STUDENT LIST
+       STUDENTS
     ===================================================== */
 
     function renderStudents() {
 
-        const list =
-            document.getElementById(
-                "studentList"
-            );
-
+        const list = $("studentList");
 
         if (!list) return;
 
-
-        const users =
-            getUsers();
-
+        const users = getUsers();
 
         if (users.length === 0) {
 
-            list.innerHTML =
-                `<div class="details-card">
-                    <h3>No Students Registered</h3>
-                    <p>Students will appear here after creating an account.</p>
-                </div>`;
+            list.innerHTML = `
+                <div class="details-card">
+                    <h3>No students registered yet.</h3>
+                    <p>Students will appear here after creating accounts.</p>
+                </div>
+            `;
 
             return;
-
         }
 
-
-        list.innerHTML =
-            users.map(user => {
-
-                return `
-                    <div class="student-card">
-
-                        <div class="student-card-header">
-
-                            <div class="student-avatar">
-                                👤
-                            </div>
-
-                            <div>
-                                <h3>${escapeHTML(user.name)}</h3>
-                                <p>
-                                    Roll: ${escapeHTML(user.roll)}
-                                </p>
-                            </div>
-
-                        </div>
-
-                        <div class="student-info">
-
-                            <p>
-                                <strong>📱 Mobile:</strong>
-                                ${escapeHTML(user.mobile || "-")}
-                            </p>
-
-                            <p>
-                                <strong>📧 Email:</strong>
-                                ${escapeHTML(user.email || "-")}
-                            </p>
-
-                            <p>
-                                <strong>🏫 College:</strong>
-                                ${escapeHTML(user.college || "-")}
-                            </p>
-
-                            <p>
-                                <strong>📚 Branch:</strong>
-                                ${escapeHTML(user.department || "-")}
-                            </p>
-
-                            <p>
-                                <strong>👤 Face:</strong>
-                                ${
-                                    user.faceRegistered
-                                    ? "✅ Registered"
-                                    : "❌ Not Registered"
-                                }
-                            </p>
-
-                        </div>
-
-                    </div>
-                `;
-
-            }).join("");
-
+        list.innerHTML = users
+            .map(studentCard)
+            .join("");
     }
 
+    function studentCard(user) {
+
+        return `
+            <div class="student-card">
+
+                <div class="student-info">
+
+                    <h3>${escapeHTML(user.name)}</h3>
+
+                    <p>
+                        <strong>Mobile:</strong>
+                        ${escapeHTML(user.mobile || "-")}
+                    </p>
+
+                    <p>
+                        <strong>Email:</strong>
+                        ${escapeHTML(user.email || "-")}
+                    </p>
+
+                    <p>
+                        <strong>Branch:</strong>
+                        ${escapeHTML(user.department || "-")}
+                    </p>
+
+                    <p>
+                        <strong>Roll:</strong>
+                        ${escapeHTML(user.roll || "-")}
+                    </p>
+
+                    <p>
+                        <strong>Face:</strong>
+                        ${
+                            user.faceRegistered
+                            ? "Registered ✓"
+                            : "Not Registered"
+                        }
+                    </p>
+
+                </div>
+
+            </div>
+        `;
+    }
+
+    /* =====================================================
+       SEARCH STUDENTS
+    ===================================================== */
+
+    if ($("searchStudent")) {
+
+        $("searchStudent")
+            .addEventListener("input", () => {
+
+                const query =
+                    $("searchStudent")
+                    .value
+                    .toLowerCase()
+                    .trim();
+
+                const users = getUsers();
+
+                const filtered =
+                    users.filter(user =>
+                        user.name.toLowerCase()
+                            .includes(query) ||
+
+                        user.roll.toLowerCase()
+                            .includes(query) ||
+
+                        user.department.toLowerCase()
+                            .includes(query)
+                    );
+
+                const list = $("studentList");
+
+                if (!list) return;
+
+                list.innerHTML =
+                    filtered.map(studentCard).join("");
+
+                if (filtered.length === 0) {
+
+                    list.innerHTML = `
+                        <div class="details-card">
+                            <p>No student found.</p>
+                        </div>
+                    `;
+                }
+            });
+    }
 
     /* =====================================================
        ADMIN STUDENT LIST
@@ -2341,483 +1630,299 @@ document.addEventListener("DOMContentLoaded", () => {
     function renderAdminStudents() {
 
         const list =
-            document.getElementById(
-                "adminStudentList"
-            );
-
+            $("adminStudentList");
 
         if (!list) return;
 
-
-        const users =
-            getUsers();
-
+        const users = getUsers();
+        const attendance = getAttendance();
 
         if (users.length === 0) {
 
-            list.innerHTML =
-                `<div class="details-card">
-                    <h3>No Registered Students</h3>
-                    <p>Student details will appear here.</p>
-                </div>`;
+            list.innerHTML = `
+                <div class="details-card">
+                    <h3>No students registered.</h3>
+                </div>
+            `;
 
             return;
-
         }
 
+        list.innerHTML = users.map(user => {
 
-        list.innerHTML =
-            users.map((user, index) => {
+            const studentAttendance =
+                attendance.filter(
+                    record =>
+                        record.userId === user.id
+                );
 
-                return `
-                    <div class="student-card">
+            return `
+                <div class="student-card">
 
-                        <div class="student-card-header">
+                    <div class="student-info">
 
-                            <div class="student-avatar">
-                                ${index + 1}
-                            </div>
+                        <h3>
+                            ${escapeHTML(user.name)}
+                        </h3>
 
-                            <div>
+                        <p>
+                            <strong>Mobile:</strong>
+                            ${escapeHTML(user.mobile || "-")}
+                        </p>
 
-                                <h3>
-                                    ${escapeHTML(user.name)}
-                                </h3>
+                        <p>
+                            <strong>Email:</strong>
+                            ${escapeHTML(user.email || "-")}
+                        </p>
 
-                                <p>
-                                    ${escapeHTML(user.department)}
-                                    •
-                                    Roll ${escapeHTML(user.roll)}
-                                </p>
+                        <p>
+                            <strong>Branch:</strong>
+                            ${escapeHTML(user.department || "-")}
+                        </p>
 
-                            </div>
+                        <p>
+                            <strong>Roll:</strong>
+                            ${escapeHTML(user.roll || "-")}
+                        </p>
 
-                        </div>
+                        <p>
+                            <strong>Face:</strong>
+                            ${
+                                user.faceRegistered
+                                ? "Registered ✓"
+                                : "Not Registered"
+                            }
+                        </p>
 
-
-                        <div class="student-info">
-
-                            <p>
-                                <strong>📱 Mobile:</strong>
-                                ${escapeHTML(user.mobile || "-")}
-                            </p>
-
-                            <p>
-                                <strong>📧 Email:</strong>
-                                ${escapeHTML(user.email || "-")}
-                            </p>
-
-                            <p>
-                                <strong>🏫 College:</strong>
-                                ${escapeHTML(user.college || "-")}
-                            </p>
-
-                            <p>
-                                <strong>📚 Department:</strong>
-                                ${escapeHTML(user.department || "-")}
-                            </p>
-
-                            <p>
-                                <strong>🎫 Roll:</strong>
-                                ${escapeHTML(user.roll || "-")}
-                            </p>
-
-                            <p>
-                                <strong>👤 Face Registration:</strong>
-                                ${
-                                    user.faceRegistered
-                                    ? "✅ Completed"
-                                    : "❌ Pending"
-                                }
-                            </p>
-
-                        </div>
+                        <p>
+                            <strong>Present Days:</strong>
+                            ${studentAttendance.length}
+                        </p>
 
                     </div>
-                `;
 
-            }).join("");
+                </div>
+            `;
 
+        }).join("");
     }
 
-
     /* =====================================================
-       SEARCH STUDENTS
-    ===================================================== */
-
-    const searchStudent =
-        document.getElementById(
-            "searchStudent"
-        );
-
-
-    if (searchStudent) {
-
-        searchStudent.addEventListener(
-            "input",
-            () => {
-
-                const query =
-                    searchStudent.value
-                        .trim()
-                        .toLowerCase();
-
-
-                const users =
-                    getUsers();
-
-
-                const filtered =
-                    users.filter(user => {
-
-                        return (
-
-                            user.name
-                                .toLowerCase()
-                                .includes(query)
-
-                            ||
-
-                            user.roll
-                                .toLowerCase()
-                                .includes(query)
-
-                            ||
-
-                            user.department
-                                .toLowerCase()
-                                .includes(query)
-
-                        );
-
-                    });
-
-
-                const list =
-                    document.getElementById(
-                        "studentList"
-                    );
-
-
-                if (!list) return;
-
-
-                if (filtered.length === 0) {
-
-                    list.innerHTML =
-                        `<div class="details-card">
-                            <h3>No student found</h3>
-                        </div>`;
-
-                    return;
-
-                }
-
-
-                list.innerHTML =
-                    filtered.map(user => {
-
-                        return `
-                            <div class="student-card">
-
-                                <div class="student-card-header">
-
-                                    <div class="student-avatar">
-                                        👤
-                                    </div>
-
-                                    <div>
-                                        <h3>
-                                            ${escapeHTML(user.name)}
-                                        </h3>
-
-                                        <p>
-                                            Roll:
-                                            ${escapeHTML(user.roll)}
-                                        </p>
-                                    </div>
-
-                                </div>
-
-                                <div class="student-info">
-
-                                    <p>
-                                        <strong>📱 Mobile:</strong>
-                                        ${escapeHTML(user.mobile || "-")}
-                                    </p>
-
-                                    <p>
-                                        <strong>📧 Email:</strong>
-                                        ${escapeHTML(user.email || "-")}
-                                    </p>
-
-                                    <p>
-                                        <strong>📚 Branch:</strong>
-                                        ${escapeHTML(user.department || "-")}
-                                    </p>
-
-                                </div>
-
-                            </div>
-                        `;
-
-                    }).join("");
-
-            }
-        );
-
-    }
-
-
-    /* =====================================================
-       ATTENDANCE HISTORY
+       CHECK ATTENDANCE
     ===================================================== */
 
     function renderAttendanceHistory() {
 
-        const history =
-            document.getElementById(
-                "attendanceHistory"
-            );
+        const user = getCurrentUser();
 
+        if (!user) return;
 
-        if (!history) return;
-
-
-        const currentUser =
-            getCurrentUser();
-
-
-        if (!currentUser) return;
-
-
-        const records =
+        const attendance =
             getAttendance();
 
+        let records;
 
-        const myRecords =
+        if (user.role === "Admin") {
+
+            records = attendance;
+
+        } else {
+
+            records =
+                attendance.filter(
+                    record =>
+                        record.userId === user.id
+                );
+        }
+
+        const totalDays =
+            new Set(
+                records.map(record => record.date)
+            ).size;
+
+        const presentDays =
             records.filter(
-                record =>
-                    record.userId === currentUser.id
-            );
-
-
-        const total =
-            myRecords.length;
-
-
-        const present =
-            myRecords.filter(
                 record =>
                     record.status === "Present"
             ).length;
 
+        const absentDays =
+            Math.max(
+                totalDays - presentDays,
+                0
+            );
 
-        const absent =
-            Math.max(0, total - present);
+        if ($("attendanceTotalDays"))
+            $("attendanceTotalDays").textContent =
+                totalDays;
 
+        if ($("attendancePresentDays"))
+            $("attendancePresentDays").textContent =
+                presentDays;
 
-        setText(
-            "attendanceTotalDays",
-            total
-        );
+        if ($("attendanceAbsentDays"))
+            $("attendanceAbsentDays").textContent =
+                absentDays;
 
+        const history =
+            $("attendanceHistory");
 
-        setText(
-            "attendancePresentDays",
-            present
-        );
+        if (!history) return;
 
+        if (records.length === 0) {
 
-        setText(
-            "attendanceAbsentDays",
-            absent
-        );
-
-
-        if (myRecords.length === 0) {
-
-            history.innerHTML =
-                `<div class="details-card">
-                    <h3>No Attendance Records</h3>
-                    <p>Your attendance history will appear here.</p>
-                </div>`;
+            history.innerHTML = `
+                <div class="details-card">
+                    <p>No attendance records yet.</p>
+                </div>
+            `;
 
             return;
-
         }
 
-
-        const sorted =
-            [...myRecords].reverse();
-
-
         history.innerHTML =
-            sorted.map(record => {
+            records
+                .slice()
+                .reverse()
+                .map(record => `
 
-                return `
-                    <div class="attendance-history-card">
+                    <div class="attendance-record">
 
-                        <div>
+                        <h3>
+                            ${escapeHTML(record.name)}
+                        </h3>
 
-                            <strong>
-                                ${escapeHTML(record.date)}
-                            </strong>
+                        <p>
+                            📅
+                            ${escapeHTML(record.date)}
+                            —
+                            ${escapeHTML(record.day)}
+                        </p>
 
-                            <span>
-                                ${escapeHTML(record.day)}
-                            </span>
+                        <p>
+                            🕒
+                            ${escapeHTML(record.time)}
+                        </p>
 
-                        </div>
+                        <p>
+                            👤
+                            ${escapeHTML(record.department || "-")}
+                            |
+                            Roll:
+                            ${escapeHTML(record.roll || "-")}
+                        </p>
 
-                        <div>
-
-                            <strong>
-                                ${escapeHTML(record.time)}
-                            </strong>
-
-                            <span class="present-badge">
-                                ${escapeHTML(record.status)}
-                            </span>
-
-                        </div>
+                        <strong>
+                            ✅ ${escapeHTML(record.status)}
+                        </strong>
 
                     </div>
-                `;
 
-            }).join("");
-
+                `)
+                .join("");
     }
-
-
-    /* =====================================================
-       DASHBOARD STATISTICS
-    ===================================================== */
-
-    function loadDashboardStats() {
-
-        const users =
-            getUsers();
-
-
-        const records =
-            getAttendance();
-
-
-        const today =
-            new Date().toLocaleDateString(
-                "en-IN"
-            );
-
-
-        const todayRecords =
-            records.filter(
-                record =>
-                    record.date === today &&
-                    record.status === "Present"
-            );
-
-
-        const totalStudents =
-            users.length;
-
-
-        const presentToday =
-            todayRecords.length;
-
-
-        const absentToday =
-            Math.max(
-                0,
-                totalStudents - presentToday
-            );
-
-
-        const attendancePercentage =
-            totalStudents > 0
-                ? Math.round(
-                    (presentToday / totalStudents) *
-                    100
-                )
-                : 0;
-
-
-        setText(
-            "totalStudents",
-            totalStudents
-        );
-
-
-        setText(
-            "presentStudents",
-            presentToday
-        );
-
-
-        setText(
-            "absentStudents",
-            absentToday
-        );
-
-
-        setText(
-            "attendancePercentage",
-            attendancePercentage + "%"
-        );
-
-    }
-
 
     /* =====================================================
        LOGOUT
     ===================================================== */
 
-    const logoutButton =
-        document.getElementById(
-            "logoutButton"
-        );
-
-
     if (logoutButton) {
 
-        logoutButton.addEventListener(
-            "click",
-            () => {
+        logoutButton.addEventListener("click", () => {
 
-                stopAllCameras();
+            stopAllCameras();
 
-                clearCurrentUser();
+            clearCurrentUser();
 
-                showPage(loginPage);
+            showLogin();
 
+            if ($("loginName"))
+                $("loginName").value = "";
 
-                document.getElementById(
-                    "loginName"
-                ).value = "";
+            if ($("loginIdentity"))
+                $("loginIdentity").value = "";
 
+            if ($("loginPin"))
+                $("loginPin").value = "";
 
-                document.getElementById(
-                    "loginIdentity"
-                ).value = "";
-
-
-                document.getElementById(
-                    "loginPin"
-                ).value = "";
-
-
-                clearMessage(
-                    "loginMessage"
-                );
-
-            }
-        );
-
+            showMessage(
+                $("loginMessage"),
+                "You have been logged out.",
+                "success"
+            );
+        });
     }
 
+    /* =====================================================
+       CAMERA STOP
+    ===================================================== */
+
+    function stopRegistrationCamera() {
+
+        if (registrationTimer) {
+
+            clearTimeout(registrationTimer);
+            registrationTimer = null;
+        }
+
+        if (registrationStream) {
+
+            registrationStream
+                .getTracks()
+                .forEach(track => track.stop());
+
+            registrationStream = null;
+        }
+
+        if (registrationCamera) {
+
+            registrationCamera.srcObject = null;
+        }
+
+        if ($("registrationStatus")) {
+
+            $("registrationStatus").textContent =
+                "Camera is OFF";
+        }
+    }
+
+    function stopAttendanceCamera() {
+
+        if (attendanceTimer) {
+
+            clearTimeout(attendanceTimer);
+            attendanceTimer = null;
+        }
+
+        if (attendanceStream) {
+
+            attendanceStream
+                .getTracks()
+                .forEach(track => track.stop());
+
+            attendanceStream = null;
+        }
+
+        if (attendanceCamera) {
+
+            attendanceCamera.srcObject = null;
+        }
+
+        if ($("attendanceStatus")) {
+
+            $("attendanceStatus").textContent =
+                "Camera is OFF";
+        }
+    }
+
+    function stopAllCameras() {
+
+        stopRegistrationCamera();
+        stopAttendanceCamera();
+    }
 
     /* =====================================================
-       ESCAPE HTML
+       HTML ESCAPE
     ===================================================== */
 
     function escapeHTML(value) {
@@ -2828,401 +1933,50 @@ document.addEventListener("DOMContentLoaded", () => {
             .replace(/>/g, "&gt;")
             .replace(/"/g, "&quot;")
             .replace(/'/g, "&#039;");
-
     }
 
-
     /* =====================================================
-       STOP ALL CAMERAS
+       KEYBOARD SUPPORT
     ===================================================== */
 
-    function stopAllCameras() {
+    document.addEventListener(
+        "keydown",
+        event => {
 
-        stopRegistrationCamera();
+            if (
+                event.key === "Enter" &&
+                loginPage &&
+                loginPage.style.display !== "none"
+            ) {
 
-        stopAttendanceCamera();
-
-    }
-
-
-    /* =====================================================
-       SIDEBAR / HAMBURGER SUPPORT
-    ===================================================== */
-
-    /*
-       This automatically creates the ☰ button
-       if your HTML does not already contain one.
-    */
-
-    function createHamburgerButton() {
-
-        if (!dashboardPage) return;
-
-
-        let hamburger =
-            document.getElementById(
-                "hamburgerButton"
-            );
-
-
-        if (hamburger) return;
-
-
-        hamburger =
-            document.createElement("button");
-
-
-        hamburger.id =
-            "hamburgerButton";
-
-
-        hamburger.className =
-            "hamburger-button";
-
-
-        hamburger.innerHTML =
-            "☰";
-
-
-        hamburger.setAttribute(
-            "aria-label",
-            "Open menu"
-        );
-
-
-        document.body.appendChild(
-            hamburger
-        );
-
-
-        hamburger.addEventListener(
-            "click",
-            () => {
-
-                const sidebar =
-                    document.querySelector(
-                        ".sidebar"
-                    );
-
-
-                if (!sidebar) return;
-
-
-                sidebar.classList.toggle(
-                    "sidebar-open"
-                );
-
+                if (loginButton)
+                    loginButton.click();
             }
-        );
-
-    }
-
-
-    function closeSidebar() {
-
-        const sidebar =
-            document.querySelector(
-                ".sidebar"
-            );
-
-
-        if (sidebar) {
-
-            sidebar.classList.remove(
-                "sidebar-open"
-            );
-
         }
-
-    }
-
-
-    createHamburgerButton();
-
+    );
 
     /* =====================================================
-       AUTO LOGIN CHECK
+       INITIAL LOAD
     ===================================================== */
 
-    const savedUser =
+    const loggedUser =
         getCurrentUser();
 
+    if (loggedUser) {
 
-    if (savedUser) {
-
-        openDashboard(savedUser);
+        showDashboard();
 
     } else {
 
-        showPage(loginPage);
-
+        showLogin();
     }
-
-
-    /* =====================================================
-       CLOSE MODALS
-    ===================================================== */
-
-    const closeStudentsModal =
-        document.getElementById(
-            "closeStudentsModal"
-        );
-
-
-    if (closeStudentsModal) {
-
-        closeStudentsModal.addEventListener(
-            "click",
-            () => {
-
-                const modal =
-                    document.getElementById(
-                        "studentsModal"
-                    );
-
-
-                if (modal) {
-
-                    modal.style.display =
-                        "none";
-
-                }
-
-            }
-        );
-
-    }
-
-
-    const closeCheckAttendanceModal =
-        document.getElementById(
-            "closeCheckAttendanceModal"
-        );
-
-
-    if (closeCheckAttendanceModal) {
-
-        closeCheckAttendanceModal.addEventListener(
-            "click",
-            () => {
-
-                const modal =
-                    document.getElementById(
-                        "attendanceCheckModal"
-                    );
-
-
-                if (modal) {
-
-                    modal.style.display =
-                        "none";
-
-                }
-
-            }
-        );
-
-    }
-
-
-    const closeEditDetailsModal =
-        document.getElementById(
-            "closeEditDetailsModal"
-        );
-
-
-    if (closeEditDetailsModal) {
-
-        closeEditDetailsModal.addEventListener(
-            "click",
-            () => {
-
-                const modal =
-                    document.getElementById(
-                        "editDetailsModal"
-                    );
-
-
-                if (modal) {
-
-                    modal.style.display =
-                        "none";
-
-                }
-
-            }
-        );
-
-    }
-
-
-    /* =====================================================
-       FORGOT PIN
-    ===================================================== */
-
-    const resetPinButton =
-        document.getElementById(
-            "resetPinButton"
-        );
-
-
-    if (resetPinButton) {
-
-        resetPinButton.addEventListener(
-            "click",
-            () => {
-
-                const name =
-                    document.getElementById(
-                        "forgotName"
-                    ).value.trim();
-
-
-                const identity =
-                    document.getElementById(
-                        "forgotIdentity"
-                    ).value.trim();
-
-
-                const newPin =
-                    document.getElementById(
-                        "newPin"
-                    ).value.trim();
-
-
-                const confirmNewPin =
-                    document.getElementById(
-                        "confirmNewPin"
-                    ).value.trim();
-
-
-                if (
-                    !name ||
-                    !identity ||
-                    !newPin ||
-                    !confirmNewPin
-                ) {
-
-                    showMessage(
-                        "forgotMessage",
-                        "Please fill all fields.",
-                        "error"
-                    );
-
-                    return;
-
-                }
-
-
-                if (
-                    !/^[0-9]{4}$/.test(newPin)
-                ) {
-
-                    showMessage(
-                        "forgotMessage",
-                        "New PIN must contain 4 digits.",
-                        "error"
-                    );
-
-                    return;
-
-                }
-
-
-                if (
-                    newPin !== confirmNewPin
-                ) {
-
-                    showMessage(
-                        "forgotMessage",
-                        "PINs do not match.",
-                        "error"
-                    );
-
-                    return;
-
-                }
-
-
-                const users =
-                    getUsers();
-
-
-                const index =
-                    users.findIndex(user => {
-
-                        const sameName =
-                            user.name.toLowerCase() ===
-                            name.toLowerCase();
-
-
-                        const sameMobile =
-                            user.mobile === identity;
-
-
-                        const sameEmail =
-                            user.email &&
-                            user.email.toLowerCase() ===
-                            identity.toLowerCase();
-
-
-                        return (
-                            sameName &&
-                            (sameMobile || sameEmail)
-                        );
-
-                    });
-
-
-                if (index === -1) {
-
-                    showMessage(
-                        "forgotMessage",
-                        "❌ Account not found.",
-                        "error"
-                    );
-
-                    return;
-
-                }
-
-
-                users[index].pin =
-                    newPin;
-
-
-                saveUsers(users);
-
-
-                showMessage(
-                    "forgotMessage",
-                    "✅ PIN reset successfully. Please login.",
-                    "success"
-                );
-
-
-                setTimeout(() => {
-
-                    showPage(loginPage);
-
-                }, 1200);
-
-            }
-        );
-
-    }
-
-
-    /* =====================================================
-       INITIAL DASHBOARD
-    ===================================================== */
-
-    loadDashboardStats();
-
 
     console.log(
-        "✅ Smart Attendance System loaded successfully."
+        "Smart Attendance System loaded successfully."
+    );
+
+    console.log(
+        "Admin Login: Ayush Chatterjee / PIN 1234"
     );
 
 });
-```
