@@ -6,31 +6,42 @@
 
 body {
     font-family: Arial, sans-serif;
-    background: #f4f7fb;
-    color: #222;
+    background: linear-gradient(135deg, #eef2ff, #ecfeff, #fdf2f8);
+    color: #1e293b;
+    min-height: 100vh;
 }
 
 .container {
-    width: 90%;
+    width: 92%;
     max-width: 1200px;
     margin: auto;
-    padding: 35px 0;
+    padding: 35px 0 60px;
 }
+
+/* ================= HEADER ================= */
 
 header {
     text-align: center;
     margin-bottom: 35px;
+    padding: 30px;
+    border-radius: 22px;
+    background: linear-gradient(135deg, #4f46e5, #2563eb, #06b6d4);
+    color: white;
+    box-shadow: 0 12px 30px rgba(37, 99, 235, 0.25);
 }
 
 header h1 {
-    font-size: 38px;
+    font-size: 40px;
     margin-bottom: 10px;
 }
 
 header p {
-    color: #666;
     font-size: 17px;
+    opacity: 0.9;
 }
+
+
+/* ================= DASHBOARD ================= */
 
 .dashboard {
     display: grid;
@@ -39,45 +50,75 @@ header p {
 }
 
 .card {
-    background: white;
+    background: rgba(255, 255, 255, 0.95);
     padding: 25px;
-    border-radius: 15px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    border-radius: 18px;
+    text-align: center;
+    box-shadow: 0 8px 25px rgba(30, 41, 59, 0.10);
+    border-top: 5px solid #6366f1;
+}
+
+.card:nth-child(2) {
+    border-top-color: #10b981;
+}
+
+.card:nth-child(3) {
+    border-top-color: #ef4444;
+}
+
+.card:nth-child(4) {
+    border-top-color: #06b6d4;
 }
 
 .card h3 {
-    color: #666;
+    color: #64748b;
     font-size: 16px;
     margin-bottom: 12px;
 }
 
 .card h2 {
     font-size: 32px;
+    color: #1e293b;
 }
+
+
+/* ================= BOX ================= */
 
 .box {
-    background: white;
+    background: rgba(255, 255, 255, 0.96);
     margin-top: 25px;
-    padding: 25px;
-    border-radius: 15px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    padding: 28px;
+    border-radius: 20px;
+    box-shadow: 0 8px 25px rgba(30, 41, 59, 0.09);
+    border: 1px solid #e0e7ff;
 }
 
-.box h2 {
+.box > h2 {
+    color: #4338ca;
     margin-bottom: 20px;
 }
 
+
+/* ================= FORM ================= */
+
 .form {
     display: flex;
-    gap: 10px;
+    gap: 12px;
     flex-wrap: wrap;
 }
 
 input {
-    padding: 13px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
+    padding: 14px;
+    border: 2px solid #dbeafe;
+    border-radius: 10px;
     font-size: 15px;
+    outline: none;
+    background: #ffffff;
+}
+
+input:focus {
+    border-color: #6366f1;
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
 }
 
 .form input {
@@ -85,23 +126,35 @@ input {
     min-width: 200px;
 }
 
+
+/* ================= BUTTON ================= */
+
 button {
-    padding: 13px 20px;
+    padding: 14px 22px;
     border: none;
-    border-radius: 8px;
-    background: #222;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #4f46e5, #2563eb);
     color: white;
     cursor: pointer;
     font-size: 15px;
+    font-weight: bold;
+    transition: 0.2s;
 }
 
 button:hover {
-    opacity: 0.85;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 18px rgba(37, 99, 235, 0.25);
 }
+
+
+/* ================= SEARCH ================= */
 
 .search {
     width: 100%;
 }
+
+
+/* ================= STUDENT LIST ================= */
 
 .student-row {
     display: flex;
@@ -109,7 +162,7 @@ button:hover {
     align-items: center;
     gap: 15px;
     padding: 18px 5px;
-    border-bottom: 1px solid #eee;
+    border-bottom: 1px solid #e2e8f0;
 }
 
 .student-info {
@@ -123,77 +176,30 @@ button:hover {
 }
 
 .present-btn {
-    background: #198754;
+    background: #10b981;
 }
 
 .absent-btn {
-    background: #dc3545;
+    background: #ef4444;
 }
 
 .delete-btn {
-    background: #555;
+    background: #64748b;
 }
 
 .status {
     margin-top: 5px;
     font-size: 13px;
-    color: #666;
+    color: #64748b;
 }
 
-@media (max-width: 800px) {
-    .dashboard {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
 
-@media (max-width: 500px) {
-    .container {
-        width: 94%;
-    }
+/* ================= FACE SECTIONS ================= */
 
-    .dashboard {
-        grid-template-columns: 1fr;
-    }
-
-    .student-row {
-        flex-direction: column;
-        align-items: flex-start;
-    }.face-section {
-    text-align: center;
-}
-
-#camera {
-    width: 100%;
-    max-width: 500px;
-    border-radius: 15px;
-    margin: 15px auto;
-    display: block;
-    background: #111;
-}
-
-#faceMessage {
-    margin: 15px 0;
-    color: #666;
-}
-#camera {
-    transform: scaleX(-1);
-}
-    .student-actions {
-        width: 100%;
-    }
-}
-#faceCanvas {
-    display: block;
-    width: 100%;
-    max-width: 500px;
-    margin: -15px auto 15px;
-    pointer-events: none;
-}
-/* ===== COLORFUL FACE REGISTRATION ===== */
-
-.face-section {
-    background: linear-gradient(135deg, #ffffff, #f0f7ff);
-    border: 1px solid #dbeafe;
+.face-section,
+.face-attendance-section {
+    background: linear-gradient(135deg, #ffffff, #eff6ff);
+    border: 2px solid #dbeafe;
 }
 
 .section-title {
@@ -209,13 +215,17 @@ button:hover {
 
 .section-title h2 {
     margin: 0;
-    color: #2563eb;
+    color: #4f46e5;
+    font-size: 28px;
 }
 
 .section-title p {
-    margin-top: 5px;
+    margin-top: 6px;
     color: #64748b;
 }
+
+
+/* ================= FACE FORM ================= */
 
 .face-form {
     display: grid;
@@ -227,64 +237,63 @@ button:hover {
 .face-form input {
     width: 100%;
     padding: 15px;
-    border: 2px solid #dbeafe;
+    border: 2px solid #c7d2fe;
     border-radius: 12px;
     font-size: 16px;
-    outline: none;
-    background: white;
 }
 
-.face-form input:focus {
-    border-color: #6366f1;
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
-}
+
+/* ================= CAMERA ================= */
 
 .camera-box {
     position: relative;
     width: 100%;
-    max-width: 650px;
-    margin: auto;
+    max-width: 700px;
+    margin: 20px auto;
     overflow: hidden;
-    border-radius: 20px;
-    background: #111827;
-    box-shadow: 0 12px 30px rgba(37, 99, 235, 0.20);
+    border-radius: 22px;
+    background: #0f172a;
+    border: 4px solid #6366f1;
+    box-shadow: 0 12px 30px rgba(37, 99, 235, 0.25);
 }
 
-#camera {
+.camera-box video {
     width: 100%;
     display: block;
     aspect-ratio: 16 / 9;
     object-fit: cover;
+    background: #0f172a;
 
-    /* Mirror preview like a normal selfie camera */
+    /* Selfie-style preview */
     transform: scaleX(-1);
 }
 
-#faceStatus {
+.camera-box div {
     position: absolute;
     left: 15px;
     right: 15px;
     bottom: 15px;
     padding: 12px;
-    border-radius: 10px;
+    border-radius: 12px;
     text-align: center;
     color: white;
-    background: rgba(15, 23, 42, 0.75);
+    background: rgba(15, 23, 42, 0.78);
     backdrop-filter: blur(5px);
 }
+
+
+/* ================= FACE BUTTON ================= */
 
 .face-register-btn {
     display: block;
     margin: 25px auto 10px;
-    padding: 15px 28px;
-
-    border: none;
-    border-radius: 12px;
+    padding: 16px 30px;
+    border-radius: 13px;
 
     background: linear-gradient(
         135deg,
-        #6366f1,
-        #2563eb,
+        #7c3aed,
+        #4f46e5,
         #06b6d4
     );
 
@@ -292,18 +301,11 @@ button:hover {
     font-size: 17px;
     font-weight: bold;
 
-    cursor: pointer;
-
-    box-shadow:
-        0 8px 20px rgba(37, 99, 235, 0.30);
-
-    transition: 0.2s;
+    box-shadow: 0 10px 25px rgba(79, 70, 229, 0.28);
 }
 
 .face-register-btn:hover {
-    transform: translateY(-2px);
-    box-shadow:
-        0 12px 25px rgba(37, 99, 235, 0.40);
+    transform: translateY(-2px) scale(1.01);
 }
 
 .face-register-btn:disabled {
@@ -312,20 +314,87 @@ button:hover {
     transform: none;
 }
 
-#captureMessage {
+
+/* ================= MESSAGES ================= */
+
+#registrationMessage,
+#attendanceResult {
     text-align: center;
-    margin-top: 12px;
+    margin-top: 15px;
     font-weight: bold;
 }
 
-@media (max-width: 700px) {
+#registrationMessage {
+    color: #059669;
+}
+
+
+/* ================= ATTENDANCE SUCCESS ================= */
+
+.attendance-result {
+    margin: 20px auto;
+    max-width: 600px;
+    padding: 20px;
+    border-radius: 16px;
+    background: #ecfdf5;
+    border: 2px solid #86efac;
+    color: #166534;
+    text-align: center;
+    font-size: 17px;
+}
+
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 800px) {
+
+    .dashboard {
+        grid-template-columns: repeat(2, 1fr);
+    }
 
     .face-form {
         grid-template-columns: 1fr;
     }
 
+    header h1 {
+        font-size: 32px;
+    }
 }
-#faceDetectionMessage {
-    text-align: center;
-    font-weight: bold;
+
+
+@media (max-width: 500px) {
+
+    .container {
+        width: 94%;
+        padding-top: 20px;
+    }
+
+    .dashboard {
+        grid-template-columns: 1fr;
+    }
+
+    .box {
+        padding: 20px;
+    }
+
+    .student-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .student-actions {
+        width: 100%;
+    }
+
+    header {
+        padding: 24px 15px;
+    }
+
+    header h1 {
+        font-size: 27px;
+    }
+
+    .section-title h2 {
+        font-size: 23px;
+    }
 }
