@@ -1,12 +1,12 @@
-/* =========================================================
+/* =====================================================
    SMART ATTENDANCE SYSTEM
    COMPLETE STYLE.CSS
-   ========================================================= */
+===================================================== */
 
 * {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
 }
 
 html {
@@ -14,476 +14,512 @@ html {
 }
 
 body {
-    font-family: Arial, Helvetica, sans-serif;
-    background: linear-gradient(135deg, #eef4ff, #f8fbff);
-    color: #172033;
-    min-height: 100vh;
-}
+    font-family:
+        "Segoe UI",
+        Arial,
+        sans-serif;
 
-
-/* =========================================================
-   COMMON
-   ========================================================= */
-
-button,
-input {
-    font-family: inherit;
-}
-
-button {
-    cursor: pointer;
-}
-
-input {
-    outline: none;
-}
-
-
-/* =========================================================
-   LOGIN / CREATE ACCOUNT PAGE
-   ========================================================= */
-
-#loginPage {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 25px;
-    background:
-        radial-gradient(circle at top left, #dbeafe 0%, transparent 35%),
-        radial-gradient(circle at bottom right, #bfdbfe 0%, transparent 35%),
-        linear-gradient(135deg, #eff6ff, #ffffff);
-}
-
-
-/* Main authentication box */
-
-.auth-container {
-    width: 100%;
-    max-width: 460px;
-}
-
-
-/* =========================================================
-   AUTH BRAND
-   ========================================================= */
-
-.auth-brand {
-    text-align: center;
-    margin-bottom: 22px;
-}
-
-.auth-brand h1 {
-    font-size: 32px;
-    font-weight: 800;
-    color: #1d4ed8;
-    margin-bottom: 7px;
-}
-
-.auth-brand .college-name {
-    font-size: 18px;
-    font-weight: 700;
-    color: #b91c1c;
-    margin-bottom: 8px;
-}
-
-.auth-brand p {
-    color: #64748b;
-    font-size: 14px;
-}
-
-
-/* =========================================================
-   AUTH CARD
-   ========================================================= */
-
-.auth-card {
-    background: rgba(255, 255, 255, 0.96);
-    border-radius: 24px;
-    padding: 32px;
-    border: 1px solid #dbeafe;
-    box-shadow:
-        0 20px 50px rgba(30, 64, 175, 0.15),
-        0 5px 15px rgba(15, 23, 42, 0.06);
-}
-
-
-/* Login / Create Account title */
-
-.auth-card h2 {
-    text-align: center;
-    color: #1e3a8a;
-    margin-bottom: 22px;
-    font-size: 24px;
-}
-
-
-/* =========================================================
-   AUTH INPUTS
-   ========================================================= */
-
-.auth-card input,
-.auth-container input {
-    width: 100%;
-    padding: 14px 15px;
-    margin-bottom: 13px;
-
-    border: 2px solid #dbe3f0;
-    border-radius: 12px;
-
-    background: #f8fafc;
-    color: #172033;
-
-    font-size: 15px;
-
-    transition: 0.2s ease;
-}
-
-.auth-card input:focus,
-.auth-container input:focus {
-    border-color: #2563eb;
-    background: #ffffff;
-
-    box-shadow:
-        0 0 0 4px rgba(37, 99, 235, 0.10);
-}
-
-
-/* =========================================================
-   AUTH BUTTON
-   ========================================================= */
-
-.auth-card button,
-.auth-container .auth-button {
-    width: 100%;
-    padding: 14px;
-
-    border: none;
-    border-radius: 12px;
-
-    background: linear-gradient(
-        135deg,
-        #2563eb,
-        #1d4ed8
-    );
-
-    color: white;
-
-    font-size: 16px;
-    font-weight: 700;
-
-    box-shadow:
-        0 8px 18px rgba(37, 99, 235, 0.22);
-
-    transition: 0.2s ease;
-}
-
-.auth-card button:hover,
-.auth-container .auth-button:hover {
-    transform: translateY(-1px);
-
-    box-shadow:
-        0 12px 24px rgba(37, 99, 235, 0.28);
-}
-
-
-/* =========================================================
-   FORGOT PIN
-   ========================================================= */
-
-.forgot-pin {
-    display: block;
-
-    margin-top: 15px;
-
-    text-align: center;
-
-    color: #2563eb;
-
-    font-weight: 700;
-
-    text-decoration: none;
-
-    cursor: pointer;
-}
-
-.forgot-pin:hover {
-    text-decoration: underline;
-}
-
-
-/* =========================================================
-   CREATE ACCOUNT LINK
-   ========================================================= */
-
-.create-account-link {
-    margin-top: 18px;
-
-    padding-top: 18px;
-
-    border-top: 1px solid #e2e8f0;
-
-    text-align: center;
-
-    color: #64748b;
-}
-
-.create-account-link button {
-    width: auto;
-
-    margin-top: 8px;
-
-    padding: 8px 18px;
-
-    background: #eff6ff;
-
-    color: #1d4ed8;
-
-    border: 1px solid #bfdbfe;
-
-    box-shadow: none;
-}
-
-.create-account-link button:hover {
-    background: #dbeafe;
-
-    transform: none;
-
-    box-shadow: none;
-}
-
-
-/* =========================================================
-   AUTH NOTE
-   ========================================================= */
-
-.auth-note {
-    margin-top: 15px;
-
-    padding: 11px;
-
-    border-radius: 10px;
-
-    background: #eff6ff;
-
-    color: #1e40af;
-
-    border: 1px solid #bfdbfe;
-
-    text-align: center;
-
-    font-size: 13px;
-
-    line-height: 1.5;
-}
-
-
-/* =========================================================
-   CREATE ACCOUNT FORM
-   ========================================================= */
-
-#createAccountPage {
-    min-height: 100vh;
-
-    display: none;
-
-    align-items: center;
-    justify-content: center;
-
-    padding: 25px;
-
-    background:
-        radial-gradient(circle at top right, #dcfce7 0%, transparent 35%),
-        radial-gradient(circle at bottom left, #dbeafe 0%, transparent 35%),
-        linear-gradient(135deg, #f8fafc, #eff6ff);
-}
-
-.create-account-card {
-    width: 100%;
-    max-width: 480px;
-
-    background: white;
-
-    padding: 32px;
-
-    border-radius: 24px;
-
-    border: 1px solid #dbeafe;
-
-    box-shadow:
-        0 20px 50px rgba(30, 64, 175, 0.14);
-}
-
-.create-account-card h2 {
-    color: #1e3a8a;
-
-    text-align: center;
-
-    margin-bottom: 20px;
-}
-
-
-/* =========================================================
-   PIN INPUT
-   ========================================================= */
-
-.pin-input {
-    letter-spacing: 6px;
-
-    text-align: center;
-
-    font-weight: 700;
-
-    font-size: 18px;
-}
-
-
-/* =========================================================
-   MAIN DASHBOARD
-   ========================================================= */
-
-#dashboardPage {
     min-height: 100vh;
 
     background:
         linear-gradient(
             135deg,
-            #eff6ff 0%,
-            #ffffff 50%,
-            #f8fafc 100%
+            #eef2ff 0%,
+            #f8fafc 45%,
+            #e0f2fe 100%
         );
+
+    color: #172033;
 }
 
 
-/* =========================================================
-   MAIN CONTAINER
-   ========================================================= */
+/* =====================================================
+   AUTH BACKGROUND
+===================================================== */
 
-.container {
-    width: 100%;
+.auth-page {
+    min-height: 100vh;
 
-    max-width: 1200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    margin: 0 auto;
+    position: relative;
 
     padding: 25px;
+
+    overflow: hidden;
+}
+
+.auth-background {
+    position: fixed;
+    inset: 0;
+
+    background:
+        radial-gradient(
+            circle at 10% 20%,
+            rgba(59,130,246,.28),
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at 90% 15%,
+            rgba(139,92,246,.30),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 80% 85%,
+            rgba(6,182,212,.22),
+            transparent 28%
+        ),
+        linear-gradient(
+            135deg,
+            #eef2ff,
+            #f8fafc,
+            #e0f2fe
+        );
+
+    z-index: -1;
 }
 
 
-/* =========================================================
-   HEADER
-   ========================================================= */
+/* =====================================================
+   AUTH CARD
+===================================================== */
 
-header {
-    background: linear-gradient(
-        135deg,
-        #1d4ed8,
-        #2563eb,
-        #3b82f6
-    );
+.auth-card {
+    width: 100%;
+    max-width: 460px;
+
+    padding: 38px;
+
+    border-radius: 28px;
+
+    background:
+        rgba(255,255,255,.82);
+
+    border: 1px solid
+        rgba(255,255,255,.75);
+
+    box-shadow:
+        0 25px 70px
+        rgba(30,41,59,.20);
+
+    backdrop-filter: blur(20px);
+
+    position: relative;
+
+    animation:
+        authAppear .55s ease;
+}
+
+@keyframes authAppear {
+
+    from {
+        opacity: 0;
+        transform: translateY(25px) scale(.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+
+.auth-logo {
+    width: 72px;
+    height: 72px;
+
+    margin: 0 auto 18px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 22px;
+
+    font-size: 34px;
 
     color: white;
 
-    padding: 38px 25px;
-
-    border-radius: 24px;
-
-    margin-bottom: 25px;
-
-    text-align: center;
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #7c3aed
+        );
 
     box-shadow:
-        0 15px 35px rgba(37, 99, 235, 0.22);
+        0 12px 30px
+        rgba(79,70,229,.28);
 }
 
-header h1 {
-    font-size: 34px;
+.auth-card h1 {
+    text-align: center;
+
+    font-size: 29px;
 
     margin-bottom: 8px;
 
-    font-weight: 800;
+    background:
+        linear-gradient(
+            90deg,
+            #2563eb,
+            #7c3aed
+        );
+
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
-
-header p {
-    margin: 5px 0;
-}
-
-header p:nth-of-type(1) {
-    font-size: 19px;
-    font-weight: 600;
-}
-
-#currentDate {
-    opacity: 0.92;
-
-    font-size: 14px;
-
-    margin-top: 10px;
-}
-
-
-/* =========================================================
-   COLLEGE NAME UNDER MAIN TITLE
-   ========================================================= */
 
 .college-title {
-    font-size: 18px;
+    text-align: center;
 
     font-weight: 700;
 
-    color: #fee2e2;
+    color: #334155;
 
-    margin-top: 4px;
+    font-size: 15px;
 
-    letter-spacing: 0.3px;
+    line-height: 1.5;
+
+    margin-bottom: 5px;
+}
+
+.auth-subtitle {
+    text-align: center;
+
+    color: #64748b;
+
+    font-size: 13px;
+
+    margin-bottom: 25px;
 }
 
 
-/* =========================================================
-   THREE LINE MENU
-   ========================================================= */
+/* =====================================================
+   AUTH FORM
+===================================================== */
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.auth-form label {
+    font-size: 13px;
+
+    font-weight: 700;
+
+    color: #334155;
+
+    margin:
+        0 0 7px 3px;
+}
+
+.auth-form label span {
+    font-weight: 400;
+    color: #94a3b8;
+}
+
+.auth-form input {
+    width: 100%;
+
+    padding: 14px 16px;
+
+    margin-bottom: 15px;
+
+    border-radius: 13px;
+
+    border: 1.5px solid #dbe3f0;
+
+    background:
+        rgba(255,255,255,.88);
+
+    color: #172033;
+
+    outline: none;
+
+    font-size: 14px;
+
+    transition:
+        .2s ease;
+}
+
+.auth-form input:focus {
+    border-color: #6366f1;
+
+    box-shadow:
+        0 0 0 4px
+        rgba(99,102,241,.11);
+
+    transform: translateY(-1px);
+}
+
+.auth-form input::placeholder {
+    color: #94a3b8;
+}
+
+
+/* =====================================================
+   AUTH BUTTONS
+===================================================== */
+
+.auth-main-button,
+.create-account-button,
+.back-button,
+.forgot-button {
+
+    width: 100%;
+
+    border: none;
+
+    border-radius: 13px;
+
+    padding: 14px;
+
+    font-size: 15px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        opacity .2s ease;
+}
+
+.auth-main-button {
+    color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #7c3aed
+        );
+
+    box-shadow:
+        0 10px 25px
+        rgba(79,70,229,.25);
+
+    margin-top: 3px;
+}
+
+.auth-main-button:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 14px 30px
+        rgba(79,70,229,.32);
+}
+
+.forgot-button {
+    margin-top: 10px;
+
+    background: transparent;
+
+    color: #4f46e5;
+}
+
+.forgot-button:hover {
+    background: #eef2ff;
+}
+
+.auth-divider {
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+
+    margin: 18px 0;
+
+    color: #94a3b8;
+
+    font-size: 12px;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+    content: "";
+
+    height: 1px;
+
+    flex: 1;
+
+    background: #e2e8f0;
+}
+
+.create-account-button {
+    color: #1d4ed8;
+
+    background:
+        linear-gradient(
+            135deg,
+            #dbeafe,
+            #ede9fe
+        );
+
+    border:
+        1px solid #c7d2fe;
+}
+
+.create-account-button:hover {
+    transform: translateY(-2px);
+}
+
+.back-button {
+    margin-top: 10px;
+
+    color: #475569;
+
+    background: #f1f5f9;
+}
+
+.back-button:hover {
+    background: #e2e8f0;
+}
+
+.auth-message {
+    margin-top: 13px;
+
+    text-align: center;
+
+    font-size: 13px;
+
+    font-weight: 600;
+}
+
+
+/* =====================================================
+   DASHBOARD
+===================================================== */
+
+.dashboard-page {
+    min-height: 100vh;
+}
+
+.container {
+    width: min(1180px, 94%);
+
+    margin: auto;
+    padding-bottom: 50px;
+}
+
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.main-header {
+    position: relative;
+
+    margin-top: 20px;
+
+    padding:
+        42px
+        25px
+        35px;
+
+    border-radius: 28px;
+
+    color: white;
+
+    text-align: center;
+
+    overflow: visible;
+
+    background:
+        linear-gradient(
+            135deg,
+            #1d4ed8,
+            #4f46e5 48%,
+            #7c3aed
+        );
+
+    box-shadow:
+        0 20px 45px
+        rgba(37,99,235,.22);
+}
+
+.header-content {
+    padding-top: 10px;
+}
+
+.header-icon {
+    font-size: 42px;
+
+    margin-bottom: 5px;
+}
+
+.main-header h1 {
+    font-size: 34px;
+
+    margin-bottom: 6px;
+}
+
+.main-header h2 {
+    font-size: 17px;
+
+    font-weight: 600;
+
+    opacity: .95;
+
+    margin-bottom: 9px;
+}
+
+.main-header p {
+    opacity: .88;
+
+    font-size: 14px;
+
+    margin-top: 5px;
+}
+
+
+/* =====================================================
+   LEFT MENU
+===================================================== */
 
 .menu-container {
     position: absolute;
 
-    left: 20px;
-
-    top: 20px;
+    left: 18px;
+    top: 18px;
 
     z-index: 3000;
 }
 
 .menu-button {
-    width: 55px;
+    width: 54px;
     height: 50px;
-
-    font-size: 27px;
 
     border: none;
 
-    border-radius: 12px;
-
-    background: rgba(255, 255, 255, 0.18);
+    border-radius: 13px;
 
     color: white;
 
-    cursor: pointer;
+    background:
+        rgba(255,255,255,.18);
 
     backdrop-filter: blur(8px);
 
-    transition: 0.2s;
+    font-size: 26px;
+
+    cursor: pointer;
+
+    transition: .2s ease;
 }
 
 .menu-button:hover {
-    background: rgba(255, 255, 255, 0.30);
+    background:
+        rgba(255,255,255,.28);
 
-    transform: scale(1.03);
+    transform: scale(1.04);
 }
-
-
-/* =========================================================
-   MAIN MENU
-   ========================================================= */
 
 .main-menu {
     display: none;
@@ -491,59 +527,97 @@ header p:nth-of-type(1) {
     position: absolute;
 
     left: 0;
-
     top: 60px;
 
-    width: 290px;
-
-    background: white;
+    width: 285px;
 
     padding: 12px;
 
-    border-radius: 15px;
+    border-radius: 18px;
+
+    background: rgba(255,255,255,.96);
 
     box-shadow:
-        0 15px 40px rgba(0, 0, 0, 0.20);
+        0 18px 45px
+        rgba(15,23,42,.24);
+
+    backdrop-filter: blur(15px);
+
+    border: 1px solid #e2e8f0;
 }
 
 .main-menu.show {
     display: block;
+
+    animation:
+        menuOpen .18s ease;
+}
+
+@keyframes menuOpen {
+
+    from {
+        opacity: 0;
+        transform: translateY(-7px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 .main-menu button {
     width: 100%;
 
-    margin: 5px 0;
-
-    padding: 14px;
-
     border: none;
 
-    border-radius: 10px;
+    border-radius: 11px;
 
-    background: #2563eb;
+    padding: 13px 14px;
 
-    color: white;
-
-    font-size: 15px;
+    margin: 4px 0;
 
     text-align: left;
 
+    color: #1e293b;
+
+    background: #f8fafc;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
     cursor: pointer;
 
-    transition: 0.2s;
+    transition: .2s ease;
 }
 
 .main-menu button:hover {
-    background: #1d4ed8;
+    color: white;
 
-    transform: translateX(2px);
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #6366f1
+        );
+
+    transform: translateX(3px);
+}
+
+.main-menu .logout-menu-button:hover {
+    background:
+        linear-gradient(
+            135deg,
+            #dc2626,
+            #ef4444
+        );
 }
 
 
-/* =========================================================
+/* =====================================================
    DASHBOARD CARDS
-   ========================================================= */
+===================================================== */
 
 .dashboard {
     display: grid;
@@ -551,136 +625,331 @@ header p:nth-of-type(1) {
     grid-template-columns:
         repeat(4, 1fr);
 
-    gap: 18px;
+    gap: 17px;
 
-    margin-bottom: 25px;
+    margin: 25px 0;
 }
 
 .card {
-    background: white;
+    padding: 22px;
 
-    border-radius: 18px;
+    border-radius: 20px;
 
-    padding: 24px;
-
-    text-align: center;
+    background:
+        rgba(255,255,255,.9);
 
     border: 1px solid #e2e8f0;
 
     box-shadow:
-        0 8px 25px rgba(15, 23, 42, 0.07);
+        0 10px 30px
+        rgba(15,23,42,.07);
 
-    transition: 0.2s;
+    text-align: center;
+
+    transition: .25s ease;
 }
 
 .card:hover {
-    transform: translateY(-3px);
+    transform: translateY(-4px);
 
     box-shadow:
-        0 12px 30px rgba(15, 23, 42, 0.10);
+        0 16px 35px
+        rgba(15,23,42,.11);
+}
+
+.card-icon {
+    font-size: 30px;
+
+    margin-bottom: 8px;
 }
 
 .card h3 {
     color: #64748b;
 
-    font-size: 15px;
+    font-size: 14px;
 
-    margin-bottom: 10px;
+    margin-bottom: 8px;
 }
 
 .card h2 {
-    color: #1d4ed8;
-
     font-size: 30px;
 }
 
+.total-card h2 {
+    color: #2563eb;
+}
 
-/* =========================================================
-   SECTION
-   ========================================================= */
+.present-card h2 {
+    color: #16a34a;
+}
+
+.absent-card h2 {
+    color: #dc2626;
+}
+
+.attendance-card h2 {
+    color: #7c3aed;
+}
+
+
+/* =====================================================
+   SECTIONS
+===================================================== */
 
 .section {
-    background: white;
+    margin-bottom: 24px;
+}
 
-    border-radius: 20px;
+.glass-section {
+    padding: 28px;
 
-    padding: 25px;
+    border-radius: 24px;
 
-    margin-bottom: 25px;
+    background:
+        rgba(255,255,255,.91);
 
     border: 1px solid #e2e8f0;
 
     box-shadow:
-        0 8px 25px rgba(15, 23, 42, 0.06);
+        0 12px 35px
+        rgba(15,23,42,.07);
 }
 
-.section h2 {
-    color: #1e3a8a;
+.section-heading {
+    display: flex;
 
-    margin-bottom: 18px;
+    align-items: center;
+
+    gap: 13px;
+
+    margin-bottom: 22px;
+}
+
+.section-heading > span {
+    width: 48px;
+    height: 48px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 14px;
+
+    font-size: 24px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #dbeafe,
+            #ede9fe
+        );
+}
+
+.section-heading h2 {
+    font-size: 22px;
+
+    margin-bottom: 3px;
+}
+
+.section-heading p {
+    color: #64748b;
+
+    font-size: 13px;
 }
 
 
-/* =========================================================
-   NORMAL INPUT
-   ========================================================= */
+/* =====================================================
+   FORM GRID
+===================================================== */
 
-.section input {
+.form-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 13px;
+
+    margin-bottom: 20px;
+}
+
+.form-grid input,
+.search-input,
+.modal-content input {
+
     width: 100%;
 
-    padding: 13px 15px;
+    padding: 14px 15px;
 
-    margin-bottom: 12px;
+    border-radius: 12px;
 
-    border: 2px solid #e2e8f0;
-
-    border-radius: 11px;
+    border: 1.5px solid #dbe3f0;
 
     background: #f8fafc;
 
-    font-size: 15px;
+    outline: none;
+
+    font-size: 14px;
+
+    color: #172033;
+
+    transition: .2s ease;
 }
 
-.section input:focus {
-    border-color: #2563eb;
+.form-grid input:focus,
+.search-input:focus,
+.modal-content input:focus {
+
+    border-color: #6366f1;
 
     background: white;
 
     box-shadow:
-        0 0 0 4px rgba(37, 99, 235, 0.08);
+        0 0 0 4px
+        rgba(99,102,241,.09);
 }
 
 
-/* =========================================================
-   GENERAL BUTTON
-   ========================================================= */
+/* =====================================================
+   CAMERA
+===================================================== */
 
-.section > button {
-    padding: 13px 20px;
+.camera-box {
+    width: 100%;
+
+    max-width: 680px;
+
+    margin: 20px auto;
+
+    text-align: center;
+}
+
+.camera-frame {
+    position: relative;
+
+    width: 100%;
+
+    overflow: hidden;
+
+    border-radius: 20px;
+
+    background: #0f172a;
+
+    box-shadow:
+        0 12px 35px
+        rgba(15,23,42,.2);
+}
+
+.camera-frame video {
+    width: 100%;
+
+    aspect-ratio: 4 / 3;
+
+    object-fit: cover;
+
+    display: block;
+
+    /*
+      IMPORTANT:
+      Selfie/mirror view.
+      Left movement appears on the right,
+      exactly like a normal mirror.
+    */
+    transform: scaleX(-1);
+}
+
+.camera-overlay {
+    position: absolute;
+
+    inset: 0;
+
+    pointer-events: none;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+}
+
+.face-guide {
+    width: 42%;
+
+    aspect-ratio: 1 / 1.25;
+
+    border:
+        2px dashed
+        rgba(255,255,255,.72);
+
+    border-radius: 48%;
+
+    box-shadow:
+        0 0 0 9999px
+        rgba(15,23,42,.10);
+}
+
+.camera-status {
+    margin-top: 12px;
+
+    color: #475569;
+
+    font-size: 14px;
+
+    font-weight: 700;
+}
+
+
+/* =====================================================
+   ACTION BUTTON
+===================================================== */
+
+.primary-action {
+    display: block;
+
+    width: 100%;
+
+    max-width: 680px;
+
+    margin: 12px auto 0;
+
+    padding: 15px;
 
     border: none;
 
-    border-radius: 11px;
-
-    background: #2563eb;
+    border-radius: 13px;
 
     color: white;
+
+    background:
+        linear-gradient(
+            135deg,
+            #2563eb,
+            #7c3aed
+        );
 
     font-size: 15px;
 
     font-weight: 700;
 
-    transition: 0.2s;
+    cursor: pointer;
+
+    box-shadow:
+        0 10px 25px
+        rgba(79,70,229,.2);
+
+    transition: .2s ease;
 }
 
-.section > button:hover {
-    background: #1d4ed8;
+.primary-action:hover {
+    transform: translateY(-2px);
 
-    transform: translateY(-1px);
+    box-shadow:
+        0 15px 30px
+        rgba(79,70,229,.28);
 }
 
-.section > button:disabled {
-    opacity: 0.55;
+.primary-action:disabled {
+    opacity: .55;
 
     cursor: not-allowed;
 
@@ -688,73 +957,18 @@ header p:nth-of-type(1) {
 }
 
 
-/* =========================================================
-   CAMERA
-   ========================================================= */
-
-.camera-box {
-    width: 100%;
-
-    max-width: 640px;
-
-    margin: 20px auto;
-
-    text-align: center;
-}
-
-.camera-box video {
-    width: 100%;
-
-    max-width: 640px;
-
-    min-height: 300px;
-
-    border-radius: 18px;
-
-    background: #111827;
-
-    display: block;
-
-    margin: auto;
-
-    object-fit: cover;
-
-    /*
-       MIRROR EFFECT
-       Mobile selfie camera style
-    */
-
-    transform: scaleX(-1);
-}
-
-.camera-status {
-    margin-top: 10px;
-
-    font-weight: bold;
-
-    color: #475569;
-}
-
-
-/* =========================================================
-   FACE MESSAGE
-   ========================================================= */
+/* =====================================================
+   SUCCESS MESSAGE
+===================================================== */
 
 .face-message {
     margin-top: 15px;
 }
 
-
-/* =========================================================
-   SUCCESS MESSAGE
-   ========================================================= */
-
 .success-message {
     padding: 22px;
 
-    margin-top: 20px;
-
-    border-radius: 16px;
+    border-radius: 17px;
 
     background: #ecfdf5;
 
@@ -764,48 +978,78 @@ header p:nth-of-type(1) {
 
     text-align: center;
 
-    line-height: 1.6;
+    animation:
+        successPop .35s ease;
 }
 
-.success-message .success-icon {
+@keyframes successPop {
+
+    from {
+        opacity: 0;
+        transform: scale(.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.success-icon {
     font-size: 50px;
 
-    margin-bottom: 10px;
+    margin-bottom: 8px;
 }
 
 
-/* =========================================================
-   STUDENT ROW
-   ========================================================= */
+/* =====================================================
+   SEARCH / STUDENTS
+===================================================== */
+
+.search-input {
+    margin-bottom: 18px;
+
+    background: white;
+}
 
 .student-row {
     display: flex;
 
     justify-content: space-between;
 
-    gap: 20px;
-
-    background: #f8fafc;
-
-    border: 1px solid #e2e8f0;
-
-    border-radius: 15px;
+    gap: 18px;
 
     padding: 18px;
 
     margin-bottom: 12px;
+
+    border-radius: 16px;
+
+    background: #f8fafc;
+
+    border: 1px solid #e2e8f0;
 }
 
 .student-info {
-    line-height: 1.7;
+    line-height: 1.8;
 
-    flex: 1;
+    color: #475569;
+
+    font-size: 14px;
 }
 
 .student-info strong {
-    color: #1e3a8a;
+    color: #172033;
 
     font-size: 17px;
+}
+
+.status {
+    margin-top: 6px;
+
+    font-weight: 700;
+
+    color: #2563eb;
 }
 
 .student-actions {
@@ -815,57 +1059,40 @@ header p:nth-of-type(1) {
 
     gap: 7px;
 
-    min-width: 100px;
+    min-width: 110px;
 }
 
 .student-actions button {
     border: none;
 
-    border-radius: 9px;
-
     padding: 9px;
 
-    color: white;
+    border-radius: 9px;
+
+    cursor: pointer;
 
     font-weight: 700;
 }
 
 .present-btn {
-    background: #16a34a;
-}
-
-.present-btn:hover {
-    background: #15803d;
+    background: #dcfce7;
+    color: #166534;
 }
 
 .absent-btn {
-    background: #dc2626;
-}
-
-.absent-btn:hover {
-    background: #b91c1c;
+    background: #fee2e2;
+    color: #991b1b;
 }
 
 .delete-btn {
-    background: #475569;
-}
-
-.delete-btn:hover {
-    background: #334155;
-}
-
-.status {
-    margin-top: 8px;
-
-    font-weight: 700;
-
-    color: #2563eb;
+    background: #e2e8f0;
+    color: #334155;
 }
 
 
-/* =========================================================
+/* =====================================================
    MODAL
-   ========================================================= */
+===================================================== */
 
 .modal {
     display: none;
@@ -874,9 +1101,10 @@ header p:nth-of-type(1) {
 
     inset: 0;
 
-    background: rgba(15, 23, 42, 0.60);
+    z-index: 5000;
 
-    z-index: 4000;
+    background:
+        rgba(15,23,42,.58);
 
     align-items: center;
 
@@ -884,7 +1112,7 @@ header p:nth-of-type(1) {
 
     padding: 20px;
 
-    backdrop-filter: blur(4px);
+    backdrop-filter: blur(5px);
 }
 
 .modal.show {
@@ -894,58 +1122,49 @@ header p:nth-of-type(1) {
 .modal-content {
     width: 100%;
 
-    max-width: 520px;
+    max-width: 560px;
 
-    max-height: 85vh;
+    max-height: 88vh;
 
     overflow-y: auto;
 
-    background: white;
-
-    padding: 25px;
-
-    border-radius: 20px;
-
     position: relative;
 
+    padding: 28px;
+
+    border-radius: 22px;
+
+    background: white;
+
     box-shadow:
-        0 20px 60px rgba(0, 0, 0, 0.30);
+        0 25px 70px
+        rgba(15,23,42,.3);
+
+    animation:
+        modalOpen .25s ease;
+}
+
+@keyframes modalOpen {
+
+    from {
+        opacity: 0;
+        transform: translateY(15px) scale(.97);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
 }
 
 .modal-content h2 {
     margin-bottom: 20px;
 
-    color: #1e3a8a;
+    color: #1e293b;
 }
 
 .modal-content input {
-    width: 100%;
-
     margin-bottom: 12px;
-
-    padding: 13px;
-
-    border: 2px solid #e2e8f0;
-
-    border-radius: 10px;
-}
-
-.modal-content input:focus {
-    border-color: #2563eb;
-}
-
-.modal-content > button:not(.close-modal) {
-    padding: 12px 18px;
-
-    border: none;
-
-    border-radius: 10px;
-
-    background: #2563eb;
-
-    color: white;
-
-    font-weight: 700;
 }
 
 .close-modal {
@@ -955,33 +1174,32 @@ header p:nth-of-type(1) {
 
     top: 15px;
 
-    width: 40px;
-
-    height: 40px;
-
-    padding: 0;
+    width: 38px;
+    height: 38px;
 
     border: none;
 
-    background: #dc3545;
-
-    color: white;
-
     border-radius: 50%;
 
-    cursor: pointer;
+    background: #fee2e2;
 
-    font-size: 18px;
+    color: #dc2626;
+
+    font-size: 17px;
+
+    cursor: pointer;
 }
 
 .close-modal:hover {
-    background: #b91c1c;
+    background: #dc2626;
+
+    color: white;
 }
 
 
-/* =========================================================
+/* =====================================================
    ATTENDANCE SUMMARY
-   ========================================================= */
+===================================================== */
 
 .attendance-summary {
     display: grid;
@@ -997,218 +1215,128 @@ header p:nth-of-type(1) {
 .attendance-summary-box {
     padding: 18px;
 
-    border-radius: 14px;
+    border-radius: 16px;
 
     text-align: center;
 
     background: #f8fafc;
+}
 
-    border: 1px solid #e2e8f0;
+.attendance-summary-box span {
+    font-size: 26px;
 }
 
 .attendance-summary-box h3 {
-    margin: 0 0 8px 0;
+    margin: 6px 0;
+
+    font-size: 13px;
 
     color: #64748b;
 }
 
 .attendance-summary-box h2 {
     margin: 0;
-}
 
-.present-summary {
-    border: 2px solid #22c55e;
-}
-
-.present-summary h2 {
-    color: #16a34a;
-}
-
-.absent-summary {
-    border: 2px solid #ef4444;
-}
-
-.absent-summary h2 {
-    color: #dc2626;
+    font-size: 27px;
 }
 
 .total-summary {
     border: 2px solid #2563eb;
 }
 
-.total-summary h2 {
-    color: #2563eb;
+.present-summary {
+    border: 2px solid #22c55e;
+}
+
+.absent-summary {
+    border: 2px solid #ef4444;
 }
 
 
-/* =========================================================
+/* =====================================================
    REGISTERED STUDENT
-   ========================================================= */
+===================================================== */
 
 .registered-student {
+    padding: 15px;
+
+    margin-bottom: 11px;
+
+    border-radius: 13px;
+
     background: #f8fafc;
 
     border: 1px solid #e2e8f0;
 
-    padding: 15px;
-
-    border-radius: 12px;
-
-    margin-bottom: 12px;
-
-    line-height: 1.7;
-}
-
-
-/* =========================================================
-   ADMIN
-   ========================================================= */
-
-.admin-info {
-    background: #eff6ff;
-
-    border: 1px solid #bfdbfe;
-
-    padding: 18px;
-
-    border-radius: 12px;
-
     line-height: 1.8;
 
-    color: #1e3a8a;
+    color: #475569;
 }
 
 
-/* =========================================================
-   LOGOUT BUTTON
-   ========================================================= */
+/* =====================================================
+   ADMIN
+===================================================== */
 
-.logout-button {
-    background: #dc2626 !important;
-
-    color: white !important;
-}
-
-.logout-button:hover {
-    background: #b91c1c !important;
-}
-
-
-/* =========================================================
-   EMAIL BUTTON
-   ========================================================= */
-
-.email-button {
-    display: inline-block;
-
-    margin-top: 15px;
-
-    padding: 12px 18px;
-
-    border-radius: 10px;
-
-    background: #2563eb;
-
-    color: white;
-
-    text-decoration: none;
-
-    font-weight: bold;
-}
-
-.email-button:hover {
-    background: #1d4ed8;
-}
-
-
-/* =========================================================
-   FOOTER
-   ========================================================= */
-
-footer {
-    text-align: center;
-
+.admin-info {
     padding: 20px;
 
-    color: #64748b;
+    border-radius: 15px;
 
-    font-size: 13px;
+    background:
+        linear-gradient(
+            135deg,
+            #eff6ff,
+            #f5f3ff
+        );
+
+    border:
+        1px solid #c7d2fe;
+
+    color: #334155;
+
+    line-height: 2;
 }
 
 
-/* =========================================================
+/* =====================================================
    MOBILE
-   ========================================================= */
+===================================================== */
 
-@media (max-width: 900px) {
+@media (max-width: 850px) {
 
     .dashboard {
         grid-template-columns:
             repeat(2, 1fr);
     }
+
 }
 
+@media (max-width: 650px) {
 
-@media (max-width: 600px) {
+    .auth-card {
+        padding: 28px 20px;
 
-    #loginPage,
-    #createAccountPage {
-        padding: 15px;
+        border-radius: 23px;
     }
 
-    .auth-card,
-    .create-account-card {
-        padding: 23px;
-
-        border-radius: 20px;
+    .auth-card h1 {
+        font-size: 24px;
     }
 
-    .auth-brand h1 {
-        font-size: 27px;
+    .main-header {
+        padding:
+            80px
+            18px
+            28px;
     }
 
-    .auth-brand .college-name {
-        font-size: 16px;
+    .main-header h1 {
+        font-size: 25px;
     }
 
-    .container {
-        padding: 12px;
-    }
-
-    header {
-        padding: 30px 15px;
-
-        border-radius: 18px;
-    }
-
-    header h1 {
-        font-size: 27px;
-    }
-
-    header p:nth-of-type(1) {
-        font-size: 16px;
-    }
-
-    .college-title {
-        font-size: 15px;
-    }
-
-    .menu-container {
-        left: 10px;
-
-        top: 10px;
-    }
-
-    .menu-button {
-        width: 48px;
-
-        height: 45px;
-
-        font-size: 23px;
-    }
-
-    .main-menu {
-        width: 260px;
+    .main-header h2 {
+        font-size: 14px;
     }
 
     .dashboard {
@@ -1218,23 +1346,19 @@ footer {
     }
 
     .card {
-        padding: 18px 10px;
+        padding: 17px 10px;
     }
 
     .card h2 {
         font-size: 25px;
     }
 
-    .section {
-        padding: 18px;
-
-        border-radius: 17px;
+    .glass-section {
+        padding: 20px 15px;
     }
 
-    .camera-box video {
-        min-height: 240px;
-
-        border-radius: 14px;
+    .form-grid {
+        grid-template-columns: 1fr;
     }
 
     .student-row {
@@ -1243,93 +1367,39 @@ footer {
 
     .student-actions {
         flex-direction: row;
-
-        flex-wrap: wrap;
     }
 
     .student-actions button {
         flex: 1;
-
-        min-width: 80px;
     }
 
     .attendance-summary {
         grid-template-columns: 1fr;
     }
 
-    .modal {
-        padding: 12px;
+    .menu-container {
+        left: 12px;
+        top: 12px;
     }
 
-    .modal-content {
-        max-height: 90vh;
-
-        padding: 20px;
+    .main-menu {
+        width: 270px;
     }
+
 }
 
-
-@media (max-width: 400px) {
+@media (max-width: 420px) {
 
     .dashboard {
         grid-template-columns: 1fr;
     }
 
-    .auth-brand h1 {
-        font-size: 24px;
+    .auth-page {
+        padding: 12px;
     }
 
-    .auth-brand .college-name {
-        font-size: 14px;
-    }
-}
-
-
-/* =========================================================
-   ANIMATION
-   ========================================================= */
-
-@keyframes fadeIn {
-
-    from {
-        opacity: 0;
-
-        transform: translateY(8px);
+    .camera-frame video {
+        aspect-ratio: 4 / 3;
     }
 
-    to {
-        opacity: 1;
-
-        transform: translateY(0);
-    }
-}
-
-.auth-card,
-.create-account-card,
-.section,
-.card {
-    animation: fadeIn 0.35s ease;
-}
-
-
-/* =========================================================
-   SCROLLBAR
-   ========================================================= */
-
-::-webkit-scrollbar {
-    width: 8px;
-}
-
-::-webkit-scrollbar-track {
-    background: #f1f5f9;
-}
-
-::-webkit-scrollbar-thumb {
-    background: #94a3b8;
-
-    border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: #64748b;
 }
