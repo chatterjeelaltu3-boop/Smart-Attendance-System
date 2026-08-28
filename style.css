@@ -1107,23 +1107,41 @@ input:focus {
         font-size: 23px;
     }
 }
-/* HETC Logo Size */
+/* ============================================================
+   HETC LOGO - FINAL SIZE FIX
+============================================================ */
+
 .college-logo-img {
-    width: 80px;
-    height: 80px;
-    object-fit: contain;
+    width: 58px !important;
+    height: 58px !important;
+    max-width: 58px !important;
+    max-height: 58px !important;
+    object-fit: contain !important;
     display: block;
-    margin: 0 auto 12px;
 }
 
-/* Login page logo */
+/* Login Page */
 .college-logo-area .college-logo-img {
-    width: 85px;
-    height: 85px;
+    width: 72px !important;
+    height: 72px !important;
+    max-width: 72px !important;
+    max-height: 72px !important;
+    margin: 0 auto 10px !important;
 }
 
-/* Dashboard sidebar logo */
+/* Dashboard Sidebar */
 .sidebar-logo .college-logo-img {
-    width: 65px;
-    height: 65px;
+    width: 58px !important;
+    height: 58px !important;
+    max-width: 58px !important;
+    max-height: 58px !important;
+    margin: 0 auto 8px !important;
+}
+
+/* Create Account Page */
+.small-logo .college-logo-img {
+    width: 55px !important;
+    height: 55px !important;
+    max-width: 55px !important;
+    max-height: 55px !important;
 }
