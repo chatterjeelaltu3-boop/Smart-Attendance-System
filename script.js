@@ -13,6 +13,64 @@ let attendanceRunning = false;
 
 
 // =====================================================
+// DATE + DAY + TIME
+// =====================================================
+
+function getAttendanceDateTime() {
+
+    const now = new Date();
+
+    const date = now.toLocaleDateString("en-IN", {
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+    });
+
+    const day = now.toLocaleDateString("en-IN", {
+        weekday: "long"
+    });
+
+    const time = now.toLocaleTimeString("en-IN", {
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true
+    });
+
+    return {
+        date: date,
+        day: day,
+        time: time
+    };
+}
+
+
+// =====================================================
+// SHOW TODAY'S DATE
+// =====================================================
+
+function showCurrentDate() {
+
+    const dateElement =
+        document.getElementById("currentDate");
+
+    if (!dateElement) return;
+
+    const today = new Date();
+
+    const options = {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+    };
+
+    dateElement.innerText =
+        "📅 " +
+        today.toLocaleDateString("en-IN", options);
+}
+
+
+// =====================================================
 // ADD STUDENT
 // =====================================================
 
@@ -30,10 +88,26 @@ function addStudent() {
     const department =
         document.getElementById("studentDepartment").value.trim();
 
+    const mobileElement =
+        document.getElementById("studentMobile");
 
-    if (!name || !roll || !college || !department) {
+    const mobile =
+        mobileElement
+            ? mobileElement.value.trim()
+            : "";
 
-        alert("Please fill all student details.");
+
+    if (
+        !name ||
+        !roll ||
+        !college ||
+        !department ||
+        !mobile
+    ) {
+
+        alert(
+            "Please fill Name, Roll, College, Department and Mobile Number."
+        );
 
         return;
     }
@@ -45,7 +119,11 @@ function addStudent() {
         roll: roll,
         college: college,
         department: department,
-        status: "Not Marked"
+        mobile: mobile,
+        status: "Not Marked",
+        attendanceDate: "",
+        attendanceDay: "",
+        attendanceTime: ""
 
     });
 
@@ -54,6 +132,10 @@ function addStudent() {
     document.getElementById("studentRoll").value = "";
     document.getElementById("studentCollege").value = "";
     document.getElementById("studentDepartment").value = "";
+
+    if (mobileElement) {
+        mobileElement.value = "";
+    }
 
 
     displayStudents();
@@ -90,9 +172,15 @@ function displayStudents() {
     const filteredStudents =
         students.filter(student =>
 
-            student.name.toLowerCase().includes(search) ||
+            student.name
+                .toLowerCase()
+                .includes(search)
 
-            student.roll.toLowerCase().includes(search)
+            ||
+
+            student.roll
+                .toLowerCase()
+                .includes(search)
 
         );
 
@@ -119,27 +207,65 @@ function displayStudents() {
             "student-row";
 
 
+        let attendanceInfo = "";
+
+        if (student.attendanceDate) {
+
+            attendanceInfo = `
+
+                <br>
+
+                📅 Date:
+                ${student.attendanceDate}
+
+                <br>
+
+                📆 Day:
+                ${student.attendanceDay}
+
+                <br>
+
+                🕐 Time:
+                ${student.attendanceTime}
+
+            `;
+        }
+
+
         row.innerHTML = `
 
             <div class="student-info">
 
-                <strong>${student.name}</strong>
+                <strong>
+                    ${student.name}
+                </strong>
 
                 <br>
 
-                Roll: ${student.roll}
+                Roll:
+                ${student.roll}
 
                 <br>
 
-                College: ${student.college}
+                College:
+                ${student.college}
 
                 <br>
 
-                Department: ${student.department}
+                Department:
+                ${student.department}
+
+                <br>
+
+                📱 Mobile:
+                ${student.mobile || "Not added"}
+
+                ${attendanceInfo}
 
                 <div class="status">
 
-                    Status: ${student.status}
+                    Status:
+                    ${student.status}
 
                 </div>
 
@@ -186,13 +312,27 @@ function displayStudents() {
 
 
 // =====================================================
-// PRESENT
+// MARK PRESENT
 // =====================================================
 
 function markPresent(index) {
 
+    const attendance =
+        getAttendanceDateTime();
+
+
     students[index].status =
         "Present";
+
+    students[index].attendanceDate =
+        attendance.date;
+
+    students[index].attendanceDay =
+        attendance.day;
+
+    students[index].attendanceTime =
+        attendance.time;
+
 
     displayStudents();
 
@@ -201,7 +341,7 @@ function markPresent(index) {
 
 
 // =====================================================
-// ABSENT
+// MARK ABSENT
 // =====================================================
 
 function markAbsent(index) {
@@ -209,6 +349,7 @@ function markAbsent(index) {
     students[index].status =
         "Absent";
 
+
     displayStudents();
 
     updateDashboard();
@@ -216,7 +357,7 @@ function markAbsent(index) {
 
 
 // =====================================================
-// DELETE
+// DELETE STUDENT
 // =====================================================
 
 function deleteStudent(index) {
@@ -241,43 +382,61 @@ function updateDashboard() {
 
     const present =
         students.filter(
-            student => student.status === "Present"
+            student =>
+                student.status === "Present"
         ).length;
 
 
     const absent =
         students.filter(
-            student => student.status === "Absent"
+            student =>
+                student.status === "Absent"
         ).length;
 
 
     const percentage =
         total > 0
-            ? Math.round((present / total) * 100)
+            ? Math.round(
+                (present / total) * 100
+            )
             : 0;
 
 
     const totalElement =
-        document.getElementById("totalStudents");
+        document.getElementById(
+            "totalStudents"
+        );
 
     const presentElement =
-        document.getElementById("presentStudents");
+        document.getElementById(
+            "presentStudents"
+        );
 
     const absentElement =
-        document.getElementById("absentStudents");
+        document.getElementById(
+            "absentStudents"
+        );
 
     const percentageElement =
-        document.getElementById("attendancePercentage");
+        document.getElementById(
+            "attendancePercentage"
+        );
 
 
     if (totalElement)
-        totalElement.innerText = total;
+        totalElement.innerText =
+            total;
+
 
     if (presentElement)
-        presentElement.innerText = present;
+        presentElement.innerText =
+            present;
+
 
     if (absentElement)
-        absentElement.innerText = absent;
+        absentElement.innerText =
+            absent;
+
 
     if (percentageElement)
         percentageElement.innerText =
@@ -286,7 +445,7 @@ function updateDashboard() {
 
 
 // =====================================================
-// FACE API MODELS
+// FACE API MODEL URL
 // =====================================================
 
 const MODEL_URL =
@@ -300,6 +459,7 @@ const MODEL_URL =
 async function loadFaceModels() {
 
     if (faceModelLoaded) {
+
         return true;
     }
 
@@ -371,38 +531,13 @@ async function loadFaceModels() {
         );
 
 
-        const registrationStatus =
-            document.getElementById(
-                "registrationStatus"
-            );
-
-        const attendanceStatus =
-            document.getElementById(
-                "attendanceStatus"
-            );
-
-
-        if (registrationStatus) {
-
-            registrationStatus.innerText =
-                "Face model failed to load ❌";
-        }
-
-
-        if (attendanceStatus) {
-
-            attendanceStatus.innerText =
-                "Face model failed to load ❌";
-        }
-
-
         return false;
     }
 }
 
 
 // =====================================================
-// GENERIC CAMERA START
+// CAMERA FUNCTION
 // =====================================================
 
 async function startCameraForVideo(
@@ -420,7 +555,7 @@ async function startCameraForVideo(
     if (!video) {
 
         console.error(
-            "Video element not found:",
+            "Video not found:",
             videoId
         );
 
@@ -431,25 +566,26 @@ async function startCameraForVideo(
     try {
 
         const stream =
-            await navigator.mediaDevices.getUserMedia({
+            await navigator.mediaDevices
+                .getUserMedia({
 
-                video: {
+                    video: {
 
-                    facingMode: "user",
+                        facingMode: "user",
 
-                    width: {
-                        ideal: 640
+                        width: {
+                            ideal: 640
+                        },
+
+                        height: {
+                            ideal: 480
+                        }
+
                     },
 
-                    height: {
-                        ideal: 480
-                    }
+                    audio: false
 
-                },
-
-                audio: false
-
-            });
+                });
 
 
         video.srcObject =
@@ -524,7 +660,6 @@ async function startRegistrationCamera() {
             status.innerText =
                 "Camera ON — ready for face registration 📷";
         }
-
     }
 }
 
@@ -564,13 +699,12 @@ async function startAttendanceCamera() {
             status.innerText =
                 "Camera ON — ready for attendance 📷";
         }
-
     }
 }
 
 
 // =====================================================
-// REGISTER FACE
+// FACE REGISTRATION
 // =====================================================
 
 async function startAutomaticFaceRegistration() {
@@ -599,6 +733,18 @@ async function startAutomaticFaceRegistration() {
         ).value.trim();
 
 
+    const mobileElement =
+        document.getElementById(
+            "faceMobile"
+        );
+
+
+    const mobile =
+        mobileElement
+            ? mobileElement.value.trim()
+            : "";
+
+
     const video =
         document.getElementById(
             "registrationCamera"
@@ -623,17 +769,16 @@ async function startAutomaticFaceRegistration() {
         );
 
 
-    // Check details
-
     if (
         !name ||
         !roll ||
         !college ||
-        !department
+        !department ||
+        !mobile
     ) {
 
         message.innerText =
-            "Please enter Name, Roll, College and Department.";
+            "Please enter Name, Roll, College, Department and Mobile Number.";
 
         return;
     }
@@ -641,8 +786,6 @@ async function startAutomaticFaceRegistration() {
 
     button.disabled = true;
 
-
-    // Load models
 
     const modelsReady =
         await loadFaceModels();
@@ -655,8 +798,6 @@ async function startAutomaticFaceRegistration() {
         return;
     }
 
-
-    // Start camera if not already running
 
     if (!video.srcObject) {
 
@@ -691,14 +832,15 @@ async function startAutomaticFaceRegistration() {
         name,
         roll,
         college,
-        department
+        department,
+        mobile
 
     );
 }
 
 
 // =====================================================
-// AUTOMATIC FACE DETECTION FOR REGISTRATION
+// AUTOMATIC FACE REGISTRATION DETECTION
 // =====================================================
 
 async function detectRegistrationFace(
@@ -706,7 +848,8 @@ async function detectRegistrationFace(
     name,
     roll,
     college,
-    department
+    department,
+    mobile
 
 ) {
 
@@ -732,6 +875,7 @@ async function detectRegistrationFace(
 
         const detection =
             await faceapi
+
                 .detectSingleFace(
 
                     video,
@@ -746,7 +890,9 @@ async function detectRegistrationFace(
                         })
 
                 )
+
                 .withFaceLandmarks()
+
                 .withFaceDescriptor();
 
 
@@ -755,8 +901,6 @@ async function detectRegistrationFace(
             status.innerText =
                 "Face detected ✅ Capturing...";
 
-
-            // Save descriptor
 
             const descriptor =
                 Array.from(
@@ -774,6 +918,8 @@ async function detectRegistrationFace(
 
                 department: department,
 
+                mobile: mobile,
+
                 descriptor: descriptor
 
             };
@@ -790,16 +936,30 @@ async function detectRegistrationFace(
             );
 
 
-            // Also add student to attendance list
-
             const existingStudent =
                 students.find(
+
                     student =>
                         student.roll === roll
+
                 );
 
 
-            if (!existingStudent) {
+            if (existingStudent) {
+
+                existingStudent.name =
+                    name;
+
+                existingStudent.college =
+                    college;
+
+                existingStudent.department =
+                    department;
+
+                existingStudent.mobile =
+                    mobile;
+
+            } else {
 
                 students.push({
 
@@ -811,10 +971,17 @@ async function detectRegistrationFace(
 
                     department: department,
 
-                    status: "Not Marked"
+                    mobile: mobile,
+
+                    status: "Not Marked",
+
+                    attendanceDate: "",
+
+                    attendanceDay: "",
+
+                    attendanceTime: ""
 
                 });
-
             }
 
 
@@ -824,12 +991,15 @@ async function detectRegistrationFace(
 
 
             setTimeout(
+
                 () => {
 
                     registrationSuccessful();
 
                 },
+
                 800
+
             );
 
 
@@ -850,7 +1020,8 @@ async function detectRegistrationFace(
                     name,
                     roll,
                     college,
-                    department
+                    department,
+                    mobile
 
                 );
 
@@ -865,15 +1036,34 @@ async function detectRegistrationFace(
 
         console.error(error);
 
+
         status.innerText =
             "Face detection error ❌";
+
 
         registrationRunning =
             false;
 
-        document.getElementById(
+
+        buttonEnable(
             "registerFaceButton"
-        ).disabled = false;
+        );
+    }
+}
+
+
+// =====================================================
+// ENABLE BUTTON
+// =====================================================
+
+function buttonEnable(id) {
+
+    const button =
+        document.getElementById(id);
+
+    if (button) {
+
+        button.disabled = false;
     }
 }
 
@@ -925,7 +1115,8 @@ function registrationSuccessful() {
         registrationStream
             .getTracks()
             .forEach(
-                track => track.stop()
+                track =>
+                    track.stop()
             );
 
         registrationStream = null;
@@ -1079,6 +1270,7 @@ async function detectAttendanceFace(
 
         const detection =
             await faceapi
+
                 .detectSingleFace(
 
                     video,
@@ -1093,7 +1285,9 @@ async function detectAttendanceFace(
                         })
 
                 )
+
                 .withFaceLandmarks()
+
                 .withFaceDescriptor();
 
 
@@ -1148,11 +1342,6 @@ async function detectAttendanceFace(
         );
 
 
-        /*
-         * Lower distance means
-         * stronger face match.
-         */
-
         if (distance < 0.55) {
 
             showAttendanceSuccess(
@@ -1169,24 +1358,12 @@ async function detectAttendanceFace(
                 false;
 
 
-            if (attendanceStream) {
-
-                attendanceStream
-                    .getTracks()
-                    .forEach(
-                        track => track.stop()
-                    );
-
-                attendanceStream = null;
-            }
+            stopAttendanceCamera();
 
 
-            video.srcObject = null;
-
-
-            document.getElementById(
+            buttonEnable(
                 "attendanceButton"
-            ).disabled = false;
+            );
         }
 
 
@@ -1194,15 +1371,18 @@ async function detectAttendanceFace(
 
         console.error(error);
 
+
         status.innerText =
             "Face detection error ❌";
+
 
         attendanceRunning =
             false;
 
-        document.getElementById(
+
+        buttonEnable(
             "attendanceButton"
-        ).disabled = false;
+        );
     }
 }
 
@@ -1223,46 +1403,15 @@ function showAttendanceSuccess(student) {
         );
 
 
-    result.innerHTML = `
+    // Get current date and time
 
-        <div>
-
-            <div style="font-size:45px;">
-                ✅
-            </div>
-
-            <h3>
-                Attendance Successfully
-            </h3>
-
-            <p>
-                <strong>Name:</strong>
-                ${student.name}
-            </p>
-
-            <p>
-                <strong>Roll:</strong>
-                ${student.roll}
-            </p>
-
-            <p>
-                <strong>College:</strong>
-                ${student.college}
-            </p>
-
-            <p>
-                <strong>Department:</strong>
-                ${student.department}
-            </p>
-
-        </div>
-
-    `;
+    const attendance =
+        getAttendanceDateTime();
 
 
-    // Mark student present
+    // Find student
 
-    const studentIndex =
+    let studentIndex =
         students.findIndex(
 
             s =>
@@ -1271,12 +1420,39 @@ function showAttendanceSuccess(student) {
         );
 
 
+    // If student exists
+
     if (studentIndex !== -1) {
 
         students[studentIndex].status =
             "Present";
 
-    } else {
+        students[studentIndex].attendanceDate =
+            attendance.date;
+
+        students[studentIndex].attendanceDay =
+            attendance.day;
+
+        students[studentIndex].attendanceTime =
+            attendance.time;
+
+
+        // Update mobile if available
+
+        if (
+            student.mobile &&
+            !student.mobile.trim()
+        ) {
+
+            student.mobile =
+                students[studentIndex].mobile;
+        }
+
+    }
+
+    // If student doesn't exist
+
+    else {
 
         students.push({
 
@@ -1288,11 +1464,121 @@ function showAttendanceSuccess(student) {
 
             department: student.department,
 
-            status: "Present"
+            mobile: student.mobile || "",
+
+            status: "Present",
+
+            attendanceDate:
+                attendance.date,
+
+            attendanceDay:
+                attendance.day,
+
+            attendanceTime:
+                attendance.time
 
         });
 
+
+        studentIndex =
+            students.length - 1;
     }
+
+
+    // Show success result
+
+    result.innerHTML = `
+
+        <div
+            style="
+                padding:20px;
+                margin-top:20px;
+                border-radius:15px;
+                background:#ecfdf5;
+                border:2px solid #22c55e;
+                text-align:center;
+            "
+        >
+
+            <div
+                style="
+                    font-size:50px;
+                    margin-bottom:10px;
+                "
+            >
+                ✅
+            </div>
+
+
+            <h3
+                style="
+                    font-size:24px;
+                    margin-bottom:15px;
+                "
+            >
+                Attendance Successfully
+            </h3>
+
+
+            <p>
+                <strong>👤 Name:</strong>
+                ${student.name}
+            </p>
+
+
+            <p>
+                <strong>🔢 Roll:</strong>
+                ${student.roll}
+            </p>
+
+
+            <p>
+                <strong>🏫 College:</strong>
+                ${student.college}
+            </p>
+
+
+            <p>
+                <strong>🎓 Department:</strong>
+                ${student.department}
+            </p>
+
+
+            <p>
+                <strong>📱 Mobile:</strong>
+                ${student.mobile || "Not added"}
+            </p>
+
+
+            <hr
+                style="
+                    margin:15px 0;
+                    border:none;
+                    border-top:1px solid #bbf7d0;
+                "
+            >
+
+
+            <p>
+                <strong>📅 Date:</strong>
+                ${attendance.date}
+            </p>
+
+
+            <p>
+                <strong>📆 Day:</strong>
+                ${attendance.day}
+            </p>
+
+
+            <p>
+                <strong>🕐 Time:</strong>
+                ${attendance.time}
+            </p>
+
+        </div>
+
+    `;
 
 
     displayStudents();
@@ -1313,14 +1599,28 @@ function showAttendanceSuccess(student) {
     }
 
 
-    // Stop camera
+    stopAttendanceCamera();
+
+
+    buttonEnable(
+        "attendanceButton"
+    );
+}
+
+
+// =====================================================
+// STOP ATTENDANCE CAMERA
+// =====================================================
+
+function stopAttendanceCamera() {
 
     if (attendanceStream) {
 
         attendanceStream
             .getTracks()
             .forEach(
-                track => track.stop()
+                track =>
+                    track.stop()
             );
 
         attendanceStream = null;
@@ -1337,18 +1637,6 @@ function showAttendanceSuccess(student) {
 
         video.srcObject = null;
     }
-
-
-    const button =
-        document.getElementById(
-            "attendanceButton"
-        );
-
-
-    if (button) {
-
-        button.disabled = false;
-    }
 }
 
 
@@ -1364,63 +1652,9 @@ window.addEventListener(
 
         updateDashboard();
 
+        showCurrentDate();
+
         await loadFaceModels();
 
     }
 );
-// =====================================================
-// SHOW TODAY'S DATE AND DAY
-// =====================================================
-
-function showCurrentDate() {
-// =====================================================
-// ATTENDANCE DATE + DAY + TIME
-// =====================================================
-
-function getAttendanceDateTime() {
-
-    const now = new Date();
-
-    const date = now.toLocaleDateString("en-IN", {
-        day: "numeric",
-        month: "long",
-        year: "numeric"
-    });
-
-    const day = now.toLocaleDateString("en-IN", {
-        weekday: "long"
-    });
-
-    const time = now.toLocaleTimeString("en-IN", {
-        hour: "numeric",
-        minute: "2-digit",
-        hour12: true
-    });
-
-    return {
-        date: date,
-        day: day,
-        time: time
-    };
-}
-    const dateElement =
-        document.getElementById("currentDate");
-
-    if (!dateElement) return;
-
-    const today = new Date();
-
-    const options = {
-        weekday: "long",
-        day: "numeric",
-        month: "long",
-        year: "numeric"
-    };
-
-    dateElement.innerText =
-        "📅 " + today.toLocaleDateString("en-IN", options);
-}
-
-
-// Run when website opens
-showCurrentDate();
