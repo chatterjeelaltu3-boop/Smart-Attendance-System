@@ -1,2290 +1,937 @@
-// ============================================================
-// SMART ATTENDANCE SYSTEM
-// script.js
-// ============================================================
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Smart Attendance System</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Face API -->
+    <script defer src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+</head>
+
+<body>
+
+<!-- =========================================================
+     LOGIN PAGE
+========================================================= -->
+
+<section id="loginPage" class="page">
+
+    <div class="auth-container">
+
+        <h1>📋 Smart Attendance</h1>
+        <p class="subtitle">Student Attendance System</p>
+
+        <div class="form-group">
+            <label>Name</label>
+            <input
+                type="text"
+                id="loginName"
+                placeholder="Enter your name"
+            >
+        </div>
+
+        <div class="form-group">
+            <label>Mobile Number</label>
+            <input
+                type="tel"
+                id="loginMobile"
+                placeholder="10 digit mobile number"
+                maxlength="10"
+            >
+        </div>
+
+        <div class="form-group">
+            <label>4 Digit PIN</label>
+            <input
+                type="password"
+                id="loginPin"
+                placeholder="Enter PIN"
+                maxlength="4"
+            >
+        </div>
+
+        <button id="loginButton" class="primary-btn">
+            Login
+        </button>
+
+        <div id="loginMessage" class="auth-message"></div>
+
+        <button id="createAccountButton" class="link-btn">
+            Create New Account
+        </button>
+
+        <button id="forgotPinButton" class="link-btn">
+            Forgot PIN?
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- =========================================================
+     CREATE ACCOUNT PAGE
+========================================================= -->
+
+<section id="createAccountPage" class="page" style="display:none;">
+
+    <div class="auth-container">
+
+        <h1>📝 Create Account</h1>
+
+        <div class="form-group">
+            <label>Full Name</label>
+            <input
+                type="text"
+                id="createName"
+                placeholder="Enter your name"
+            >
+        </div>
+
+        <div class="form-group">
+            <label>Mobile Number</label>
+            <input
+                type="tel"
+                id="createMobile"
+                placeholder="10 digit mobile number"
+                maxlength="10"
+            >
+        </div>
+
+        <div class="form-group">
+            <label>Email (Optional)</label>
+            <input
+                type="email"
+                id="createEmail"
+                placeholder="Enter email"
+            >
+        </div>
+
+        <div class="form-group">
+            <label>Create 4 Digit PIN</label>
+            <input
+                type="password"
+                id="createPin"
+                placeholder="4 digit PIN"
+                maxlength="4"
+            >
+        </div>
+
+        <div class="form-group">
+            <label>Confirm PIN</label>
+            <input
+                type="password"
+                id="confirmPin"
+                placeholder="Confirm PIN"
+                maxlength="4"
+            >
+        </div>
+
+        <div id="recaptcha-container"></div>
+
+        <button
+            id="sendCreateOtpButton"
+            class="primary-btn"
+        >
+            Send OTP
+        </button>
+
+        <div
+            id="createOtpSection"
+            style="display:none;"
+        >
+
+            <div class="form-group">
+                <label>Enter OTP</label>
+
+                <input
+                    type="text"
+                    id="createOtp"
+                    placeholder="6 digit OTP"
+                    maxlength="6"
+                >
+            </div>
+
+            <button
+                id="verifyCreateOtpButton"
+                class="success-btn"
+            >
+                Verify OTP & Create Account
+            </button>
 
-import {
-    getAuth,
-    RecaptchaVerifier,
-    signInWithPhoneNumber,
-    onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+        </div>
 
-// ============================================================
-// GLOBAL VARIABLES
-// ============================================================
+        <div
+            id="createMessage"
+            class="auth-message"
+        ></div>
 
-let confirmationResult = null;
-let forgotConfirmationResult = null;
+        <button
+            id="backToLoginButton"
+            class="link-btn"
+        >
+            ← Back to Login
+        </button>
 
-let currentUser = null;
+    </div>
 
-let registrationStream = null;
-let attendanceStream = null;
+</section>
 
-let registeredStudents =
-    JSON.parse(localStorage.getItem("registeredStudents") || "[]");
 
-let attendanceData =
-    JSON.parse(localStorage.getItem("attendanceData") || "{}");
+<!-- =========================================================
+     FORGOT PIN PAGE
+========================================================= -->
 
-const auth = window.firebaseAuth;
+<section id="forgotPinPage" class="page" style="display:none;">
 
+    <div class="auth-container">
 
-// ============================================================
-// HELPER
-// ============================================================
+        <h1>🔐 Forgot PIN</h1>
 
-function $(id) {
-    return document.getElementById(id);
-}
+        <div class="form-group">
 
-function showMessage(id, message, type = "info") {
-    const el = $(id);
-    if (!el) return;
+            <label>Name</label>
 
-    el.textContent = message;
-    el.className = "auth-message " + type;
-}
+            <input
+                type="text"
+                id="forgotName"
+                placeholder="Registered name"
+            >
 
-function cleanMobile(mobile) {
-    return String(mobile || "")
-        .replace(/\D/g, "")
-        .slice(-10);
-}
+        </div>
 
-function getPhoneNumber(mobile) {
-    return "+91" + cleanMobile(mobile);
-}
+        <div class="form-group">
 
-function validMobile(mobile) {
-    return /^[6-9]\d{9}$/.test(cleanMobile(mobile));
-}
+            <label>Mobile Number</label>
 
-function validPin(pin) {
-    return /^\d{4}$/.test(pin);
-}
+            <input
+                type="tel"
+                id="forgotMobile"
+                placeholder="Registered mobile"
+                maxlength="10"
+            >
 
-function validEmail(email) {
-    if (!email) return true;
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-}
+        </div>
 
-function saveStudents() {
-    localStorage.setItem(
-        "registeredStudents",
-        JSON.stringify(registeredStudents)
-    );
-}
+        <div id="forgot-recaptcha-container"></div>
 
-function saveAttendance() {
-    localStorage.setItem(
-        "attendanceData",
-        JSON.stringify(attendanceData)
-    );
-}
+        <button
+            id="sendForgotOtpButton"
+            class="primary-btn"
+        >
+            Send OTP
+        </button>
 
 
-// ============================================================
-// PAGE NAVIGATION
-// ============================================================
+        <div
+            id="forgotOtpSection"
+            style="display:none;"
+        >
 
-function showPage(pageId) {
+            <div class="form-group">
 
-    const pages = [
-        "loginPage",
-        "createAccountPage",
-        "forgotPinPage",
-        "dashboardPage"
-    ];
+                <label>OTP</label>
 
-    pages.forEach(id => {
-        const page = $(id);
+                <input
+                    type="text"
+                    id="forgotOtp"
+                    placeholder="6 digit OTP"
+                    maxlength="6"
+                >
 
-        if (page) {
-            page.style.display =
-                id === pageId ? "block" : "none";
-        }
-    });
-}
-
-
-// ============================================================
-// CREATE ACCOUNT PAGE
-// ============================================================
+            </div>
 
-function openCreateAccount() {
 
-    showPage("createAccountPage");
+            <div class="form-group">
 
-    if ($("createOtpSection")) {
-        $("createOtpSection").style.display = "none";
-    }
+                <label>New PIN</label>
 
-    showMessage("createMessage", "");
+                <input
+                    type="password"
+                    id="newPin"
+                    placeholder="New 4 digit PIN"
+                    maxlength="4"
+                >
 
-    $("createName")?.focus();
-}
-
-
-// ============================================================
-// BACK TO LOGIN
-// ============================================================
+            </div>
 
-function backToLogin() {
-    showPage("loginPage");
-    showMessage("loginMessage", "");
-}
 
-function backFromForgot() {
-    showPage("loginPage");
-    showMessage("forgotMessage", "");
-}
-
-
-// ============================================================
-// SEND CREATE ACCOUNT PHONE OTP
-// ============================================================
-
-async function sendCreateOTP() {
-
-    const name =
-        $("createName")?.value.trim();
-
-    const mobile =
-        cleanMobile($("createMobile")?.value);
-
-    const email =
-        $("createEmail")?.value.trim();
-
-    const pin =
-        $("createPin")?.value.trim();
-
-    const confirmPin =
-        $("confirmPin")?.value.trim();
-
-
-    // ---------------- VALIDATION ----------------
-
-    if (!name) {
-        showMessage(
-            "createMessage",
-            "Please enter your name.",
-            "error"
-        );
-        return;
-    }
+            <div class="form-group">
 
-    if (!validMobile(mobile)) {
-        showMessage(
-            "createMessage",
-            "Please enter a valid 10 digit mobile number.",
-            "error"
-        );
-        return;
-    }
+                <label>Confirm New PIN</label>
 
-    if (email && !validEmail(email)) {
-        showMessage(
-            "createMessage",
-            "Please enter a valid email address.",
-            "error"
-        );
-        return;
-    }
-
-    if (!validPin(pin)) {
-        showMessage(
-            "createMessage",
-            "PIN must contain exactly 4 digits.",
-            "error"
-        );
-        return;
-    }
-
-    if (pin !== confirmPin) {
-        showMessage(
-            "createMessage",
-            "PIN and Confirm PIN do not match.",
-            "error"
-        );
-        return;
-    }
-
-
-    // ---------------- DUPLICATE MOBILE ----------------
-
-    const existingMobile =
-        registeredStudents.find(
-            student =>
-                student.mobile === mobile
-        );
-
-    if (existingMobile) {
-        showMessage(
-            "createMessage",
-            "This mobile number is already registered.",
-            "error"
-        );
-        return;
-    }
-
-
-    // ---------------- DUPLICATE EMAIL ----------------
+                <input
+                    type="password"
+                    id="confirmNewPin"
+                    placeholder="Confirm new PIN"
+                    maxlength="4"
+                >
 
-    if (email) {
+            </div>
 
-        const existingEmail =
-            registeredStudents.find(
-                student =>
-                    student.email &&
-                    student.email.toLowerCase() ===
-                    email.toLowerCase()
-            );
 
-        if (existingEmail) {
-            showMessage(
-                "createMessage",
-                "This email is already registered.",
-                "error"
-            );
-            return;
-        }
-    }
+            <button
+                id="resetPinButton"
+                class="success-btn"
+            >
+                Reset PIN
+            </button>
 
+        </div>
 
-    if (!auth) {
-        showMessage(
-            "createMessage",
-            "Firebase is not initialized. Please reload the page.",
-            "error"
-        );
-        return;
-    }
 
+        <div
+            id="forgotMessage"
+            class="auth-message"
+        ></div>
 
-    try {
 
-        showMessage(
-            "createMessage",
-            "Preparing Phone OTP...",
-            "info"
-        );
+        <button
+            id="forgotBackButton"
+            class="link-btn"
+        >
+            ← Back to Login
+        </button>
 
+    </div>
 
-        // Clear old reCAPTCHA
+</section>
 
-        if (window.createRecaptchaVerifier) {
-            try {
-                window.createRecaptchaVerifier.clear();
-            } catch (e) {}
-        }
 
+<!-- =========================================================
+     DASHBOARD
+========================================================= -->
 
-        // Create reCAPTCHA
+<section
+    id="dashboardPage"
+    class="page"
+    style="display:none;"
+>
 
-        window.createRecaptchaVerifier =
-            new RecaptchaVerifier(
-                auth,
-                "recaptcha-container",
-                {
-                    size: "normal",
-
-                    callback: () => {
-                        console.log(
-                            "Create account reCAPTCHA completed."
-                        );
-                    },
-
-                    "expired-callback": () => {
-                        showMessage(
-                            "createMessage",
-                            "reCAPTCHA expired. Please try again.",
-                            "error"
-                        );
-                    }
-                }
-            );
-
+    <!-- HEADER -->
 
-        // Save pending data
-
-        window.pendingRegistration = {
-            name,
-            mobile,
-            email,
-            pin
-        };
-
+    <header class="dashboard-header">
 
-        // Send Firebase Phone OTP
+        <div>
 
-        confirmationResult =
-            await signInWithPhoneNumber(
-                auth,
-                getPhoneNumber(mobile),
-                window.createRecaptchaVerifier
-            );
+            <h1>📋 Smart Attendance</h1>
 
+            <p id="currentDate"></p>
 
-        $("createOtpSection").style.display =
-            "block";
+        </div>
 
 
-        showMessage(
-            "createMessage",
-            "OTP sent to +91 " + mobile,
-            "success"
-        );
+        <button
+            onclick="toggleMenu()"
+            class="menu-btn"
+        >
+            ☰
+        </button>
 
+    </header>
 
-        $("createOtp")?.focus();
 
-    }
+    <!-- MENU -->
 
-    catch (error) {
+    <nav
+        id="mainMenu"
+        class="main-menu"
+    >
 
-        console.error(
-            "Create OTP Error:",
-            error
-        );
+        <button onclick="showRegisteredStudents()">
+            👥 Registered Students
+        </button>
 
-        showMessage(
-            "createMessage",
-            firebaseErrorMessage(error),
-            "error"
-        );
+        <button onclick="showCheckAttendance()">
+            📊 Check Attendance
+        </button>
 
-        if (window.createRecaptchaVerifier) {
-            try {
-                window.createRecaptchaVerifier.clear();
-            } catch (e) {}
-        }
-    }
-}
+        <button onclick="openEditDetails()">
+            ✏️ Edit Details
+        </button>
 
+        <button onclick="showAdminDetails()">
+            ⚙️ Admin
+        </button>
 
-// ============================================================
-// VERIFY CREATE OTP
-// ============================================================
+        <button onclick="logoutUser()">
+            🚪 Logout
+        </button>
 
-async function verifyCreateOTP() {
+    </nav>
 
-    const otp =
-        $("createOtp")?.value.trim();
 
-    if (!/^\d{6}$/.test(otp)) {
-        showMessage(
-            "createMessage",
-            "Enter the 6 digit OTP.",
-            "error"
-        );
-        return;
-    }
+    <!-- DASHBOARD STATS -->
 
-    if (!confirmationResult) {
-        showMessage(
-            "createMessage",
-            "Please request OTP first.",
-            "error"
-        );
-        return;
-    }
+    <div class="stats-container">
 
-    const data =
-        window.pendingRegistration;
+        <div class="stat-card">
 
-    if (!data) {
-        showMessage(
-            "createMessage",
-            "Registration session expired. Please start again.",
-            "error"
-        );
-        return;
-    }
+            <h3>Total Students</h3>
 
+            <div id="totalStudents">
+                0
+            </div>
 
-    try {
+        </div>
 
-        showMessage(
-            "createMessage",
-            "Verifying OTP...",
-            "info"
-        );
 
+        <div class="stat-card">
 
-        const result =
-            await confirmationResult.confirm(otp);
+            <h3>Present Today</h3>
 
+            <div id="presentStudents">
+                0
+            </div>
 
-        const firebaseUser =
-            result.user;
+        </div>
 
 
-        const student = {
+        <div class="stat-card">
 
-            id: firebaseUser.uid,
+            <h3>Absent Today</h3>
 
-            name: data.name,
+            <div id="absentStudents">
+                0
+            </div>
 
-            mobile: data.mobile,
+        </div>
 
-            email: data.email,
 
-            pin: data.pin,
+        <div class="stat-card">
 
-            roll: "",
+            <h3>Attendance</h3>
 
-            college: "",
+            <div id="attendancePercentage">
+                0%
+            </div>
 
-            department: "",
+        </div>
 
-            faceDescriptor: null,
+    </div>
 
-            registeredAt:
-                new Date().toISOString()
-        };
 
+    <!-- =====================================================
+         FACE REGISTRATION
+    ====================================================== -->
 
-        registeredStudents.push(student);
+    <div class="dashboard-card">
 
-        saveStudents();
+        <h2>👤 Face Registration</h2>
 
+        <p>
+            Register your face for automatic attendance.
+        </p>
 
-        currentUser =
-            student;
 
-        window.currentStudentId =
-            student.id;
+        <div class="form-grid">
 
+            <div class="form-group">
 
-        showMessage(
-            "createMessage",
-            "Account created successfully! Opening dashboard...",
-            "success"
-        );
+                <label>Name</label>
 
+                <input
+                    type="text"
+                    id="faceName"
+                    placeholder="Name"
+                >
 
-        setTimeout(() => {
-            openDashboard(student);
-        }, 700);
+            </div>
 
-    }
 
-    catch (error) {
+            <div class="form-group">
 
-        console.error(
-            "OTP verification error:",
-            error
-        );
+                <label>Roll Number</label>
 
-        showMessage(
-            "createMessage",
-            firebaseErrorMessage(error),
-            "error"
-        );
-    }
-}
+                <input
+                    type="text"
+                    id="faceRoll"
+                    placeholder="Roll number"
+                >
 
+            </div>
 
-// ============================================================
-// LOGIN
-// ============================================================
 
-function loginUser() {
+            <div class="form-group">
 
-    const name =
-        $("loginName")?.value.trim();
+                <label>College</label>
 
-    const mobile =
-        cleanMobile($("loginMobile")?.value);
+                <input
+                    type="text"
+                    id="collegeName"
+                    placeholder="College name"
+                >
 
-    const pin =
-        $("loginPin")?.value.trim();
+            </div>
 
 
-    if (!name) {
-        showMessage(
-            "loginMessage",
-            "Please enter your name.",
-            "error"
-        );
-        return;
-    }
+            <div class="form-group">
 
+                <label>Department</label>
 
-    if (!validMobile(mobile)) {
-        showMessage(
-            "loginMessage",
-            "Please enter a valid mobile number.",
-            "error"
-        );
-        return;
-    }
+                <input
+                    type="text"
+                    id="departmentName"
+                    placeholder="Department"
+                >
 
+            </div>
 
-    if (!validPin(pin)) {
-        showMessage(
-            "loginMessage",
-            "PIN must be exactly 4 digits.",
-            "error"
-        );
-        return;
-    }
 
+            <div class="form-group">
 
-    const student =
-        registeredStudents.find(
-            s =>
-                s.name.toLowerCase() ===
-                    name.toLowerCase() &&
-                s.mobile === mobile &&
-                s.pin === pin
-        );
+                <label>Mobile</label>
 
+                <input
+                    type="tel"
+                    id="faceMobile"
+                    placeholder="Mobile"
+                    maxlength="10"
+                >
 
-    if (!student) {
-        showMessage(
-            "loginMessage",
-            "Name, mobile number or PIN does not match.",
-            "error"
-        );
-        return;
-    }
+            </div>
 
 
-    currentUser =
-        student;
+            <div class="form-group">
 
-    window.currentStudentId =
-        student.id;
+                <label>Email</label>
 
+                <input
+                    type="email"
+                    id="faceEmail"
+                    placeholder="Email"
+                >
 
-    showMessage(
-        "loginMessage",
-        "Login successful! ✅",
-        "success"
-    );
+            </div>
 
+        </div>
 
-    setTimeout(() => {
-        openDashboard(student);
-    }, 500);
-}
 
+        <div class="camera-box">
 
-// ============================================================
-// FORGOT PIN
-// ============================================================
+            <video
+                id="registrationCamera"
+                autoplay
+                muted
+                playsinline
+            ></video>
 
-function openForgotPin() {
+            <div class="camera-guide">
+                Keep your face inside the guide
+            </div>
 
-    showPage("forgotPinPage");
+        </div>
 
-    if ($("forgotOtpSection")) {
-        $("forgotOtpSection").style.display = "none";
-    }
 
-    showMessage(
-        "forgotMessage",
-        ""
-    );
-}
+        <p id="registrationStatus">
+            Camera is OFF
+        </p>
 
 
-// ============================================================
-// SEND FORGOT OTP
-// ============================================================
+        <p id="registrationMessage"></p>
 
-async function sendForgotOTP() {
 
-    const name =
-        $("forgotName")?.value.trim();
+        <button
+            onclick="startAutomaticFaceRegistration()"
+            class="primary-btn"
+        >
+            📷 Register Face
+        </button>
 
-    const mobile =
-        cleanMobile(
-            $("forgotMobile")?.value
-        );
 
+        <button
+            onclick="stopRegistrationCamera()"
+            class="secondary-btn"
+        >
+            Stop Camera
+        </button>
 
-    if (!name) {
-        showMessage(
-            "forgotMessage",
-            "Enter your registered name.",
-            "error"
-        );
-        return;
-    }
+    </div>
 
 
-    if (!validMobile(mobile)) {
-        showMessage(
-            "forgotMessage",
-            "Enter a valid mobile number.",
-            "error"
-        );
-        return;
-    }
+    <!-- =====================================================
+         FACE ATTENDANCE
+    ====================================================== -->
 
+    <div class="dashboard-card">
 
-    const student =
-        registeredStudents.find(
-            s =>
-                s.name.toLowerCase() ===
-                    name.toLowerCase() &&
-                s.mobile === mobile
-        );
+        <h2>📷 Mark Attendance</h2>
 
+        <p>
+            Look at the camera to automatically mark attendance.
+        </p>
 
-    if (!student) {
-        showMessage(
-            "forgotMessage",
-            "Name and mobile number do not match.",
-            "error"
-        );
-        return;
-    }
 
+        <div class="camera-box">
 
-    if (!auth) {
-        showMessage(
-            "forgotMessage",
-            "Firebase is not initialized.",
-            "error"
-        );
-        return;
-    }
+            <video
+                id="attendanceCamera"
+                autoplay
+                muted
+                playsinline
+            ></video>
 
+        </div>
 
-    try {
 
-        if (window.forgotRecaptchaVerifier) {
-            try {
-                window.forgotRecaptchaVerifier.clear();
-            } catch (e) {}
-        }
+        <p id="attendanceStatus">
+            Camera is OFF
+        </p>
 
 
-        window.forgotRecaptchaVerifier =
-            new RecaptchaVerifier(
-                auth,
-                "forgot-recaptcha-container",
-                {
-                    size: "normal"
-                }
-            );
+        <p id="attendanceResult"></p>
 
 
-        forgotConfirmationResult =
-            await signInWithPhoneNumber(
-                auth,
-                getPhoneNumber(mobile),
-                window.forgotRecaptchaVerifier
-            );
+        <button
+            onclick="startFaceAttendance()"
+            class="success-btn"
+        >
+            📸 Start Face Attendance
+        </button>
 
 
-        window.pendingForgotStudent =
-            student.id;
+        <button
+            onclick="stopAttendanceCamera()"
+            class="secondary-btn"
+        >
+            Stop Camera
+        </button>
 
+    </div>
 
-        $("forgotOtpSection").style.display =
-            "block";
 
+    <!-- =====================================================
+         STUDENT SEARCH
+    ====================================================== -->
 
-        showMessage(
-            "forgotMessage",
-            "OTP sent to +91 " + mobile,
-            "success"
-        );
+    <div class="dashboard-card">
 
+        <h2>👥 Students</h2>
 
-        $("forgotOtp")?.focus();
 
-    }
+        <div class="form-group">
 
-    catch (error) {
+            <input
+                type="text"
+                id="searchStudent"
+                placeholder="Search student by name or roll..."
+                oninput="displayStudents()"
+            >
 
-        console.error(
-            "Forgot OTP error:",
-            error
-        );
+        </div>
 
-        showMessage(
-            "forgotMessage",
-            firebaseErrorMessage(error),
-            "error"
-        );
-    }
-}
 
+        <div id="studentList">
 
-// ============================================================
-// RESET PIN
-// ============================================================
+            <p>
+                No registered students found.
+            </p>
 
-async function resetPIN() {
+        </div>
 
-    const otp =
-        $("forgotOtp")?.value.trim();
+    </div>
 
-    const newPin =
-        $("newPin")?.value.trim();
+</section>
 
-    const confirmNewPin =
-        $("confirmNewPin")?.value.trim();
 
+<!-- =========================================================
+     REGISTERED STUDENTS MODAL
+========================================================= -->
 
-    if (!/^\d{6}$/.test(otp)) {
-        showMessage(
-            "forgotMessage",
-            "Enter the 6 digit OTP.",
-            "error"
-        );
-        return;
-    }
+<div
+    id="studentsModal"
+    class="modal"
+    style="display:none;"
+>
 
+    <div class="modal-content">
 
-    if (!validPin(newPin)) {
-        showMessage(
-            "forgotMessage",
-            "New PIN must contain 4 digits.",
-            "error"
-        );
-        return;
-    }
+        <button
+            onclick="closeRegisteredStudents()"
+            class="close-btn"
+        >
+            ✕
+        </button>
 
+        <h2>👥 Registered Students</h2>
 
-    if (newPin !== confirmNewPin) {
-        showMessage(
-            "forgotMessage",
-            "New PINs do not match.",
-            "error"
-        );
-        return;
-    }
+        <div id="registeredStudentsList"></div>
 
+    </div>
 
-    if (!forgotConfirmationResult) {
-        showMessage(
-            "forgotMessage",
-            "Please request OTP first.",
-            "error"
-        );
-        return;
-    }
+</div>
 
 
-    try {
+<!-- =========================================================
+     ATTENDANCE MODAL
+========================================================= -->
 
-        await forgotConfirmationResult.confirm(
-            otp
-        );
+<div
+    id="attendanceCheckModal"
+    class="modal"
+    style="display:none;"
+>
 
+    <div class="modal-content">
 
-        const student =
-            registeredStudents.find(
-                s =>
-                    s.id ===
-                    window.pendingForgotStudent
-            );
+        <button
+            onclick="closeCheckAttendance()"
+            class="close-btn"
+        >
+            ✕
+        </button>
 
 
-        if (!student) {
-            showMessage(
-                "forgotMessage",
-                "Student account not found.",
-                "error"
-            );
-            return;
-        }
+        <h2>📊 My Attendance</h2>
 
 
-        student.pin =
-            newPin;
+        <div class="attendance-summary">
 
-        saveStudents();
+            <div>
+                <strong id="attendanceTotalDays">
+                    0
+                </strong>
 
+                <span>Total Days</span>
+            </div>
 
-        showMessage(
-            "forgotMessage",
-            "PIN reset successfully! ✅",
-            "success"
-        );
 
+            <div>
+                <strong id="attendancePresentDays">
+                    0
+                </strong>
 
-        setTimeout(() => {
-            showPage("loginPage");
-        }, 1200);
+                <span>Present</span>
+            </div>
 
-    }
 
-    catch (error) {
+            <div>
+                <strong id="attendanceAbsentDays">
+                    0
+                </strong>
 
-        console.error(error);
+                <span>Absent</span>
+            </div>
 
-        showMessage(
-            "forgotMessage",
-            firebaseErrorMessage(error),
-            "error"
-        );
-    }
-}
+        </div>
 
 
-// ============================================================
-// FIREBASE ERROR
-// ============================================================
+        <h3>Attendance History</h3>
 
-function firebaseErrorMessage(error) {
+        <div id="attendanceHistory"></div>
 
-    if (!error) {
-        return "Something went wrong.";
-    }
+    </div>
 
+</div>
 
-    const code =
-        error.code || "";
 
+<!-- =========================================================
+     EDIT DETAILS MODAL
+========================================================= -->
 
-    switch (code) {
+<div
+    id="editDetailsModal"
+    class="modal"
+    style="display:none;"
+>
 
-        case "auth/invalid-phone-number":
-            return "Mobile number is invalid.";
+    <div class="modal-content">
 
-        case "auth/too-many-requests":
-            return "Too many attempts. Please wait and try again.";
+        <button
+            onclick="closeEditDetails()"
+            class="close-btn"
+        >
+            ✕
+        </button>
 
-        case "auth/quota-exceeded":
-            return "Firebase SMS quota has been exceeded.";
 
-        case "auth/captcha-check-failed":
-            return "reCAPTCHA verification failed.";
+        <h2>✏️ Edit Details</h2>
 
-        case "auth/invalid-verification-code":
-            return "Incorrect OTP.";
 
-        case "auth/code-expired":
-            return "OTP expired. Request a new OTP.";
+        <div class="form-group">
 
-        case "auth/billing-not-enabled":
-            return "Firebase SMS/billing configuration is not available.";
+            <label>Name</label>
 
-        case "auth/operation-not-allowed":
-            return "Phone authentication is not enabled for this Firebase project.";
+            <input
+                type="text"
+                id="editName"
+            >
 
-        default:
-            return (
-                error.message ||
-                "Firebase authentication failed."
-            );
-    }
-}
+        </div>
 
 
-// ============================================================
-// DASHBOARD
-// ============================================================
+        <div class="form-group">
 
-function openDashboard(student) {
+            <label>Roll</label>
 
-    showPage("dashboardPage");
+            <input
+                type="text"
+                id="editRoll"
+            >
 
-    currentUser =
-        student;
+        </div>
 
 
-    fillFaceRegistrationFields(
-        student
-    );
+        <div class="form-group">
 
+            <label>College</label>
 
-    updateDashboard();
+            <input
+                type="text"
+                id="editCollege"
+            >
 
-    updateDate();
+        </div>
 
-    displayStudents();
-}
 
+        <div class="form-group">
 
-// ============================================================
-// FILL FACE FIELDS
-// ============================================================
+            <label>Department</label>
 
-function fillFaceRegistrationFields(student) {
+            <input
+                type="text"
+                id="editDepartment"
+            >
 
-    if (!student) return;
+        </div>
 
 
-    $("faceName").value =
-        student.name || "";
+        <div class="form-group">
 
-    $("faceRoll").value =
-        student.roll || "";
+            <label>Mobile</label>
 
-    $("collegeName").value =
-        student.college || "";
+            <input
+                type="tel"
+                id="editMobile"
+                maxlength="10"
+            >
 
-    $("departmentName").value =
-        student.department || "";
+        </div>
 
-    $("faceMobile").value =
-        student.mobile || "";
 
-    $("faceEmail").value =
-        student.email || "";
-}
+        <div class="form-group">
 
+            <label>Email</label>
 
-// ============================================================
-// DATE
-// ============================================================
+            <input
+                type="email"
+                id="editEmail"
+            >
 
-function updateDate() {
+        </div>
 
-    const el =
-        $("currentDate");
 
-    if (!el) return;
+        <button
+            onclick="saveEditedDetails()"
+            class="success-btn"
+        >
+            Save Changes
+        </button>
 
+    </div>
 
-    el.textContent =
-        new Date().toLocaleDateString(
-            "en-IN",
-            {
-                weekday: "long",
-                year: "numeric",
-                month: "long",
-                day: "numeric"
-            }
-        );
-}
+</div>
 
 
-// ============================================================
-// DASHBOARD STATS
-// ============================================================
+<!-- =========================================================
+     ADMIN MODAL
+========================================================= -->
 
-function updateDashboard() {
+<div
+    id="adminModal"
+    class="modal"
+    style="display:none;"
+>
 
-    const total =
-        registeredStudents.length;
+    <div class="modal-content">
 
+        <button
+            onclick="closeAdminDetails()"
+            class="close-btn"
+        >
+            ✕
+        </button>
 
-    const today =
-        new Date()
-            .toISOString()
-            .slice(0, 10);
 
+        <h2>⚙️ Admin</h2>
 
-    let present = 0;
+        <p>
+            Smart Attendance System
+        </p>
 
+        <p>
+            Face recognition based attendance system.
+        </p>
 
-    registeredStudents.forEach(
-        student => {
+    </div>
 
-            const records =
-                attendanceData[student.id] || [];
+</div>
 
 
-            if (
-                records.some(
-                    r =>
-                        r.date === today &&
-                        r.status === "Present"
-                )
-            ) {
-                present++;
-            }
-        }
-    );
+<!-- =========================================================
+     FIREBASE
+========================================================= -->
 
+<script type="module">
 
-    const absent =
-        Math.max(
-            0,
-            total - present
-        );
+    import {
+        initializeApp
+    } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
 
+    import {
+        getAuth
+    } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
 
-    const percentage =
-        total > 0
-            ? Math.round(
-                (present / total) * 100
-            )
-            : 0;
 
+    /*
+     * IMPORTANT:
+     * এখানে তোমার নিজের Firebase configuration বসাতে হবে।
+     */
 
-    if ($("totalStudents"))
-        $("totalStudents").textContent =
-            total;
+    const firebaseConfig = {
 
+        apiKey: "YOUR_API_KEY",
 
-    if ($("presentStudents"))
-        $("presentStudents").textContent =
-            present;
+        authDomain: "YOUR_PROJECT.firebaseapp.com",
 
+        projectId: "YOUR_PROJECT_ID",
 
-    if ($("absentStudents"))
-        $("absentStudents").textContent =
-            absent;
+        storageBucket: "YOUR_PROJECT.firebasestorage.app",
 
+        messagingSenderId: "YOUR_SENDER_ID",
 
-    if ($("attendancePercentage"))
-        $("attendancePercentage").textContent =
-            percentage + "%";
-}
+        appId: "YOUR_APP_ID"
 
+    };
 
-// ============================================================
-// FACE REGISTRATION
-// ============================================================
 
-async function startAutomaticFaceRegistration() {
+    const app =
+        initializeApp(firebaseConfig);
 
-    if (!currentUser) {
 
-        showMessage(
-            "registrationMessage",
-            "Please login first.",
-            "error"
-        );
+    const auth =
+        getAuth(app);
 
-        return;
-    }
 
+    window.firebaseAuth =
+        auth;
 
-    const name =
-        $("faceName").value.trim();
+</script>
 
-    const roll =
-        $("faceRoll").value.trim();
 
-    const college =
-        $("collegeName").value.trim();
+<!-- =========================================================
+     JAVASCRIPT
+========================================================= -->
 
-    const department =
-        $("departmentName").value.trim();
+<script type="module" src="script.js"></script>
 
-    const mobile =
-        cleanMobile(
-            $("faceMobile").value
-        );
 
-    const email =
-        $("faceEmail").value.trim();
-
-
-    if (
-        !name ||
-        !roll ||
-        !college ||
-        !department
-    ) {
-
-        $("registrationMessage").textContent =
-            "Please fill Name, Roll, College and Department.";
-
-        return;
-    }
-
-
-    if (!validMobile(mobile)) {
-
-        $("registrationMessage").textContent =
-            "Enter a valid mobile number.";
-
-        return;
-    }
-
-
-    try {
-
-        const video =
-            $("registrationCamera");
-
-
-        registrationStream =
-            await navigator.mediaDevices.getUserMedia(
-                {
-                    video: {
-                        facingMode: "user"
-                    },
-                    audio: false
-                }
-            );
-
-
-        video.srcObject =
-            registrationStream;
-
-
-        $("registrationStatus").textContent =
-            "Camera ON — keep your face inside the guide.";
-
-
-        $("registrationMessage").textContent =
-            "Camera started. Capturing face...";
-
-
-        await new Promise(
-            resolve =>
-                setTimeout(
-                    resolve,
-                    2000
-                )
-        );
-
-
-        const descriptor =
-            await detectFaceDescriptor(
-                video
-            );
-
-
-        if (!descriptor) {
-
-            $("registrationMessage").textContent =
-                "No clear face detected. Please try again.";
-
-            stopRegistrationCamera();
-
-            return;
-        }
-
-
-        const student =
-            registeredStudents.find(
-                s =>
-                    s.id === currentUser.id
-            );
-
-
-        if (student) {
-
-            student.name =
-                name;
-
-            student.roll =
-                roll;
-
-            student.college =
-                college;
-
-            student.department =
-                department;
-
-            student.mobile =
-                mobile;
-
-            student.email =
-                email;
-
-            student.faceDescriptor =
-                Array.from(
-                    descriptor
-                );
-
-
-            saveStudents();
-
-            currentUser =
-                student;
-        }
-
-
-        $("registrationMessage").textContent =
-            "Face registered successfully ✅";
-
-
-        stopRegistrationCamera();
-
-        updateDashboard();
-
-        displayStudents();
-
-    }
-
-    catch (error) {
-
-        console.error(error);
-
-        $("registrationMessage").textContent =
-            "Camera error: " +
-            error.message;
-
-        stopRegistrationCamera();
-    }
-}
-
-
-// ============================================================
-// FACE API
-// ============================================================
-
-async function detectFaceDescriptor(video) {
-
-    if (
-        typeof faceapi ===
-        "undefined"
-    ) {
-
-        console.error(
-            "face-api.js not loaded."
-        );
-
-        return null;
-    }
-
-
-    try {
-
-        const detection =
-            await faceapi
-                .detectSingleFace(
-                    video
-                )
-                .withFaceLandmarks()
-                .withFaceDescriptor();
-
-
-        if (!detection) {
-            return null;
-        }
-
-
-        return detection.descriptor;
-
-    }
-
-    catch (error) {
-
-        console.error(error);
-
-        return null;
-    }
-}
-
-
-// ============================================================
-// STOP REGISTRATION CAMERA
-// ============================================================
-
-function stopRegistrationCamera() {
-
-    if (registrationStream) {
-
-        registrationStream
-            .getTracks()
-            .forEach(
-                track =>
-                    track.stop()
-            );
-
-        registrationStream =
-            null;
-    }
-
-
-    const video =
-        $("registrationCamera");
-
-
-    if (video) {
-        video.srcObject = null;
-    }
-
-
-    if ($("registrationStatus")) {
-
-        $("registrationStatus").textContent =
-            "Camera is OFF";
-    }
-}
-
-
-// ============================================================
-// FACE ATTENDANCE
-// ============================================================
-
-async function startFaceAttendance() {
-
-    if (!currentUser) {
-
-        $("attendanceResult").textContent =
-            "Please login first.";
-
-        return;
-    }
-
-
-    try {
-
-        const video =
-            $("attendanceCamera");
-
-
-        attendanceStream =
-            await navigator.mediaDevices.getUserMedia(
-                {
-                    video: {
-                        facingMode: "user"
-                    },
-                    audio: false
-                }
-            );
-
-
-        video.srcObject =
-            attendanceStream;
-
-
-        $("attendanceStatus").textContent =
-            "Camera ON — detecting face...";
-
-
-        $("attendanceResult").textContent =
-            "Please look at the camera.";
-
-
-        await new Promise(
-            resolve =>
-                setTimeout(
-                    resolve,
-                    2000
-                )
-        );
-
-
-        const descriptor =
-            await detectFaceDescriptor(
-                video
-            );
-
-
-        if (!descriptor) {
-
-            $("attendanceResult").textContent =
-                "No face detected. Please try again.";
-
-            stopAttendanceCamera();
-
-            return;
-        }
-
-
-        const student =
-            findMatchingStudent(
-                descriptor
-            );
-
-
-        if (!student) {
-
-            $("attendanceResult").textContent =
-                "Face not registered.";
-
-            stopAttendanceCamera();
-
-            return;
-        }
-
-
-        const marked =
-            markAttendance(student);
-
-
-        if (marked) {
-
-            $("attendanceResult").textContent =
-                "Attendance marked successfully ✅";
-
-        } else {
-
-            $("attendanceResult").textContent =
-                "Today's attendance is already marked ✅";
-        }
-
-
-        stopAttendanceCamera();
-
-        updateDashboard();
-
-    }
-
-    catch (error) {
-
-        console.error(error);
-
-        $("attendanceResult").textContent =
-            "Camera error: " +
-            error.message;
-
-        stopAttendanceCamera();
-    }
-}
-
-
-// ============================================================
-// MATCH FACE
-// ============================================================
-
-function findMatchingStudent(descriptor) {
-
-    if (
-        typeof faceapi ===
-        "undefined"
-    ) {
-        return null;
-    }
-
-
-    let bestStudent =
-        null;
-
-    let bestDistance =
-        Infinity;
-
-
-    registeredStudents.forEach(
-        student => {
-
-            if (
-                !student.faceDescriptor ||
-                !Array.isArray(
-                    student.faceDescriptor
-                )
-            ) {
-                return;
-            }
-
-
-            const stored =
-                new Float32Array(
-                    student.faceDescriptor
-                );
-
-
-            const distance =
-                faceapi.euclideanDistance(
-                    descriptor,
-                    stored
-                );
-
-
-            if (
-                distance <
-                bestDistance
-            ) {
-
-                bestDistance =
-                    distance;
-
-                bestStudent =
-                    student;
-            }
-        }
-    );
-
-
-    if (
-        bestStudent &&
-        bestDistance < 0.6
-    ) {
-
-        return bestStudent;
-    }
-
-
-    return null;
-}
-
-
-// ============================================================
-// MARK ATTENDANCE
-// ============================================================
-
-function markAttendance(student) {
-
-    const today =
-        new Date()
-            .toISOString()
-            .slice(0, 10);
-
-
-    if (!attendanceData[student.id]) {
-
-        attendanceData[student.id] =
-            [];
-    }
-
-
-    const alreadyMarked =
-        attendanceData[student.id]
-            .some(
-                record =>
-                    record.date === today
-            );
-
-
-    if (alreadyMarked) {
-        return false;
-    }
-
-
-    attendanceData[student.id]
-        .push(
-            {
-                date: today,
-
-                time:
-                    new Date()
-                        .toLocaleTimeString(
-                            "en-IN"
-                        ),
-
-                status:
-                    "Present"
-            }
-        );
-
-
-    saveAttendance();
-
-    return true;
-}
-
-
-// ============================================================
-// STOP ATTENDANCE CAMERA
-// ============================================================
-
-function stopAttendanceCamera() {
-
-    if (attendanceStream) {
-
-        attendanceStream
-            .getTracks()
-            .forEach(
-                track =>
-                    track.stop()
-            );
-
-        attendanceStream =
-            null;
-    }
-
-
-    const video =
-        $("attendanceCamera");
-
-
-    if (video) {
-        video.srcObject = null;
-    }
-
-
-    if ($("attendanceStatus")) {
-
-        $("attendanceStatus").textContent =
-            "Camera is OFF";
-    }
-}
-
-
-// ============================================================
-// STUDENT LIST
-// ============================================================
-
-function displayStudents() {
-
-    const container =
-        $("studentList");
-
-    if (!container) return;
-
-
-    const search =
-        (
-            $("searchStudent")?.value ||
-            ""
-        )
-            .toLowerCase()
-            .trim();
-
-
-    const students =
-        registeredStudents.filter(
-            student =>
-                student.name
-                    .toLowerCase()
-                    .includes(search)
-                ||
-                (student.roll || "")
-                    .toLowerCase()
-                    .includes(search)
-        );
-
-
-    if (!students.length) {
-
-        container.innerHTML =
-            "<p>No registered students found.</p>";
-
-        return;
-    }
-
-
-    container.innerHTML =
-        students
-            .map(
-                student => `
-
-                <div class="student-item">
-
-                    <h3>
-                        👤 ${escapeHTML(student.name)}
-                    </h3>
-
-                    <p>
-                        🔢 Roll:
-                        ${escapeHTML(
-                            student.roll ||
-                            "Not added"
-                        )}
-                    </p>
-
-                    <p>
-                        🏫
-                        ${escapeHTML(
-                            student.college ||
-                            "Not added"
-                        )}
-                    </p>
-
-                    <p>
-                        🎓
-                        ${escapeHTML(
-                            student.department ||
-                            "Not added"
-                        )}
-                    </p>
-
-                </div>
-            `
-            )
-            .join("");
-}
-
-
-// ============================================================
-// REGISTERED STUDENTS
-// ============================================================
-
-function showRegisteredStudents() {
-
-    $("studentsModal").style.display =
-        "flex";
-
-
-    const container =
-        $("registeredStudentsList");
-
-
-    if (!registeredStudents.length) {
-
-        container.innerHTML =
-            "<p>No students registered yet.</p>";
-
-        return;
-    }
-
-
-    container.innerHTML =
-        registeredStudents
-            .map(
-                student => `
-
-                <div class="student-item">
-
-                    <h3>
-                        👤 ${escapeHTML(student.name)}
-                    </h3>
-
-                    <p>
-                        📱 ${escapeHTML(
-                            student.mobile
-                        )}
-                    </p>
-
-                    <p>
-                        📧 ${escapeHTML(
-                            student.email ||
-                            "Not added"
-                        )}
-                    </p>
-
-                    <p>
-                        🔢 ${escapeHTML(
-                            student.roll ||
-                            "Not added"
-                        )}
-                    </p>
-
-                </div>
-            `
-            )
-            .join("");
-}
-
-
-function closeRegisteredStudents() {
-
-    $("studentsModal").style.display =
-        "none";
-}
-
-
-// ============================================================
-// CHECK ATTENDANCE
-// ============================================================
-
-function showCheckAttendance() {
-
-    $("attendanceCheckModal").style.display =
-        "flex";
-
-
-    if (!currentUser) return;
-
-
-    const records =
-        attendanceData[currentUser.id] ||
-        [];
-
-
-    const presentDays =
-        records.filter(
-            r =>
-                r.status === "Present"
-        ).length;
-
-
-    $("attendanceTotalDays")
-        .textContent =
-        records.length;
-
-
-    $("attendancePresentDays")
-        .textContent =
-        presentDays;
-
-
-    $("attendanceAbsentDays")
-        .textContent =
-        0;
-
-
-    const history =
-        $("attendanceHistory");
-
-
-    if (!records.length) {
-
-        history.innerHTML =
-            "<p>No attendance records yet.</p>";
-
-        return;
-    }
-
-
-    history.innerHTML =
-        records
-            .slice()
-            .reverse()
-            .map(
-                record => `
-
-                <div class="attendance-history-item">
-
-                    <strong>
-                        📅 ${escapeHTML(
-                            record.date
-                        )}
-                    </strong>
-
-                    <span>
-                        ${escapeHTML(
-                            record.time
-                        )}
-                    </span>
-
-                    <b>
-                        ✅ ${escapeHTML(
-                            record.status
-                        )}
-                    </b>
-
-                </div>
-            `
-            )
-            .join("");
-}
-
-
-function closeCheckAttendance() {
-
-    $("attendanceCheckModal").style.display =
-        "none";
-}
-
-
-// ============================================================
-// MENU
-// ============================================================
-
-function toggleMenu() {
-
-    const menu =
-        $("mainMenu");
-
-    if (!menu) return;
-
-    menu.classList.toggle(
-        "show"
-    );
-}
-
-
-// ============================================================
-// EDIT DETAILS
-// ============================================================
-
-function openEditDetails() {
-
-    if (!currentUser) return;
-
-
-    const student =
-        registeredStudents.find(
-            s =>
-                s.id ===
-                currentUser.id
-        );
-
-
-    if (!student) return;
-
-
-    $("editName").value =
-        student.name || "";
-
-    $("editRoll").value =
-        student.roll || "";
-
-    $("editCollege").value =
-        student.college || "";
-
-    $("editDepartment").value =
-        student.department || "";
-
-    $("editMobile").value =
-        student.mobile || "";
-
-    $("editEmail").value =
-        student.email || "";
-
-
-    $("editDetailsModal").style.display =
-        "flex";
-}
-
-
-function closeEditDetails() {
-
-    $("editDetailsModal").style.display =
-        "none";
-}
-
-
-function saveEditedDetails() {
-
-    if (!currentUser) return;
-
-
-    const student =
-        registeredStudents.find(
-            s =>
-                s.id ===
-                currentUser.id
-        );
-
-
-    if (!student) return;
-
-
-    const name =
-        $("editName").value.trim();
-
-    const roll =
-        $("editRoll").value.trim();
-
-    const college =
-        $("editCollege").value.trim();
-
-    const department =
-        $("editDepartment").value.trim();
-
-    const mobile =
-        cleanMobile(
-            $("editMobile").value
-        );
-
-    const email =
-        $("editEmail").value.trim();
-
-
-    if (!name) {
-        alert("Name is required.");
-        return;
-    }
-
-
-    if (!validMobile(mobile)) {
-        alert("Enter a valid mobile number.");
-        return;
-    }
-
-
-    if (
-        email &&
-        !validEmail(email)
-    ) {
-        alert("Enter a valid email.");
-        return;
-    }
-
-
-    student.name =
-        name;
-
-    student.roll =
-        roll;
-
-    student.college =
-        college;
-
-    student.department =
-        department;
-
-    student.mobile =
-        mobile;
-
-    student.email =
-        email;
-
-
-    currentUser =
-        student;
-
-
-    saveStudents();
-
-
-    closeEditDetails();
-
-    fillFaceRegistrationFields(
-        student
-    );
-
-    displayStudents();
-
-    updateDashboard();
-
-
-    alert(
-        "Details updated successfully."
-    );
-}
-
-
-// ============================================================
-// MOBILE / EMAIL UPDATE
-// ============================================================
-
-function openMobileUpdate() {
-    openEditDetails();
-}
-
-function openEmailUpdate() {
-    openEditDetails();
-}
-
-
-// ============================================================
-// ADMIN
-// ============================================================
-
-function showAdminDetails() {
-
-    $("adminModal").style.display =
-        "flex";
-}
-
-function closeAdminDetails() {
-
-    $("adminModal").style.display =
-        "none";
-}
-
-
-// ============================================================
-// LOGOUT
-// ============================================================
-
-function logoutUser() {
-
-    stopRegistrationCamera();
-
-    stopAttendanceCamera();
-
-
-    currentUser =
-        null;
-
-    window.currentStudentId =
-        null;
-
-
-    showPage(
-        "loginPage"
-    );
-
-
-    $("loginName").value =
-        "";
-
-    $("loginMobile").value =
-        "";
-
-    $("loginPin").value =
-        "";
-
-
-    showMessage(
-        "loginMessage",
-        "Logged out successfully.",
-        "success"
-    );
-}
-
-
-// ============================================================
-// ESCAPE HTML
-// ============================================================
-
-function escapeHTML(value) {
-
-    return String(value || "")
-        .replace(
-            /[&<>"']/g,
-            char => {
-
-                const map = {
-
-                    "&": "&amp;",
-                    "<": "&lt;",
-                    ">": "&gt;",
-                    '"': "&quot;",
-                    "'": "&#039;"
-
-                };
-
-                return map[char];
-            }
-        );
-}
-
-
-// ============================================================
-// WINDOW FUNCTIONS
-// ============================================================
-
-window.toggleMenu =
-    toggleMenu;
-
-window.openEditDetails =
-    openEditDetails;
-
-window.closeEditDetails =
-    closeEditDetails;
-
-window.saveEditedDetails =
-    saveEditedDetails;
-
-window.openMobileUpdate =
-    openMobileUpdate;
-
-window.openEmailUpdate =
-    openEmailUpdate;
-
-window.showRegisteredStudents =
-    showRegisteredStudents;
-
-window.closeRegisteredStudents =
-    closeRegisteredStudents;
-
-window.showCheckAttendance =
-    showCheckAttendance;
-
-window.closeCheckAttendance =
-    closeCheckAttendance;
-
-window.showAdminDetails =
-    showAdminDetails;
-
-window.closeAdminDetails =
-    closeAdminDetails;
-
-window.logoutUser =
-    logoutUser;
-
-window.startAutomaticFaceRegistration =
-    startAutomaticFaceRegistration;
-
-window.startFaceAttendance =
-    startFaceAttendance;
-
-window.displayStudents =
-    displayStudents;
-
-
-// ============================================================
-// DOM READY
-// ============================================================
-
-document.addEventListener(
-    "DOMContentLoaded",
-    () => {
-
-        $("loginButton")
-            ?.addEventListener(
-                "click",
-                loginUser
-            );
-
-
-        $("createAccountButton")
-            ?.addEventListener(
-                "click",
-                openCreateAccount
-            );
-
-
-        $("sendCreateOtpButton")
-            ?.addEventListener(
-                "click",
-                sendCreateOTP
-            );
-
-
-        $("verifyCreateOtpButton")
-            ?.addEventListener(
-                "click",
-                verifyCreateOTP
-            );
-
-
-        $("backToLoginButton")
-            ?.addEventListener(
-                "click",
-                backToLogin
-            );
-
-
-        $("forgotPinButton")
-            ?.addEventListener(
-                "click",
-                openForgotPin
-            );
-
-
-        $("sendForgotOtpButton")
-            ?.addEventListener(
-                "click",
-                sendForgotOTP
-            );
-
-
-        $("resetPinButton")
-            ?.addEventListener(
-                "click",
-                resetPIN
-            );
-
-
-        $("forgotBackButton")
-            ?.addEventListener(
-                "click",
-                backFromForgot
-            );
-
-
-        [
-            "loginName",
-            "loginMobile",
-            "loginPin"
-        ].forEach(
-            id => {
-
-                $(id)?.addEventListener(
-                    "keydown",
-                    event => {
-
-                        if (
-                            event.key ===
-                            "Enter"
-                        ) {
-                            loginUser();
-                        }
-                    }
-                );
-            }
-        );
-
-
-        updateDate();
-
-
-        setInterval(
-            updateDate,
-            60000
-        );
-
-
-        console.log(
-            "Smart Attendance System loaded successfully ✅"
-        );
-    }
-);
-
-
-// ============================================================
-// FIREBASE AUTH STATE
-// ============================================================
-
-if (auth) {
-
-    onAuthStateChanged(
-        auth,
-        user => {
-
-            if (user) {
-
-                console.log(
-                    "Firebase user:",
-                    user.uid
-                );
-            }
-        }
-    );
-}
+</body>
+</html>
+```
