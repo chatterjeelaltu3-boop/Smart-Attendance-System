@@ -1,7 +1,7 @@
+```css
 /* ============================================================
    SMART ATTENDANCE SYSTEM
    style.css
-   Colourful Modern Interface
 ============================================================ */
 
 * {
@@ -24,19 +24,15 @@
     --light: #f5f7fb;
     --white: #ffffff;
     --border: #e6e9f0;
-    --shadow: 0 15px 40px rgba(45, 52, 54, 0.12);
+    --shadow: 0 15px 40px rgba(45,52,54,.12);
 }
 
 body {
     font-family: Arial, Helvetica, sans-serif;
-    background: linear-gradient(135deg, #eef2ff, #f8f9ff);
+    background: linear-gradient(135deg,#eef2ff,#f8f9ff);
     color: var(--dark);
     min-height: 100vh;
 }
-
-/* ============================================================
-   COMMON
-============================================================ */
 
 button,
 input {
@@ -56,12 +52,12 @@ input {
     outline: none;
     background: #fff;
     font-size: 15px;
-    transition: 0.25s;
+    transition: .25s;
 }
 
 input:focus {
     border-color: var(--primary);
-    box-shadow: 0 0 0 4px rgba(108, 92, 231, 0.10);
+    box-shadow: 0 0 0 4px rgba(108,92,231,.10);
 }
 
 .input-group {
@@ -77,12 +73,16 @@ input:focus {
 }
 
 /* ============================================================
-   LOGIN PAGE
+   COMMON PAGE
 ============================================================ */
 
 .page {
     min-height: 100vh;
 }
+
+/* ============================================================
+   LOGIN
+============================================================ */
 
 .login-page {
     display: flex;
@@ -91,56 +91,102 @@ input:focus {
     padding: 30px 15px;
 
     background:
-        radial-gradient(circle at top left, rgba(108,92,231,.25), transparent 35%),
-        radial-gradient(circle at bottom right, rgba(0,184,148,.20), transparent 35%),
-        linear-gradient(135deg, #f4f1ff, #eefbff);
+        radial-gradient(circle at top left,rgba(108,92,231,.25),transparent 35%),
+        radial-gradient(circle at bottom right,rgba(0,184,148,.20),transparent 35%),
+        linear-gradient(135deg,#f4f1ff,#eefbff);
 }
 
 .login-card {
     width: 100%;
     max-width: 460px;
-    background: rgba(255,255,255,.97);
+    background: rgba(255,255,255,.98);
     padding: 38px;
     border-radius: 28px;
     box-shadow: var(--shadow);
     text-align: center;
 }
 
+/* ============================================================
+   HETC LOGO
+============================================================ */
+
 .college-logo-area {
-    margin-bottom: 25px;
+    margin-bottom: 22px;
 }
 
-.college-logo {
-    width: 82px;
-    height: 82px;
-    margin: 0 auto 15px;
-    border-radius: 22px;
+.college-logo-img {
+    width: 72px !important;
+    height: 72px !important;
+    max-width: 72px !important;
+    max-height: 72px !important;
+    object-fit: contain !important;
+    display: block;
+    margin: 0 auto 12px;
+}
 
+/* Login logo */
+.login-card .college-logo-img {
+    width: 75px !important;
+    height: 75px !important;
+    max-width: 75px !important;
+    max-height: 75px !important;
+}
+
+/* Create Account logo */
+.page-header .college-logo {
+    width: 62px;
+    height: 62px;
+    min-width: 62px;
+    border-radius: 16px;
     display: flex;
     align-items: center;
     justify-content: center;
-
-    background: linear-gradient(
-        135deg,
-        var(--primary),
-        var(--pink)
-    );
-
-    color: white;
-    font-size: 40px;
-
-    box-shadow:
-        0 12px 25px rgba(108,92,231,.30);
+    background: #fff;
+    overflow: hidden;
 }
+
+.page-header .college-logo img {
+    width: 52px !important;
+    height: 52px !important;
+    max-width: 52px !important;
+    max-height: 52px !important;
+    object-fit: contain !important;
+}
+
+/* Dashboard logo */
+.sidebar-logo .college-logo {
+    width: 62px;
+    height: 62px;
+    margin: 0 auto 10px;
+    border-radius: 16px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.sidebar-logo .college-logo img {
+    width: 52px !important;
+    height: 52px !important;
+    max-width: 52px !important;
+    max-height: 52px !important;
+    object-fit: contain !important;
+}
+
+/* ============================================================
+   COLLEGE NAME
+============================================================ */
 
 .college-logo-area h1 {
     font-size: 30px;
-    margin-bottom: 6px;
+    margin-bottom: 7px;
 }
 
 .college-name {
     color: var(--primary);
     font-weight: 700;
+    line-height: 1.4;
 }
 
 .login-card h2 {
@@ -195,7 +241,6 @@ input:focus {
     color: white;
     font-size: 15px;
     font-weight: 700;
-
     transition: .25s;
 }
 
@@ -239,7 +284,7 @@ input:focus {
 }
 
 /* ============================================================
-   CREATE / FORGOT PAGE
+   CREATE ACCOUNT / FORGOT
 ============================================================ */
 
 .create-page,
@@ -250,8 +295,8 @@ input:focus {
     padding: 35px 15px;
 
     background:
-        radial-gradient(circle at top right, rgba(232,67,147,.16), transparent 35%),
-        radial-gradient(circle at bottom left, rgba(9,132,227,.15), transparent 35%),
+        radial-gradient(circle at top right,rgba(232,67,147,.16),transparent 35%),
+        radial-gradient(circle at bottom left,rgba(9,132,227,.15),transparent 35%),
         #f7f8ff;
 }
 
@@ -269,15 +314,6 @@ input:focus {
     align-items: center;
     gap: 18px;
     margin-bottom: 28px;
-}
-
-.small-logo {
-    width: 65px;
-    height: 65px;
-    min-width: 65px;
-    margin: 0;
-    font-size: 30px;
-    border-radius: 18px;
 }
 
 .page-header h1 {
@@ -308,12 +344,11 @@ input:focus {
     min-height: 100vh;
     padding: 25px 18px;
 
-    background:
-        linear-gradient(
-            180deg,
-            #302b63,
-            #24243e
-        );
+    background: linear-gradient(
+        180deg,
+        #302b63,
+        #24243e
+    );
 
     color: white;
 
@@ -328,14 +363,8 @@ input:focus {
 
 .sidebar-logo {
     text-align: center;
-    padding-bottom: 25px;
+    padding-bottom: 22px;
     border-bottom: 1px solid rgba(255,255,255,.12);
-}
-
-.sidebar-logo .college-logo {
-    width: 65px;
-    height: 65px;
-    font-size: 30px;
 }
 
 .sidebar-logo h2 {
@@ -344,9 +373,14 @@ input:focus {
 
 .sidebar-logo p {
     color: #c9c8df;
-    margin-top: 5px;
-    font-size: 13px;
+    margin-top: 6px;
+    font-size: 12px;
+    line-height: 1.4;
 }
+
+/* ============================================================
+   SIDEBAR MENU
+============================================================ */
 
 .side-menu {
     margin-top: 25px;
@@ -467,13 +501,12 @@ input:focus {
 ============================================================ */
 
 .welcome-card {
-    background:
-        linear-gradient(
-            135deg,
-            #6c5ce7,
-            #8e44ad,
-            #e84393
-        );
+    background: linear-gradient(
+        135deg,
+        #6c5ce7,
+        #8e44ad,
+        #e84393
+    );
 
     color: white;
     border-radius: 22px;
@@ -510,7 +543,7 @@ input:focus {
 
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(4,1fr);
     gap: 18px;
     margin: 25px 0;
 }
@@ -525,7 +558,6 @@ input:focus {
     gap: 15px;
 
     box-shadow: 0 7px 20px rgba(0,0,0,.06);
-
     transition: .25s;
 }
 
@@ -609,7 +641,7 @@ input:focus {
 
 .quick-actions {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3,1fr);
     gap: 18px;
 }
 
@@ -620,7 +652,6 @@ input:focus {
     text-align: left;
 
     box-shadow: 0 7px 20px rgba(0,0,0,.06);
-
     transition: .25s;
 }
 
@@ -700,6 +731,9 @@ input:focus {
     min-height: 300px;
     object-fit: cover;
     display: block;
+
+    /* Mirror camera like selfie */
+    transform: scaleX(-1);
 }
 
 .face-guide {
@@ -743,6 +777,7 @@ input:focus {
 
 .large-camera video {
     min-height: 430px;
+    transform: scaleX(-1);
 }
 
 .attendance-button {
@@ -772,7 +807,7 @@ input:focus {
 
 .student-list {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2,1fr);
     gap: 15px;
 }
 
@@ -781,7 +816,6 @@ input:focus {
     padding: 20px;
     border-radius: 17px;
     border-left: 5px solid var(--primary);
-
     box-shadow: 0 6px 18px rgba(0,0,0,.05);
 }
 
@@ -796,7 +830,7 @@ input:focus {
 }
 
 /* ============================================================
-   POPUPS / MODALS
+   POPUP
 ============================================================ */
 
 .popup-overlay {
@@ -864,6 +898,10 @@ input:focus {
     margin-bottom: 20px;
 }
 
+/* ============================================================
+   MODALS
+============================================================ */
+
 .modal-card {
     width: 100%;
     max-width: 650px;
@@ -905,7 +943,7 @@ input:focus {
 
 .attendance-summary {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(3,1fr);
     gap: 12px;
     margin: 20px 0;
 }
@@ -951,42 +989,13 @@ input:focus {
 }
 
 /* ============================================================
-   EDIT MODAL
-============================================================ */
-
-#editDetailsModal .modal-card {
-    max-width: 600px;
-}
-
-/* ============================================================
-   SCROLLBAR
-============================================================ */
-
-::-webkit-scrollbar {
-    width: 8px;
-}
-
-::-webkit-scrollbar-track {
-    background: #f1f2f6;
-}
-
-::-webkit-scrollbar-thumb {
-    background: #b2bec3;
-    border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: var(--primary);
-}
-
-/* ============================================================
    RESPONSIVE
 ============================================================ */
 
-@media (max-width: 1000px) {
+@media (max-width:1000px) {
 
     .stats-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2,1fr);
     }
 
     .quick-actions {
@@ -1002,7 +1011,7 @@ input:focus {
     }
 }
 
-@media (max-width: 750px) {
+@media (max-width:750px) {
 
     .sidebar {
         width: 210px;
@@ -1027,7 +1036,7 @@ input:focus {
     }
 }
 
-@media (max-width: 600px) {
+@media (max-width:600px) {
 
     .login-card,
     .form-card {
@@ -1055,7 +1064,7 @@ input:focus {
 
     .side-menu {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(2,1fr);
         gap: 7px;
     }
 
@@ -1087,7 +1096,7 @@ input:focus {
     }
 }
 
-@media (max-width: 400px) {
+@media (max-width:400px) {
 
     .login-card,
     .form-card {
@@ -1107,41 +1116,4 @@ input:focus {
         font-size: 23px;
     }
 }
-/* ============================================================
-   HETC LOGO - FINAL SIZE FIX
-============================================================ */
-
-.college-logo-img {
-    width: 58px !important;
-    height: 58px !important;
-    max-width: 58px !important;
-    max-height: 58px !important;
-    object-fit: contain !important;
-    display: block;
-}
-
-/* Login Page */
-.college-logo-area .college-logo-img {
-    width: 72px !important;
-    height: 72px !important;
-    max-width: 72px !important;
-    max-height: 72px !important;
-    margin: 0 auto 10px !important;
-}
-
-/* Dashboard Sidebar */
-.sidebar-logo .college-logo-img {
-    width: 58px !important;
-    height: 58px !important;
-    max-width: 58px !important;
-    max-height: 58px !important;
-    margin: 0 auto 8px !important;
-}
-
-/* Create Account Page */
-.small-logo .college-logo-img {
-    width: 55px !important;
-    height: 55px !important;
-    max-width: 55px !important;
-    max-height: 55px !important;
-}
+```
