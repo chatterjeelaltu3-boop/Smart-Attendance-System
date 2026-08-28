@@ -1,41 +1,26 @@
-// Local State Management & Demo Database
-let currentUser = { name: "Student User", role: "student", contact: "" };
+// Local Database with Roll Numbers
+let currentUser = { name: "Student User", role: "student", contact: "9876543210", roll: "HETC/2026/01", branch: "CSE", college: "Hooghly Engineering & Technology College" };
 let registeredDatabase = [
-    { name: "Arijit Das", contact: "9876543210", dept: "CSE", img: "https://unsplash.com" },
-    { name: "Sneha Paul", contact: "sneha@gmail.com", dept: "ECE", img: "https://unsplash.com" }
+    { name: "Arijit Das", roll: "HETC/2026/05", contact: "9876543210", dept: "CSE", img: "https://unsplash.com" },
+    { name: "Sneha Paul", roll: "HETC/2026/12", contact: "sneha@gmail.com", dept: "ECE", img: "https://unsplash.com" }
 ];
 
-// 1. Student & Admin Tab Switching Logic
 function switchTab(type) {
     document.getElementById('tabStudent').classList.remove('active');
     document.getElementById('tabAdmin').classList.remove('active');
-    
-    if(type === 'student') {
-        document.getElementById('tabStudent').classList.add('active');
-        showForm('studentLoginForm');
-    } else {
-        document.getElementById('tabAdmin').classList.add('active');
-        showForm('adminLoginForm');
-    }
+    showForm(type === 'student' ? 'studentLoginForm' : 'adminLoginForm');
+    document.getElementById(type === 'student' ? 'tabStudent' : 'tabAdmin').classList.add('active');
 }
 
-// 2. Auth Form Toggle System (Forgot PIN / Create Account Framework)
 function showForm(id) {
-    const forms = ['studentLoginForm', 'adminLoginForm', 'registerForm', 'forgotPinForm'];
-    forms.forEach(formId => {
-        const element = document.getElementById(formId);
-        if(element) {
-            element.classList.add('hidden');
-        }
+    ['studentLoginForm', 'adminLoginForm', 'registerForm', 'forgotPinForm'].forEach(f => {
+        const el = document.getElementById(f);
+        if(el) el.classList.add('hidden');
     });
-    
     const target = document.getElementById(id);
-    if(target) {
-        target.classList.remove('hidden');
-    }
+    if(target) target.classList.remove('hidden');
 }
 
-// 3. New Student Registration Controller
 function processRegistration() {
     const name = document.getElementById('regName').value;
     const mob = document.getElementById('regMob').value;
@@ -48,123 +33,157 @@ function processRegistration() {
         return;
     }
 
-    currentUser = { name: name, role: "student", contact: mob };
-    
-    // Injecting metadata into array database
-    registeredDatabase.push({ 
-        name: name, 
-        contact: mob, 
-        dept: dept.toUpperCase(), 
-        img: "https://unsplash.com" 
-    });
+    currentUser = { name: name, role: "student", contact: mob, roll: "HETC/2026/Temp", branch: dept, college: "Hooghly Engineering & Technology College" };
+    registeredDatabase.push({ name: name, roll: currentUser.roll, contact: mob, dept: dept.toUpperCase(), img: "https://unsplash.com" });
     
     alert(`Account created successfully for ${name}! Please login.`);
     showForm('studentLoginForm');
-    document.getElementById('stuUser').value = mob; // Auto pre-fill username field
+    document.getElementById('stuUser').value = mob;
 }
 
-// 4. Authentication Routing (Admin PIN Validation Layer)
 function handleLogin(role) {
     if(role === 'admin') {
-        const pin = document.getElementById('adminPin').value;
-        if(pin !== "1234") { 
-            alert("Invalid Admin PIN! (Hint: 1234)"); 
+        if(document.getElementById('adminPin').value !== "1234") { 
+            alert("Invalid Admin PIN!"); 
             return; 
         }
         currentUser = { name: "Pradyut Chatterjee", role: "admin" };
     } else {
         const userVal = document.getElementById('stuUser').value;
-        const pinVal = document.getElementById('stuPin').value;
-        
-        if(!userVal || !pinVal) { 
-            alert("Please enter Username/Mobile and PIN."); 
+        if(!userVal || !document.getElementById('stuPin').value) { 
+            alert("Please enter credentials."); 
             return; 
         }
-        currentUser = { name: userVal, role: "student", contact: userVal };
+        currentUser = { name: userVal, role: "student", contact: userVal, roll: "HETC/2026/01", branch: "CSE", college: "Hooghly Engineering & Technology College" };
     }
     launchDashboard();
 }
 
-// 5. System Dashboard Control Engine
 function launchDashboard() {
     document.getElementById('authSection').classList.add('hidden');
     document.getElementById('dashboardSection').classList.remove('hidden');
-    document.getElementById('welcomeMsg').innerText = `Welcome back, ${currentUser.name}!`;
     
+    // ফিক্সড: লোগো এবং ওয়েলকাম মেসেজ সেট
+    document.getElementById('welcomeMsg').innerText = `Welcome, ${currentUser.name}!`;
+
     initWebcam();
+    showDashboardHome();
 
-    // Updating sidebar badge counter live
-    document.getElementById('menuTotalReg').innerText = `📊 Registered Users: ${registeredDatabase.length}`;
-
-    // Privacy Filter Rules Execution
+    // ৩ বার মেনু ফিল্টার (স্টুডেন্ট বনাম অ্যাডমিন)
     if(currentUser.role === 'admin') {
-        document.getElementById('studentRegistrationContainer').classList.add('hidden');
-        document.getElementById('adminViewContainer').classList.remove('hidden');
-        renderAdminTable();
+        document.getElementById('adminRegMenuOpt').classList.remove('hidden');
     } else {
-        document.getElementById('studentRegistrationContainer').classList.remove('hidden');
-        document.getElementById('adminViewContainer').classList.add('hidden');
-        document.getElementById('dashStuName').value = currentUser.name;
+        document.getElementById('adminRegMenuOpt').classList.add('hidden');
     }
 }
 
-// 6. Master Table Renderer for System Administrators
+// ভিউ সুইচিং লজিক
+function showDashboardHome() {
+    resetActiveView();
+    document.getElementById('mainDashboardView').classList.remove('hidden');
+    
+    if(currentUser.role === 'admin') {
+        document.getElementById('studentRegisterCard').classList.add('hidden');
+    } else {
+        document.getElementById('studentRegisterCard').classList.remove('hidden');
+        // ফিল্ড প্রি-ফিল
+        document.getElementById('frName').value = currentUser.name;
+        document.getElementById('frRoll').value = currentUser.roll;
+        document.getElementById('frMob').value = currentUser.contact;
+        document.getElementById('frBranch').value = currentUser.branch;
+        document.getElementById('frCollege').value = currentUser.college;
+    }
+}
+
+function showEditDetails() {
+    resetActiveView();
+    document.getElementById('editDetailsView').classList.remove('hidden');
+    // কারেন্ট ডেটা ফিল
+    document.getElementById('editName').value = currentUser.name;
+    document.getElementById('editMob').value = currentUser.contact;
+    document.getElementById('editBranch').value = currentUser.branch;
+    document.getElementById('editRoll').value = currentUser.roll;
+    document.getElementById('editCollege').value = currentUser.college;
+}
+
+function savePersonalDetails() {
+    currentUser.name = document.getElementById('editName').value;
+    currentUser.contact = document.getElementById('editMob').value;
+    currentUser.branch = document.getElementById('editBranch').value;
+    currentUser.roll = document.getElementById('editRoll').value;
+    currentUser.college = document.getElementById('editCollege').value;
+    
+    document.getElementById('welcomeMsg').innerText = `Welcome, ${currentUser.name}!`;
+    alert("Details updated successfully!");
+    showDashboardHome();
+}
+
+function showAttendanceView() {
+    resetActiveView();
+    document.getElementById('attendanceLogsView').classList.remove('hidden');
+    const tbody = document.getElementById('attendanceTableBody');
+    
+    if(currentUser.role === 'admin') {
+        tbody.innerHTML = `
+            <tr><td>Arijit Das</td><td>HETC/2026/05</td><td>10:15 AM</td><td>Present</td></tr>
+            <tr><td>Sneha Paul</td><td>HETC/2026/12</td><td>10:20 AM</td><td>Present</td></tr>`;
+    } else {
+        tbody.innerHTML = `<tr><td>${currentUser.name}</td><td>${currentUser.roll}</td><td>10:02 AM</td><td>Present</td></tr>`;
+    }
+}
+
+function showRegisteredStudents() {
+    resetActiveView();
+    document.getElementById('registeredStudentsView').classList.remove('hidden');
+    renderAdminTable();
+}
+
 function renderAdminTable() {
     const tbody = document.getElementById('registryTableBody');
     tbody.innerHTML = "";
-    registeredDatabase.forEach(user => {
+    registeredDatabase.forEach((user, index) => {
         tbody.innerHTML += `
             <tr>
                 <td><img src="${user.img}" class="user-avatar"></td>
                 <td><strong>${user.name}</strong></td>
+                <td>${user.roll}</td>
                 <td>${user.contact}</td>
-                <td><span style="background:#e0f2fe; color:#0369a1; padding:2px 6px; border-radius:4px;">${user.dept}</span></td>
-                <td><span style="color:#10b981; font-weight:600;">● Active</span></td>
+                <td>${user.dept}</td>
+                <td><button class="btn-delete" onclick="deleteStudent(${index})">❌ Delete</button></td>
             </tr>`;
     });
 }
 
-// 7. Mirror-styled Hardware Webcam Initializer 
-function initWebcam() {
-    navigator.mediaDevices.getUserMedia({ video: true })
-    .then(stream => { document.getElementById('webcam').srcObject = stream; })
-    .catch(err => { console.log("Webcam access restricted or device missing."); });
-}
-
-// 8. Automatic Profile Picture Target Synchronization
-function triggerAutomaticCapture() {
-    showPopup("📸 Auto Capture Triggered... Syncing profile frame.");
-    setTimeout(() => {
-        showPopup("🎉 Face data captured and locked into HETC Node successfully!");
-    }, 2500);
-}
-
-// 9. Attendance Log Generator (Exact Day, Date, and Time Node Capture)
-function triggerFaceAttendance() {
-    const now = new Date();
-    const days = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-    const dateStr = now.toLocaleDateString();
-    const timeStr = now.toLocaleTimeString();
-    const dayName = days[now.getDay()];
-
-    document.getElementById('camTitle').innerText = "📷 Face Attendance Scan Activated";
-    const stamp = document.getElementById('liveTimeStamp');
-    stamp.classList.remove('hidden');
-    stamp.innerHTML = `⏱️ Verified Stamp:<br>${dayName} | ${dateStr} | ${timeStr}`;
-
-    showPopup(`✔️ Attendance Logged: ${currentUser.name} | ${timeStr}`);
-}
-
-// 10. Privacy Shield Interceptor
-function toggleAttendanceView() {
-    if(currentUser.role !== 'admin') {
-        alert("🔒 Privacy Shield: You can only track your own live stream log tokens.");
-    } else {
-        alert("Global security database loaded successfully.");
+function deleteStudent(index) {
+    if(confirm(`Are you sure you want to remove ${registeredDatabase[index].name}?`)) {
+        registeredDatabase.splice(index, 1);
+        renderAdminTable();
+        showPopup("🗑️ Student removed from system log database.");
     }
 }
 
-// 11. Global Pop-up Interface Messenger
+function resetActiveView() {
+    ['mainDashboardView', 'editDetailsView', 'attendanceLogsView', 'registeredStudentsView'].forEach(id => {
+        document.getElementById(id).classList.add('hidden');
+    });
+}
+
+function initWebcam() {
+    navigator.mediaDevices.getUserMedia({ video: true })
+    .then(stream => { document.getElementById('webcam').srcObject = stream; })
+    .catch(err => { console.log("Camera simulation run."); });
+}
+
+function triggerAutomaticCapture() {
+    showPopup("📸 Analyzing Full Metadata Frame... Hold Still!");
+    setTimeout(() => { showPopup("🎉 Profile Registered successfully via Mirror Cam!"); }, 2500);
+}
+
+function triggerFaceAttendance() {
+    const now = new Date();
+    showPopup(`✔️ Attendance Logged via Mirror Cam for ${currentUser.name} at ${now.toLocaleTimeString()}`);
+}
+
 function showPopup(msg) {
     const pop = document.getElementById('popupAlert');
     pop.innerText = msg;
