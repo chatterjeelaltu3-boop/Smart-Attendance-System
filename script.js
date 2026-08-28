@@ -1,3 +1,4 @@
+```javascript
 // ============================================================
 // SMART ATTENDANCE SYSTEM
 // script.js
@@ -32,52 +33,72 @@ const auth = window.firebaseAuth;
 
 
 // ============================================================
-// HELPER
+// HELPER FUNCTIONS
 // ============================================================
 
 function $(id) {
     return document.getElementById(id);
 }
 
+
 function showMessage(id, message, type = "info") {
+
     const el = $(id);
+
     if (!el) return;
 
     el.textContent = message;
     el.className = "auth-message " + type;
 }
 
+
 function cleanMobile(mobile) {
+
     return String(mobile || "")
         .replace(/\D/g, "")
         .slice(-10);
 }
 
+
 function getPhoneNumber(mobile) {
+
     return "+91" + cleanMobile(mobile);
 }
 
+
 function validMobile(mobile) {
-    return /^[6-9]\d{9}$/.test(cleanMobile(mobile));
+
+    return /^[6-9]\d{9}$/.test(
+        cleanMobile(mobile)
+    );
 }
 
+
 function validPin(pin) {
+
     return /^\d{4}$/.test(pin);
 }
 
+
 function validEmail(email) {
+
     if (!email) return true;
+
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
+
 function saveStudents() {
+
     localStorage.setItem(
         "registeredStudents",
         JSON.stringify(registeredStudents)
     );
 }
 
+
 function saveAttendance() {
+
     localStorage.setItem(
         "attendanceData",
         JSON.stringify(attendanceData)
@@ -99,18 +120,22 @@ function showPage(pageId) {
     ];
 
     pages.forEach(id => {
+
         const page = $(id);
 
         if (page) {
+
             page.style.display =
-                id === pageId ? "block" : "none";
+                id === pageId
+                    ? "block"
+                    : "none";
         }
     });
 }
 
 
 // ============================================================
-// CREATE ACCOUNT PAGE
+// CREATE ACCOUNT
 // ============================================================
 
 function openCreateAccount() {
@@ -118,10 +143,15 @@ function openCreateAccount() {
     showPage("createAccountPage");
 
     if ($("createOtpSection")) {
-        $("createOtpSection").style.display = "none";
+
+        $("createOtpSection").style.display =
+            "none";
     }
 
-    showMessage("createMessage", "");
+    showMessage(
+        "createMessage",
+        ""
+    );
 
     $("createName")?.focus();
 }
@@ -132,18 +162,29 @@ function openCreateAccount() {
 // ============================================================
 
 function backToLogin() {
+
     showPage("loginPage");
-    showMessage("loginMessage", "");
+
+    showMessage(
+        "loginMessage",
+        ""
+    );
 }
 
+
 function backFromForgot() {
+
     showPage("loginPage");
-    showMessage("forgotMessage", "");
+
+    showMessage(
+        "forgotMessage",
+        ""
+    );
 }
 
 
 // ============================================================
-// SEND CREATE ACCOUNT PHONE OTP
+// SEND CREATE ACCOUNT OTP
 // ============================================================
 
 async function sendCreateOTP() {
@@ -152,7 +193,9 @@ async function sendCreateOTP() {
         $("createName")?.value.trim();
 
     const mobile =
-        cleanMobile($("createMobile")?.value);
+        cleanMobile(
+            $("createMobile")?.value
+        );
 
     const email =
         $("createEmail")?.value.trim();
@@ -164,55 +207,69 @@ async function sendCreateOTP() {
         $("confirmPin")?.value.trim();
 
 
-    // ---------------- VALIDATION ----------------
+    // VALIDATION
 
     if (!name) {
+
         showMessage(
             "createMessage",
             "Please enter your name.",
             "error"
         );
+
         return;
     }
 
+
     if (!validMobile(mobile)) {
+
         showMessage(
             "createMessage",
             "Please enter a valid 10 digit mobile number.",
             "error"
         );
+
         return;
     }
 
+
     if (email && !validEmail(email)) {
+
         showMessage(
             "createMessage",
             "Please enter a valid email address.",
             "error"
         );
+
         return;
     }
 
+
     if (!validPin(pin)) {
+
         showMessage(
             "createMessage",
             "PIN must contain exactly 4 digits.",
             "error"
         );
+
         return;
     }
 
+
     if (pin !== confirmPin) {
+
         showMessage(
             "createMessage",
             "PIN and Confirm PIN do not match.",
             "error"
         );
+
         return;
     }
 
 
-    // ---------------- DUPLICATE MOBILE ----------------
+    // DUPLICATE MOBILE
 
     const existingMobile =
         registeredStudents.find(
@@ -220,17 +277,20 @@ async function sendCreateOTP() {
                 student.mobile === mobile
         );
 
+
     if (existingMobile) {
+
         showMessage(
             "createMessage",
             "This mobile number is already registered.",
             "error"
         );
+
         return;
     }
 
 
-    // ---------------- DUPLICATE EMAIL ----------------
+    // DUPLICATE EMAIL
 
     if (email) {
 
@@ -242,23 +302,28 @@ async function sendCreateOTP() {
                     email.toLowerCase()
             );
 
+
         if (existingEmail) {
+
             showMessage(
                 "createMessage",
                 "This email is already registered.",
                 "error"
             );
+
             return;
         }
     }
 
 
     if (!auth) {
+
         showMessage(
             "createMessage",
-            "Firebase is not initialized. Please reload the page.",
+            "Firebase is not initialized. Please check Firebase configuration.",
             "error"
         );
+
         return;
     }
 
@@ -272,11 +337,14 @@ async function sendCreateOTP() {
         );
 
 
-        // Clear old reCAPTCHA
+        // Clear previous reCAPTCHA
 
         if (window.createRecaptchaVerifier) {
+
             try {
+
                 window.createRecaptchaVerifier.clear();
+
             } catch (e) {}
         }
 
@@ -291,12 +359,14 @@ async function sendCreateOTP() {
                     size: "normal",
 
                     callback: () => {
+
                         console.log(
                             "Create account reCAPTCHA completed."
                         );
                     },
 
                     "expired-callback": () => {
+
                         showMessage(
                             "createMessage",
                             "reCAPTCHA expired. Please try again.",
@@ -307,9 +377,10 @@ async function sendCreateOTP() {
             );
 
 
-        // Save pending data
+        // Save temporary registration data
 
         window.pendingRegistration = {
+
             name,
             mobile,
             email,
@@ -317,7 +388,7 @@ async function sendCreateOTP() {
         };
 
 
-        // Send Firebase Phone OTP
+        // Send OTP
 
         confirmationResult =
             await signInWithPhoneNumber(
@@ -349,15 +420,20 @@ async function sendCreateOTP() {
             error
         );
 
+
         showMessage(
             "createMessage",
             firebaseErrorMessage(error),
             "error"
         );
 
+
         if (window.createRecaptchaVerifier) {
+
             try {
+
                 window.createRecaptchaVerifier.clear();
+
             } catch (e) {}
         }
     }
@@ -365,7 +441,7 @@ async function sendCreateOTP() {
 
 
 // ============================================================
-// VERIFY CREATE OTP
+// VERIFY CREATE ACCOUNT OTP
 // ============================================================
 
 async function verifyCreateOTP() {
@@ -373,33 +449,43 @@ async function verifyCreateOTP() {
     const otp =
         $("createOtp")?.value.trim();
 
+
     if (!/^\d{6}$/.test(otp)) {
+
         showMessage(
             "createMessage",
             "Enter the 6 digit OTP.",
             "error"
         );
+
         return;
     }
 
+
     if (!confirmationResult) {
+
         showMessage(
             "createMessage",
             "Please request OTP first.",
             "error"
         );
+
         return;
     }
+
 
     const data =
         window.pendingRegistration;
 
+
     if (!data) {
+
         showMessage(
             "createMessage",
             "Registration session expired. Please start again.",
             "error"
         );
+
         return;
     }
 
@@ -414,7 +500,9 @@ async function verifyCreateOTP() {
 
 
         const result =
-            await confirmationResult.confirm(otp);
+            await confirmationResult.confirm(
+                otp
+            );
 
 
         const firebaseUser =
@@ -446,13 +534,17 @@ async function verifyCreateOTP() {
         };
 
 
-        registeredStudents.push(student);
+        registeredStudents.push(
+            student
+        );
+
 
         saveStudents();
 
 
         currentUser =
             student;
+
 
         window.currentStudentId =
             student.id;
@@ -466,7 +558,9 @@ async function verifyCreateOTP() {
 
 
         setTimeout(() => {
+
             openDashboard(student);
+
         }, 700);
 
     }
@@ -477,6 +571,7 @@ async function verifyCreateOTP() {
             "OTP verification error:",
             error
         );
+
 
         showMessage(
             "createMessage",
@@ -497,38 +592,46 @@ function loginUser() {
         $("loginName")?.value.trim();
 
     const mobile =
-        cleanMobile($("loginMobile")?.value);
+        cleanMobile(
+            $("loginMobile")?.value
+        );
 
     const pin =
         $("loginPin")?.value.trim();
 
 
     if (!name) {
+
         showMessage(
             "loginMessage",
             "Please enter your name.",
             "error"
         );
+
         return;
     }
 
 
     if (!validMobile(mobile)) {
+
         showMessage(
             "loginMessage",
             "Please enter a valid mobile number.",
             "error"
         );
+
         return;
     }
 
 
     if (!validPin(pin)) {
+
         showMessage(
             "loginMessage",
             "PIN must be exactly 4 digits.",
             "error"
         );
+
         return;
     }
 
@@ -544,17 +647,20 @@ function loginUser() {
 
 
     if (!student) {
+
         showMessage(
             "loginMessage",
             "Name, mobile number or PIN does not match.",
             "error"
         );
+
         return;
     }
 
 
     currentUser =
         student;
+
 
     window.currentStudentId =
         student.id;
@@ -568,7 +674,9 @@ function loginUser() {
 
 
     setTimeout(() => {
+
         openDashboard(student);
+
     }, 500);
 }
 
@@ -582,7 +690,9 @@ function openForgotPin() {
     showPage("forgotPinPage");
 
     if ($("forgotOtpSection")) {
-        $("forgotOtpSection").style.display = "none";
+
+        $("forgotOtpSection").style.display =
+            "none";
     }
 
     showMessage(
@@ -608,21 +718,25 @@ async function sendForgotOTP() {
 
 
     if (!name) {
+
         showMessage(
             "forgotMessage",
             "Enter your registered name.",
             "error"
         );
+
         return;
     }
 
 
     if (!validMobile(mobile)) {
+
         showMessage(
             "forgotMessage",
             "Enter a valid mobile number.",
             "error"
         );
+
         return;
     }
 
@@ -637,21 +751,25 @@ async function sendForgotOTP() {
 
 
     if (!student) {
+
         showMessage(
             "forgotMessage",
             "Name and mobile number do not match.",
             "error"
         );
+
         return;
     }
 
 
     if (!auth) {
+
         showMessage(
             "forgotMessage",
             "Firebase is not initialized.",
             "error"
         );
+
         return;
     }
 
@@ -659,8 +777,11 @@ async function sendForgotOTP() {
     try {
 
         if (window.forgotRecaptchaVerifier) {
+
             try {
+
                 window.forgotRecaptchaVerifier.clear();
+
             } catch (e) {}
         }
 
@@ -709,6 +830,7 @@ async function sendForgotOTP() {
             error
         );
 
+
         showMessage(
             "forgotMessage",
             firebaseErrorMessage(error),
@@ -735,41 +857,49 @@ async function resetPIN() {
 
 
     if (!/^\d{6}$/.test(otp)) {
+
         showMessage(
             "forgotMessage",
             "Enter the 6 digit OTP.",
             "error"
         );
+
         return;
     }
 
 
     if (!validPin(newPin)) {
+
         showMessage(
             "forgotMessage",
             "New PIN must contain 4 digits.",
             "error"
         );
+
         return;
     }
 
 
     if (newPin !== confirmNewPin) {
+
         showMessage(
             "forgotMessage",
             "New PINs do not match.",
             "error"
         );
+
         return;
     }
 
 
     if (!forgotConfirmationResult) {
+
         showMessage(
             "forgotMessage",
             "Please request OTP first.",
             "error"
         );
+
         return;
     }
 
@@ -790,17 +920,20 @@ async function resetPIN() {
 
 
         if (!student) {
+
             showMessage(
                 "forgotMessage",
                 "Student account not found.",
                 "error"
             );
+
             return;
         }
 
 
         student.pin =
             newPin;
+
 
         saveStudents();
 
@@ -813,7 +946,9 @@ async function resetPIN() {
 
 
         setTimeout(() => {
+
             showPage("loginPage");
+
         }, 1200);
 
     }
@@ -821,6 +956,7 @@ async function resetPIN() {
     catch (error) {
 
         console.error(error);
+
 
         showMessage(
             "forgotMessage",
@@ -832,12 +968,13 @@ async function resetPIN() {
 
 
 // ============================================================
-// FIREBASE ERROR
+// FIREBASE ERROR MESSAGE
 // ============================================================
 
 function firebaseErrorMessage(error) {
 
     if (!error) {
+
         return "Something went wrong.";
     }
 
@@ -849,30 +986,47 @@ function firebaseErrorMessage(error) {
     switch (code) {
 
         case "auth/invalid-phone-number":
+
             return "Mobile number is invalid.";
 
+
         case "auth/too-many-requests":
+
             return "Too many attempts. Please wait and try again.";
 
+
         case "auth/quota-exceeded":
+
             return "Firebase SMS quota has been exceeded.";
 
+
         case "auth/captcha-check-failed":
+
             return "reCAPTCHA verification failed.";
 
+
         case "auth/invalid-verification-code":
+
             return "Incorrect OTP.";
 
+
         case "auth/code-expired":
+
             return "OTP expired. Request a new OTP.";
 
+
         case "auth/billing-not-enabled":
+
             return "Firebase SMS/billing configuration is not available.";
 
+
         case "auth/operation-not-allowed":
+
             return "Phone authentication is not enabled for this Firebase project.";
 
+
         default:
+
             return (
                 error.message ||
                 "Firebase authentication failed."
@@ -887,7 +1041,10 @@ function firebaseErrorMessage(error) {
 
 function openDashboard(student) {
 
-    showPage("dashboardPage");
+    showPage(
+        "dashboardPage"
+    );
+
 
     currentUser =
         student;
@@ -907,7 +1064,7 @@ function openDashboard(student) {
 
 
 // ============================================================
-// FILL FACE FIELDS
+// FILL FACE REGISTRATION FIELDS
 // ============================================================
 
 function fillFaceRegistrationFields(student) {
@@ -918,17 +1075,22 @@ function fillFaceRegistrationFields(student) {
     $("faceName").value =
         student.name || "";
 
+
     $("faceRoll").value =
         student.roll || "";
+
 
     $("collegeName").value =
         student.college || "";
 
+
     $("departmentName").value =
         student.department || "";
 
+
     $("faceMobile").value =
         student.mobile || "";
+
 
     $("faceEmail").value =
         student.email || "";
@@ -943,6 +1105,7 @@ function updateDate() {
 
     const el =
         $("currentDate");
+
 
     if (!el) return;
 
@@ -961,7 +1124,7 @@ function updateDate() {
 
 
 // ============================================================
-// DASHBOARD STATS
+// DASHBOARD STATISTICS
 // ============================================================
 
 function updateDashboard() {
@@ -983,7 +1146,8 @@ function updateDashboard() {
         student => {
 
             const records =
-                attendanceData[student.id] || [];
+                attendanceData[student.id] ||
+                [];
 
 
             if (
@@ -993,6 +1157,7 @@ function updateDashboard() {
                         r.status === "Present"
                 )
             ) {
+
                 present++;
             }
         }
@@ -1014,24 +1179,32 @@ function updateDashboard() {
             : 0;
 
 
-    if ($("totalStudents"))
+    if ($("totalStudents")) {
+
         $("totalStudents").textContent =
             total;
+    }
 
 
-    if ($("presentStudents"))
+    if ($("presentStudents")) {
+
         $("presentStudents").textContent =
             present;
+    }
 
 
-    if ($("absentStudents"))
+    if ($("absentStudents")) {
+
         $("absentStudents").textContent =
             absent;
+    }
 
 
-    if ($("attendancePercentage"))
+    if ($("attendancePercentage")) {
+
         $("attendancePercentage").textContent =
             percentage + "%";
+    }
 }
 
 
@@ -1187,6 +1360,7 @@ async function startAutomaticFaceRegistration() {
 
             saveStudents();
 
+
             currentUser =
                 student;
         }
@@ -1198,6 +1372,7 @@ async function startAutomaticFaceRegistration() {
 
         stopRegistrationCamera();
 
+
         updateDashboard();
 
         displayStudents();
@@ -1208,9 +1383,11 @@ async function startAutomaticFaceRegistration() {
 
         console.error(error);
 
+
         $("registrationMessage").textContent =
             "Camera error: " +
             error.message;
+
 
         stopRegistrationCamera();
     }
@@ -1248,6 +1425,7 @@ async function detectFaceDescriptor(video) {
 
 
         if (!detection) {
+
             return null;
         }
 
@@ -1280,6 +1458,7 @@ function stopRegistrationCamera() {
                     track.stop()
             );
 
+
         registrationStream =
             null;
     }
@@ -1290,7 +1469,9 @@ function stopRegistrationCamera() {
 
 
     if (video) {
-        video.srcObject = null;
+
+        video.srcObject =
+            null;
     }
 
 
@@ -1390,7 +1571,9 @@ async function startFaceAttendance() {
 
 
         const marked =
-            markAttendance(student);
+            markAttendance(
+                student
+            );
 
 
         if (marked) {
@@ -1415,9 +1598,11 @@ async function startFaceAttendance() {
 
         console.error(error);
 
+
         $("attendanceResult").textContent =
             "Camera error: " +
             error.message;
+
 
         stopAttendanceCamera();
     }
@@ -1434,6 +1619,7 @@ function findMatchingStudent(descriptor) {
         typeof faceapi ===
         "undefined"
     ) {
+
         return null;
     }
 
@@ -1454,6 +1640,7 @@ function findMatchingStudent(descriptor) {
                     student.faceDescriptor
                 )
             ) {
+
                 return;
             }
 
@@ -1527,6 +1714,7 @@ function markAttendance(student) {
 
 
     if (alreadyMarked) {
+
         return false;
     }
 
@@ -1550,6 +1738,7 @@ function markAttendance(student) {
 
     saveAttendance();
 
+
     return true;
 }
 
@@ -1569,6 +1758,7 @@ function stopAttendanceCamera() {
                     track.stop()
             );
 
+
         attendanceStream =
             null;
     }
@@ -1579,7 +1769,9 @@ function stopAttendanceCamera() {
 
 
     if (video) {
-        video.srcObject = null;
+
+        video.srcObject =
+            null;
     }
 
 
@@ -1599,6 +1791,7 @@ function displayStudents() {
 
     const container =
         $("studentList");
+
 
     if (!container) return;
 
@@ -1642,7 +1835,9 @@ function displayStudents() {
                 <div class="student-item">
 
                     <h3>
-                        👤 ${escapeHTML(student.name)}
+                        👤 ${escapeHTML(
+                            student.name
+                        )}
                     </h3>
 
                     <p>
@@ -1677,7 +1872,7 @@ function displayStudents() {
 
 
 // ============================================================
-// REGISTERED STUDENTS
+// REGISTERED STUDENTS MODAL
 // ============================================================
 
 function showRegisteredStudents() {
@@ -1707,7 +1902,9 @@ function showRegisteredStudents() {
                 <div class="student-item">
 
                     <h3>
-                        👤 ${escapeHTML(student.name)}
+                        👤 ${escapeHTML(
+                            student.name
+                        )}
                     </h3>
 
                     <p>
@@ -1847,7 +2044,9 @@ function toggleMenu() {
     const menu =
         $("mainMenu");
 
+
     if (!menu) return;
+
 
     menu.classList.toggle(
         "show"
@@ -1878,17 +2077,22 @@ function openEditDetails() {
     $("editName").value =
         student.name || "";
 
+
     $("editRoll").value =
         student.roll || "";
+
 
     $("editCollege").value =
         student.college || "";
 
+
     $("editDepartment").value =
         student.department || "";
 
+
     $("editMobile").value =
         student.mobile || "";
+
 
     $("editEmail").value =
         student.email || "";
@@ -1944,13 +2148,21 @@ function saveEditedDetails() {
 
 
     if (!name) {
-        alert("Name is required.");
+
+        alert(
+            "Name is required."
+        );
+
         return;
     }
 
 
     if (!validMobile(mobile)) {
-        alert("Enter a valid mobile number.");
+
+        alert(
+            "Enter a valid mobile number."
+        );
+
         return;
     }
 
@@ -1959,7 +2171,11 @@ function saveEditedDetails() {
         email &&
         !validEmail(email)
     ) {
-        alert("Enter a valid email.");
+
+        alert(
+            "Enter a valid email."
+        );
+
         return;
     }
 
@@ -1992,9 +2208,11 @@ function saveEditedDetails() {
 
     closeEditDetails();
 
+
     fillFaceRegistrationFields(
         student
     );
+
 
     displayStudents();
 
@@ -2012,10 +2230,13 @@ function saveEditedDetails() {
 // ============================================================
 
 function openMobileUpdate() {
+
     openEditDetails();
 }
 
+
 function openEmailUpdate() {
+
     openEditDetails();
 }
 
@@ -2029,6 +2250,7 @@ function showAdminDetails() {
     $("adminModal").style.display =
         "flex";
 }
+
 
 function closeAdminDetails() {
 
@@ -2051,6 +2273,7 @@ function logoutUser() {
     currentUser =
         null;
 
+
     window.currentStudentId =
         null;
 
@@ -2060,14 +2283,19 @@ function logoutUser() {
     );
 
 
-    $("loginName").value =
-        "";
+    if ($("loginName"))
+        $("loginName").value =
+            "";
 
-    $("loginMobile").value =
-        "";
 
-    $("loginPin").value =
-        "";
+    if ($("loginMobile"))
+        $("loginMobile").value =
+            "";
+
+
+    if ($("loginPin"))
+        $("loginPin").value =
+            "";
 
 
     showMessage(
@@ -2092,12 +2320,16 @@ function escapeHTML(value) {
                 const map = {
 
                     "&": "&amp;",
-                    "<": "&lt;",
-                    ">": "&gt;",
-                    '"': "&quot;",
-                    "'": "&#039;"
 
+                    "<": "&lt;",
+
+                    ">": "&gt;",
+
+                    '"': "&quot;",
+
+                    "'": "&#039;"
                 };
+
 
                 return map[char];
             }
@@ -2112,47 +2344,70 @@ function escapeHTML(value) {
 window.toggleMenu =
     toggleMenu;
 
+
 window.openEditDetails =
     openEditDetails;
+
 
 window.closeEditDetails =
     closeEditDetails;
 
+
 window.saveEditedDetails =
     saveEditedDetails;
+
 
 window.openMobileUpdate =
     openMobileUpdate;
 
+
 window.openEmailUpdate =
     openEmailUpdate;
+
 
 window.showRegisteredStudents =
     showRegisteredStudents;
 
+
 window.closeRegisteredStudents =
     closeRegisteredStudents;
+
 
 window.showCheckAttendance =
     showCheckAttendance;
 
+
 window.closeCheckAttendance =
     closeCheckAttendance;
+
 
 window.showAdminDetails =
     showAdminDetails;
 
+
 window.closeAdminDetails =
     closeAdminDetails;
+
 
 window.logoutUser =
     logoutUser;
 
+
 window.startAutomaticFaceRegistration =
     startAutomaticFaceRegistration;
 
+
 window.startFaceAttendance =
     startFaceAttendance;
+
+
+window.stopRegistrationCamera =
+    stopRegistrationCamera;
+
+
+window.stopAttendanceCamera =
+    stopAttendanceCamera;
+
 
 window.displayStudents =
     displayStudents;
@@ -2244,6 +2499,7 @@ document.addEventListener(
                             event.key ===
                             "Enter"
                         ) {
+
                             loginUser();
                         }
                     }
@@ -2288,3 +2544,4 @@ if (auth) {
         }
     );
 }
+```
