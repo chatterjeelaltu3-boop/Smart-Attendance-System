@@ -19,17 +19,58 @@
 
 <div class="container">
 
-
     <!-- ================= HEADER ================= -->
 
     <header>
+
+        <!-- THREE LINE MENU -->
+
+        <div class="menu-container">
+
+            <button
+                type="button"
+                class="menu-button"
+                onclick="toggleMenu()"
+            >
+                ☰
+            </button>
+
+            <div
+                id="mainMenu"
+                class="main-menu"
+            >
+
+                <button
+                    type="button"
+                    onclick="openEditDetails()"
+                >
+                    ✏️ Edit My Details
+                </button>
+
+                <button
+                    type="button"
+                    onclick="openMobileUpdate()"
+                >
+                    📱 Add / Update Mobile
+                </button>
+
+                <button
+                    type="button"
+                    onclick="showRegisteredStudents()"
+                >
+                    👥 Registered Students
+                </button>
+
+            </div>
+
+        </div>
+
 
         <h1>Smart Attendance System</h1>
 
         <p>Student Attendance Dashboard</p>
 
     </header>
-
 
 
     <!-- ================= DASHBOARD ================= -->
@@ -74,7 +115,6 @@
     </section>
 
 
-
     <!-- ================= ADD STUDENT ================= -->
 
     <section class="box">
@@ -107,8 +147,6 @@
                 placeholder="Department"
             >
 
-            <!-- MOBILE NUMBER -->
-
             <input
                 type="tel"
                 id="studentMobile"
@@ -125,7 +163,6 @@
         </div>
 
     </section>
-
 
 
     <!-- ================= SEARCH ================= -->
@@ -145,14 +182,11 @@
     </section>
 
 
-
     <!-- ================= TODAY ATTENDANCE ================= -->
 
     <section class="box">
 
         <h2>📋 Today's Attendance</h2>
-
-        <!-- DATE AND DAY -->
 
         <div
             id="currentDate"
@@ -161,13 +195,11 @@
                 font-size:18px;
                 font-weight:bold;
             "
-        >
-        </div>
+        ></div>
 
         <div id="studentList"></div>
 
     </section>
-
 
 
     <!-- ================= FACE REGISTRATION ================= -->
@@ -189,7 +221,6 @@
             </div>
 
         </div>
-
 
 
         <!-- STUDENT INFORMATION -->
@@ -220,8 +251,6 @@
                 placeholder="Department"
             >
 
-            <!-- MOBILE NUMBER -->
-
             <input
                 type="tel"
                 id="faceMobile"
@@ -229,7 +258,6 @@
             >
 
         </div>
-
 
 
         <!-- REGISTRATION CAMERA -->
@@ -243,13 +271,10 @@
             ></video>
 
             <div id="registrationStatus">
-
                 Camera is ready
-
             </div>
 
         </div>
-
 
 
         <!-- START CAMERA -->
@@ -259,11 +284,8 @@
             class="face-register-btn"
             onclick="startRegistrationCamera()"
         >
-
             📷 Start Registration Camera
-
         </button>
-
 
 
         <!-- REGISTER FACE -->
@@ -274,17 +296,13 @@
             class="face-register-btn"
             onclick="startAutomaticFaceRegistration()"
         >
-
             📸 Register Face
-
         </button>
-
 
 
         <p id="registrationMessage"></p>
 
     </section>
-
 
 
     <!-- ================= FACE ATTENDANCE ================= -->
@@ -308,7 +326,6 @@
         </div>
 
 
-
         <!-- ATTENDANCE CAMERA -->
 
         <div class="camera-box">
@@ -320,16 +337,13 @@
             ></video>
 
             <div id="attendanceStatus">
-
                 Camera is ready
-
             </div>
 
         </div>
 
 
-
-        <!-- FACE ATTENDANCE BUTTON -->
+        <!-- FACE ATTENDANCE -->
 
         <button
             id="attendanceButton"
@@ -337,11 +351,8 @@
             class="face-register-btn"
             onclick="startFaceAttendance()"
         >
-
             📷 Start Face Attendance
-
         </button>
-
 
 
         <!-- RESULT -->
@@ -349,15 +360,99 @@
         <div
             id="attendanceResult"
             class="attendance-result"
-        >
-        </div>
+        ></div>
 
     </section>
 
 
+</div>
+
+
+<!-- ================= EDIT DETAILS POPUP ================= -->
+
+<div
+    id="editDetailsModal"
+    class="modal"
+>
+
+    <div class="modal-content">
+
+        <button
+            class="close-modal"
+            type="button"
+            onclick="closeEditDetails()"
+        >
+            ✖
+        </button>
+
+        <h2>✏️ Edit My Details</h2>
+
+        <input
+            type="text"
+            id="editName"
+            placeholder="Student Name"
+        >
+
+        <input
+            type="text"
+            id="editRoll"
+            placeholder="Roll Number"
+        >
+
+        <input
+            type="text"
+            id="editCollege"
+            placeholder="College Name"
+        >
+
+        <input
+            type="text"
+            id="editDepartment"
+            placeholder="Department"
+        >
+
+        <input
+            type="tel"
+            id="editMobile"
+            placeholder="Mobile Number"
+        >
+
+        <button
+            type="button"
+            onclick="saveEditedDetails()"
+        >
+            💾 Save Details
+        </button>
+
+    </div>
 
 </div>
 
+
+<!-- ================= REGISTERED STUDENTS POPUP ================= -->
+
+<div
+    id="studentsModal"
+    class="modal"
+>
+
+    <div class="modal-content">
+
+        <button
+            class="close-modal"
+            type="button"
+            onclick="closeRegisteredStudents()"
+        >
+            ✖
+        </button>
+
+        <h2>👥 Registered Students</h2>
+
+        <div id="registeredStudentsList"></div>
+
+    </div>
+
+</div>
 
 
 <!-- ================= JAVASCRIPT ================= -->
