@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,20 +8,47 @@
 
     <link rel="stylesheet" href="style.css">
 
-    <!-- =====================================================
-         FACE API
-    ====================================================== -->
+    <!-- Face API -->
     <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
 
-</head>
+    <!-- Firebase -->
+    <script type="module">
+        import { initializeApp } from
+        "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
 
+        import {
+            getAuth,
+            RecaptchaVerifier,
+            signInWithPhoneNumber
+        } from
+        "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCcvk2aGKaVJvlDSS76DnkQCy8GwAuloEE",
+            authDomain: "smart-attendance-system-82b82.firebaseapp.com",
+            projectId: "smart-attendance-system-82b82",
+            storageBucket: "smart-attendance-system-82b82.firebasestorage.app",
+            messagingSenderId: "234543808646",
+            appId: "1:234543808646:web:23aaab1d197522bd725107",
+            measurementId: "G-58XHQHDY30"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        window.firebaseAuth = auth;
+        window.RecaptchaVerifier = RecaptchaVerifier;
+        window.signInWithPhoneNumber = signInWithPhoneNumber;
+
+        console.log("Firebase initialized successfully ✅");
+    </script>
+</head>
 
 <body>
 
-
 <!-- =====================================================
      LOGIN PAGE
-====================================================== -->
+===================================================== -->
 
 <div id="loginPage" class="auth-page">
 
@@ -42,7 +68,6 @@
             Secure Student Attendance Portal
         </p>
 
-
         <div class="auth-form">
 
             <label>👤 Name</label>
@@ -54,7 +79,6 @@
                 autocomplete="name"
             >
 
-
             <label>📱 Mobile Number</label>
 
             <input
@@ -65,6 +89,18 @@
                 inputmode="numeric"
             >
 
+            <div class="login-or">
+                <span>OR</span>
+            </div>
+
+            <label>📧 Email</label>
+
+            <input
+                type="email"
+                id="loginEmail"
+                placeholder="Enter registered email"
+                autocomplete="email"
+            >
 
             <label>🔐 4 Digit PIN</label>
 
@@ -76,7 +112,6 @@
                 inputmode="numeric"
             >
 
-
             <button
                 type="button"
                 id="loginButton"
@@ -84,7 +119,6 @@
             >
                 🔓 Login
             </button>
-
 
             <button
                 type="button"
@@ -94,11 +128,9 @@
                 🔑 Forgot PIN?
             </button>
 
-
             <div class="auth-divider">
                 <span>New user?</span>
             </div>
-
 
             <button
                 type="button"
@@ -107,7 +139,6 @@
             >
                 ✨ Create Account
             </button>
-
 
             <div
                 id="loginMessage"
@@ -121,10 +152,9 @@
 </div>
 
 
-
 <!-- =====================================================
      CREATE ACCOUNT PAGE
-====================================================== -->
+===================================================== -->
 
 <div
     id="createAccountPage"
@@ -148,8 +178,9 @@
             Create your secure attendance account
         </p>
 
-
         <div class="auth-form">
+
+            <!-- NAME -->
 
             <label>👤 Name</label>
 
@@ -161,7 +192,12 @@
             >
 
 
-            <label>📱 Mobile Number</label>
+            <!-- MOBILE -->
+
+            <label>
+                📱 Mobile Number
+                <span>(Optional)</span>
+            </label>
 
             <input
                 type="tel"
@@ -172,17 +208,61 @@
             >
 
 
+            <!-- EMAIL -->
+
             <label>
-                📧 Email <span>(Optional)</span>
+                📧 Email
+                <span>(Optional)</span>
             </label>
 
             <input
                 type="email"
                 id="createEmail"
-                placeholder="Enter email if you want"
+                placeholder="Enter email address"
                 autocomplete="email"
             >
 
+
+            <div class="info-box">
+                ℹ️ You can register with Mobile, Email, or both.
+                At least one is required.
+            </div>
+
+
+            <!-- VERIFICATION METHOD -->
+
+            <label>
+                🔐 Choose Verification Method
+            </label>
+
+            <div class="verification-options">
+
+                <button
+                    type="button"
+                    id="verifyByMobileButton"
+                    class="verification-option"
+                >
+                    📱 Verify by Mobile OTP
+                </button>
+
+                <button
+                    type="button"
+                    id="verifyByEmailButton"
+                    class="verification-option"
+                >
+                    📧 Verify by Email OTP
+                </button>
+
+            </div>
+
+
+            <div
+                id="verificationMethodMessage"
+                class="auth-message"
+            ></div>
+
+
+            <!-- PIN -->
 
             <label>🔐 Create 4 Digit PIN</label>
 
@@ -206,26 +286,45 @@
             >
 
 
-            <!-- reCAPTCHA -->
+            <!-- PHONE RECAPTCHA -->
 
-            <div id="recaptcha-container"></div>
+            <div
+                id="recaptcha-container"
+                style="display:none;"
+            ></div>
 
+
+            <!-- EMAIL OTP INFORMATION -->
+
+            <div
+                id="emailOtpInfo"
+                class="otp-info"
+                style="display:none;"
+            >
+                📧 An OTP will be sent to your registered email
+                address.
+            </div>
+
+
+            <!-- SEND OTP -->
 
             <button
                 type="button"
                 id="sendCreateOtpButton"
                 class="auth-main-button"
             >
-                📱 Send OTP
+                📲 Send OTP
             </button>
 
+
+            <!-- OTP SECTION -->
 
             <div
                 id="createOtpSection"
                 style="display:none;"
             >
 
-                <label>🔢 OTP</label>
+                <label>🔢 6 Digit OTP</label>
 
                 <input
                     type="tel"
@@ -234,7 +333,6 @@
                     maxlength="6"
                     inputmode="numeric"
                 >
-
 
                 <button
                     type="button"
@@ -268,10 +366,9 @@
 </div>
 
 
-
 <!-- =====================================================
      FORGOT PIN PAGE
-====================================================== -->
+===================================================== -->
 
 <div
     id="forgotPinPage"
@@ -292,7 +389,7 @@
         </p>
 
         <p class="auth-subtitle">
-            Verify your mobile number and create a new PIN
+            Verify your mobile or email and create a new PIN
         </p>
 
 
@@ -318,7 +415,51 @@
             >
 
 
-            <div id="forgot-recaptcha-container"></div>
+            <div class="login-or">
+                <span>OR</span>
+            </div>
+
+
+            <label>📧 Registered Email</label>
+
+            <input
+                type="email"
+                id="forgotEmail"
+                placeholder="Enter registered email"
+            >
+
+
+            <label>
+                🔐 Choose Verification Method
+            </label>
+
+            <div class="verification-options">
+
+                <button
+                    type="button"
+                    id="forgotVerifyMobileButton"
+                    class="verification-option"
+                >
+                    📱 Mobile OTP
+                </button>
+
+                <button
+                    type="button"
+                    id="forgotVerifyEmailButton"
+                    class="verification-option"
+                >
+                    📧 Email OTP
+                </button>
+
+            </div>
+
+
+            <!-- Forgot PIN reCAPTCHA -->
+
+            <div
+                id="forgot-recaptcha-container"
+                style="display:none;"
+            ></div>
 
 
             <button
@@ -326,7 +467,7 @@
                 id="sendForgotOtpButton"
                 class="auth-main-button"
             >
-                📱 Send OTP
+                📲 Send OTP
             </button>
 
 
@@ -335,7 +476,7 @@
                 style="display:none;"
             >
 
-                <label>🔢 OTP</label>
+                <label>🔢 6 Digit OTP</label>
 
                 <input
                     type="tel"
@@ -362,7 +503,7 @@
                 <input
                     type="password"
                     id="confirmNewPin"
-                    placeholder="Confirm new PIN"
+                    placeholder="Confirm new 4 digit PIN"
                     maxlength="4"
                     inputmode="numeric"
                 >
@@ -400,10 +541,9 @@
 </div>
 
 
-
 <!-- =====================================================
      DASHBOARD
-====================================================== -->
+===================================================== -->
 
 <div
     id="dashboardPage"
@@ -412,9 +552,6 @@
 >
 
     <div class="container">
-
-
-        <!-- HEADER -->
 
         <header class="main-header">
 
@@ -497,21 +634,15 @@
 
             <div class="header-content">
 
-                <div class="header-icon">
-                    📊
-                </div>
+                <div class="header-icon">📊</div>
 
-                <h1>
-                    Smart Attendance System
-                </h1>
+                <h1>Smart Attendance System</h1>
 
                 <h2>
                     Hooghly Engineering &amp; Technology College
                 </h2>
 
-                <p>
-                    Student Attendance Dashboard
-                </p>
+                <p>Student Attendance Dashboard</p>
 
                 <p id="currentDate"></p>
 
@@ -520,91 +651,59 @@
         </header>
 
 
-
-        <!-- =================================================
-             DASHBOARD CARDS
-        ================================================== -->
+        <!-- DASHBOARD CARDS -->
 
         <section class="dashboard">
 
-
             <div class="card total-card">
 
-                <div class="card-icon">
-                    👥
-                </div>
+                <div class="card-icon">👥</div>
 
-                <h3>
-                    Total Students
-                </h3>
+                <h3>Total Students</h3>
 
-                <h2 id="totalStudents">
-                    0
-                </h2>
+                <h2 id="totalStudents">0</h2>
 
             </div>
 
 
             <div class="card present-card">
 
-                <div class="card-icon">
-                    ✅
-                </div>
+                <div class="card-icon">✅</div>
 
-                <h3>
-                    Present
-                </h3>
+                <h3>Present</h3>
 
-                <h2 id="presentStudents">
-                    0
-                </h2>
+                <h2 id="presentStudents">0</h2>
 
             </div>
 
 
             <div class="card absent-card">
 
-                <div class="card-icon">
-                    ❌
-                </div>
+                <div class="card-icon">❌</div>
 
-                <h3>
-                    Absent
-                </h3>
+                <h3>Absent</h3>
 
-                <h2 id="absentStudents">
-                    0
-                </h2>
+                <h2 id="absentStudents">0</h2>
 
             </div>
 
 
             <div class="card attendance-card">
 
-                <div class="card-icon">
-                    📈
-                </div>
+                <div class="card-icon">📈</div>
 
-                <h3>
-                    Attendance
-                </h3>
+                <h3>Attendance</h3>
 
-                <h2 id="attendancePercentage">
-                    0%
-                </h2>
+                <h2 id="attendancePercentage">0%</h2>
 
             </div>
 
         </section>
 
 
-
-        <!-- =================================================
-             FACE REGISTRATION
-        ================================================== -->
+        <!-- FACE REGISTRATION -->
 
         <section class="section glass-section">
-
 
             <div class="section-heading">
 
@@ -612,9 +711,7 @@
 
                 <div>
 
-                    <h2>
-                        Face Registration
-                    </h2>
+                    <h2>Face Registration</h2>
 
                     <p>
                         Register your face automatically using the camera
@@ -627,13 +724,11 @@
 
             <div class="form-grid">
 
-
                 <input
                     type="text"
                     id="faceName"
                     placeholder="👤 Student Name"
                 >
-
 
                 <input
                     type="text"
@@ -641,20 +736,17 @@
                     placeholder="🔢 Roll Number"
                 >
 
-
                 <input
                     type="text"
                     id="collegeName"
                     placeholder="🏫 College Name"
                 >
 
-
                 <input
                     type="text"
                     id="departmentName"
                     placeholder="🎓 Department"
                 >
-
 
                 <input
                     type="tel"
@@ -664,7 +756,6 @@
                     inputmode="numeric"
                 >
 
-
                 <input
                     type="email"
                     id="faceEmail"
@@ -672,7 +763,6 @@
                 >
 
             </div>
-
 
 
             <div class="camera-box">
@@ -685,7 +775,6 @@
                         muted
                         playsinline
                     ></video>
-
 
                     <div class="camera-overlay">
 
@@ -724,13 +813,9 @@
         </section>
 
 
-
-        <!-- =================================================
-             FACE ATTENDANCE
-        ================================================== -->
+        <!-- FACE ATTENDANCE -->
 
         <section class="section glass-section">
-
 
             <div class="section-heading">
 
@@ -738,9 +823,7 @@
 
                 <div>
 
-                    <h2>
-                        Face Attendance
-                    </h2>
+                    <h2>Face Attendance</h2>
 
                     <p>
                         Show your face and attendance will be marked automatically
@@ -761,7 +844,6 @@
                         muted
                         playsinline
                     ></video>
-
 
                     <div class="camera-overlay">
 
@@ -800,13 +882,9 @@
         </section>
 
 
-
-        <!-- =================================================
-             STUDENT LIST
-        ================================================== -->
+        <!-- STUDENT LIST -->
 
         <section class="section glass-section">
-
 
             <div class="section-heading">
 
@@ -814,9 +892,7 @@
 
                 <div>
 
-                    <h2>
-                        Student List
-                    </h2>
+                    <h2>Student List</h2>
 
                     <p>
                         Search registered students
@@ -845,10 +921,9 @@
 </div>
 
 
-
 <!-- =====================================================
      EDIT DETAILS MODAL
-====================================================== -->
+===================================================== -->
 
 <div
     id="editDetailsModal"
@@ -866,9 +941,7 @@
         </button>
 
 
-        <h2>
-            ✏️ Edit My Details
-        </h2>
+        <h2>✏️ Edit My Details</h2>
 
 
         <input
@@ -928,10 +1001,9 @@
 </div>
 
 
-
 <!-- =====================================================
      REGISTERED STUDENTS MODAL
-====================================================== -->
+===================================================== -->
 
 <div
     id="studentsModal"
@@ -949,9 +1021,7 @@
         </button>
 
 
-        <h2>
-            👥 Registered Students
-        </h2>
+        <h2>👥 Registered Students</h2>
 
 
         <div id="registeredStudentsList"></div>
@@ -961,17 +1031,18 @@
 </div>
 
 
-
 <!-- =====================================================
      CHECK ATTENDANCE MODAL
-====================================================== -->
+===================================================== -->
 
 <div
     id="attendanceCheckModal"
     class="modal"
 >
 
-    <div class="modal-content attendance-modal">
+    <div
+        class="modal-content attendance-modal"
+    >
 
         <button
             type="button"
@@ -982,21 +1053,18 @@
         </button>
 
 
-        <h2>
-            📊 Check Attendance
-        </h2>
+        <h2>📊 Check Attendance</h2>
 
 
         <div class="attendance-summary">
 
-
-            <div class="attendance-summary-box total-summary">
+            <div
+                class="attendance-summary-box total-summary"
+            >
 
                 <span>📅</span>
 
-                <h3>
-                    Total Days
-                </h3>
+                <h3>Total Days</h3>
 
                 <h2 id="attendanceTotalDays">
                     0
@@ -1005,13 +1073,13 @@
             </div>
 
 
-            <div class="attendance-summary-box present-summary">
+            <div
+                class="attendance-summary-box present-summary"
+            >
 
                 <span>✅</span>
 
-                <h3>
-                    Present
-                </h3>
+                <h3>Present</h3>
 
                 <h2 id="attendancePresentDays">
                     0
@@ -1020,13 +1088,13 @@
             </div>
 
 
-            <div class="attendance-summary-box absent-summary">
+            <div
+                class="attendance-summary-box absent-summary"
+            >
 
                 <span>❌</span>
 
-                <h3>
-                    Absent
-                </h3>
+                <h3>Absent</h3>
 
                 <h2 id="attendanceAbsentDays">
                     0
@@ -1044,10 +1112,9 @@
 </div>
 
 
-
 <!-- =====================================================
      ADMIN MODAL
-====================================================== -->
+===================================================== -->
 
 <div
     id="adminModal"
@@ -1065,9 +1132,7 @@
         </button>
 
 
-        <h2>
-            👑 Admin Details
-        </h2>
+        <h2>👑 Admin Details</h2>
 
 
         <div class="admin-info">
@@ -1097,13 +1162,14 @@
 </div>
 
 
-
 <!-- =====================================================
-     FIREBASE + MAIN SCRIPT
-====================================================== -->
+     SCRIPT
+===================================================== -->
 
-<script type="module" src="script.js"></script>
-
+<script
+    type="module"
+    src="script.js"
+></script>
 
 </body>
 </html>
