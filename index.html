@@ -8,7 +8,39 @@
 
     <link rel="stylesheet" href="style.css">
 
+    <!-- Face API -->
     <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+
+    <!-- Firebase -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+        import {
+            getAuth,
+            RecaptchaVerifier,
+            signInWithPhoneNumber,
+            EmailAuthProvider,
+            linkWithCredential
+        } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCcvk2aGKaVJvlDSS76DnkQCy8GwAuloEE",
+            authDomain: "smart-attendance-system-82b82.firebaseapp.com",
+            projectId: "smart-attendance-system-82b82",
+            storageBucket: "smart-attendance-system-82b82.firebasestorage.app",
+            messagingSenderId: "234543808646",
+            appId: "1:234543808646:web:23aaab1d197522bd725107",
+            measurementId: "G-58XHQHDY30"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        window.firebaseAuth = auth;
+        window.RecaptchaVerifier = RecaptchaVerifier;
+        window.signInWithPhoneNumber = signInWithPhoneNumber;
+
+        console.log("Firebase initialized successfully ✅");
+    </script>
 </head>
 
 <body>
@@ -38,6 +70,7 @@
         <div class="auth-form">
 
             <label>👤 Name</label>
+
             <input
                 type="text"
                 id="loginName"
@@ -46,6 +79,7 @@
             >
 
             <label>📱 Mobile Number</label>
+
             <input
                 type="tel"
                 id="loginMobile"
@@ -55,6 +89,7 @@
             >
 
             <label>🔐 4 Digit PIN</label>
+
             <input
                 type="password"
                 id="loginPin"
@@ -103,7 +138,11 @@
      CREATE ACCOUNT PAGE
 ===================================================== -->
 
-<div id="createAccountPage" class="auth-page" style="display:none;">
+<div
+    id="createAccountPage"
+    class="auth-page"
+    style="display:none;"
+>
 
     <div class="auth-background"></div>
 
@@ -124,13 +163,16 @@
         <div class="auth-form">
 
             <label>👤 Name</label>
+
             <input
                 type="text"
                 id="createName"
                 placeholder="Enter your name"
+                autocomplete="name"
             >
 
             <label>📱 Mobile Number</label>
+
             <input
                 type="tel"
                 id="createMobile"
@@ -140,13 +182,16 @@
             >
 
             <label>📧 Email <span>(Optional)</span></label>
+
             <input
                 type="email"
                 id="createEmail"
                 placeholder="Enter email if you want"
+                autocomplete="email"
             >
 
             <label>🔐 Create 4 Digit PIN</label>
+
             <input
                 type="password"
                 id="createPin"
@@ -156,6 +201,7 @@
             >
 
             <label>🔐 Confirm PIN</label>
+
             <input
                 type="password"
                 id="confirmPin"
@@ -164,13 +210,40 @@
                 inputmode="numeric"
             >
 
+            <div id="recaptcha-container"></div>
+
             <button
                 type="button"
-                id="saveAccountButton"
+                id="sendCreateOtpButton"
                 class="auth-main-button"
             >
-                ✅ Create Account
+                📱 Send OTP
             </button>
+
+            <div
+                id="createOtpSection"
+                style="display:none;"
+            >
+
+                <label>🔢 OTP</label>
+
+                <input
+                    type="tel"
+                    id="createOtp"
+                    placeholder="Enter 6 digit OTP"
+                    maxlength="6"
+                    inputmode="numeric"
+                >
+
+                <button
+                    type="button"
+                    id="verifyCreateOtpButton"
+                    class="auth-main-button"
+                >
+                    ✅ Verify OTP &amp; Create Account
+                </button>
+
+            </div>
 
             <button
                 type="button"
@@ -180,7 +253,130 @@
                 ← Back to Login
             </button>
 
-            <div id="createMessage" class="auth-message"></div>
+            <div
+                id="createMessage"
+                class="auth-message"
+            ></div>
+
+        </div>
+
+    </div>
+</div>
+
+
+<!-- =====================================================
+     FORGOT PIN PAGE
+===================================================== -->
+
+<div
+    id="forgotPinPage"
+    class="auth-page"
+    style="display:none;"
+>
+
+    <div class="auth-background"></div>
+
+    <div class="auth-card">
+
+        <div class="auth-logo">🔐</div>
+
+        <h1>Forgot PIN</h1>
+
+        <p class="college-title">
+            Hooghly Engineering &amp; Technology College
+        </p>
+
+        <p class="auth-subtitle">
+            Verify your mobile number and create a new PIN
+        </p>
+
+        <div class="auth-form">
+
+            <label>👤 Registered Name</label>
+
+            <input
+                type="text"
+                id="forgotName"
+                placeholder="Enter your name"
+            >
+
+            <label>📱 Registered Mobile</label>
+
+            <input
+                type="tel"
+                id="forgotMobile"
+                placeholder="10 digit mobile number"
+                maxlength="10"
+                inputmode="numeric"
+            >
+
+            <div id="forgot-recaptcha-container"></div>
+
+            <button
+                type="button"
+                id="sendForgotOtpButton"
+                class="auth-main-button"
+            >
+                📱 Send OTP
+            </button>
+
+            <div
+                id="forgotOtpSection"
+                style="display:none;"
+            >
+
+                <label>🔢 OTP</label>
+
+                <input
+                    type="tel"
+                    id="forgotOtp"
+                    placeholder="Enter 6 digit OTP"
+                    maxlength="6"
+                    inputmode="numeric"
+                >
+
+                <label>🔐 New 4 Digit PIN</label>
+
+                <input
+                    type="password"
+                    id="newPin"
+                    placeholder="Create new 4 digit PIN"
+                    maxlength="4"
+                    inputmode="numeric"
+                >
+
+                <label>🔐 Confirm New PIN</label>
+
+                <input
+                    type="password"
+                    id="confirmNewPin"
+                    placeholder="Confirm new PIN"
+                    maxlength="4"
+                    inputmode="numeric"
+                >
+
+                <button
+                    type="button"
+                    id="resetPinButton"
+                    class="auth-main-button"
+                >
+                    🔄 Reset PIN
+                </button>
+
+            </div>
+
+            <button
+                type="button"
+                id="forgotBackButton"
+                class="back-button"
+            >
+                ← Back to Login
+            </button>
+
+            <div
+                id="forgotMessage"
+                class="auth-message"
+            ></div>
 
         </div>
 
@@ -200,306 +396,329 @@
 
 <div class="container">
 
-    <header class="main-header">
+<header class="main-header">
 
-        <div class="menu-container">
+    <div class="menu-container">
+
+        <button
+            type="button"
+            class="menu-button"
+            onclick="toggleMenu()"
+        >
+            ☰
+        </button>
+
+        <div id="mainMenu" class="main-menu">
 
             <button
                 type="button"
-                class="menu-button"
-                onclick="toggleMenu()"
+                onclick="openEditDetails()"
             >
-                ☰
+                ✏️ Edit My Details
             </button>
 
-            <div id="mainMenu" class="main-menu">
-
-                <button
-                    type="button"
-                    onclick="openEditDetails()"
-                >
-                    ✏️ Edit My Details
-                </button>
-
-                <button
-                    type="button"
-                    onclick="openMobileUpdate()"
-                >
-                    📱 Add / Update Mobile
-                </button>
-
-                <button
-                    type="button"
-                    onclick="openEmailUpdate()"
-                >
-                    📧 Add / Update Email
-                </button>
-
-                <button
-                    type="button"
-                    onclick="showRegisteredStudents()"
-                >
-                    👥 Registered Students
-                </button>
-
-                <button
-                    type="button"
-                    onclick="showCheckAttendance()"
-                >
-                    📊 Check Attendance
-                </button>
-
-                <button
-                    type="button"
-                    onclick="showAdminDetails()"
-                >
-                    👑 Admin: Ayush Chatterjee
-                </button>
-
-                <button
-                    type="button"
-                    onclick="logoutUser()"
-                    class="logout-menu-button"
-                >
-                    🚪 Logout
-                </button>
-
-            </div>
-        </div>
-
-        <div class="header-content">
-
-            <div class="header-icon">📊</div>
-
-            <h1>Smart Attendance System</h1>
-
-            <h2>
-                Hooghly Engineering &amp; Technology College
-            </h2>
-
-            <p>Student Attendance Dashboard</p>
-
-            <p id="currentDate"></p>
-
-        </div>
-
-    </header>
-
-
-    <!-- =================================================
-         DASHBOARD CARDS
-    ================================================= -->
-
-    <section class="dashboard">
-
-        <div class="card total-card">
-            <div class="card-icon">👥</div>
-            <h3>Total Students</h3>
-            <h2 id="totalStudents">0</h2>
-        </div>
-
-        <div class="card present-card">
-            <div class="card-icon">✅</div>
-            <h3>Present</h3>
-            <h2 id="presentStudents">0</h2>
-        </div>
-
-        <div class="card absent-card">
-            <div class="card-icon">❌</div>
-            <h3>Absent</h3>
-            <h2 id="absentStudents">0</h2>
-        </div>
-
-        <div class="card attendance-card">
-            <div class="card-icon">📈</div>
-            <h3>Attendance</h3>
-            <h2 id="attendancePercentage">0%</h2>
-        </div>
-
-    </section>
-
-
-    <!-- =================================================
-         FACE REGISTRATION
-    ================================================= -->
-
-    <section class="section glass-section">
-
-        <div class="section-heading">
-            <span>📸</span>
-            <div>
-                <h2>Face Registration</h2>
-                <p>Register your face automatically using the camera</p>
-            </div>
-        </div>
-
-        <div class="form-grid">
-
-            <input
-                type="text"
-                id="faceName"
-                placeholder="👤 Student Name"
+            <button
+                type="button"
+                onclick="openMobileUpdate()"
             >
+                📱 Add / Update Mobile
+            </button>
 
-            <input
-                type="text"
-                id="faceRoll"
-                placeholder="🔢 Roll Number"
+            <button
+                type="button"
+                onclick="openEmailUpdate()"
             >
+                📧 Add / Update Email
+            </button>
 
-            <input
-                type="text"
-                id="collegeName"
-                placeholder="🏫 College Name"
+            <button
+                type="button"
+                onclick="showRegisteredStudents()"
             >
+                👥 Registered Students
+            </button>
 
-            <input
-                type="text"
-                id="departmentName"
-                placeholder="🎓 Department"
+            <button
+                type="button"
+                onclick="showCheckAttendance()"
             >
+                📊 Check Attendance
+            </button>
 
-            <input
-                type="tel"
-                id="faceMobile"
-                placeholder="📱 Mobile Number"
-                maxlength="10"
-                inputmode="numeric"
+            <button
+                type="button"
+                onclick="showAdminDetails()"
             >
+                👑 Admin: Ayush Chatterjee
+            </button>
 
-            <input
-                type="email"
-                id="faceEmail"
-                placeholder="📧 Email (Optional)"
+            <button
+                type="button"
+                onclick="logoutUser()"
+                class="logout-menu-button"
             >
+                🚪 Logout
+            </button>
 
         </div>
 
-        <div class="camera-box">
+    </div>
 
-            <div class="camera-frame">
+    <div class="header-content">
 
-                <video
-                    id="registrationCamera"
-                    autoplay
-                    muted
-                    playsinline
-                ></video>
+        <div class="header-icon">📊</div>
 
-                <div class="camera-overlay">
-                    <div class="face-guide"></div>
-                </div>
+        <h1>Smart Attendance System</h1>
 
-            </div>
+        <h2>
+            Hooghly Engineering &amp; Technology College
+        </h2>
 
-            <div
-                id="registrationStatus"
-                class="camera-status"
-            >
-                Camera is OFF
-            </div>
+        <p>Student Attendance Dashboard</p>
 
-        </div>
+        <p id="currentDate"></p>
 
-        <button
-            type="button"
-            id="registerFaceButton"
-            class="primary-action"
-            onclick="startAutomaticFaceRegistration()"
-        >
-            📸 Capture Face &amp; Register
-        </button>
+    </div>
 
-        <div
-            id="registrationMessage"
-            class="face-message"
-        ></div>
-
-    </section>
+</header>
 
 
-    <!-- =================================================
-         FACE ATTENDANCE
-    ================================================= -->
+<!-- =================================================
+     DASHBOARD CARDS
+================================================= -->
 
-    <section class="section glass-section">
+<section class="dashboard">
 
-        <div class="section-heading">
-            <span>📸</span>
-            <div>
-                <h2>Face Attendance</h2>
-                <p>Show your face and attendance will be marked automatically</p>
-            </div>
-        </div>
+    <div class="card total-card">
+        <div class="card-icon">👥</div>
+        <h3>Total Students</h3>
+        <h2 id="totalStudents">0</h2>
+    </div>
 
-        <div class="camera-box">
+    <div class="card present-card">
+        <div class="card-icon">✅</div>
+        <h3>Present</h3>
+        <h2 id="presentStudents">0</h2>
+    </div>
 
-            <div class="camera-frame">
+    <div class="card absent-card">
+        <div class="card-icon">❌</div>
+        <h3>Absent</h3>
+        <h2 id="absentStudents">0</h2>
+    </div>
 
-                <video
-                    id="attendanceCamera"
-                    autoplay
-                    muted
-                    playsinline
-                ></video>
+    <div class="card attendance-card">
+        <div class="card-icon">📈</div>
+        <h3>Attendance</h3>
+        <h2 id="attendancePercentage">0%</h2>
+    </div>
 
-                <div class="camera-overlay">
-                    <div class="face-guide"></div>
-                </div>
+</section>
 
-            </div>
 
-            <div
-                id="attendanceStatus"
-                class="camera-status"
-            >
-                Camera is OFF
-            </div>
+<!-- =================================================
+     FACE REGISTRATION
+================================================= -->
+
+<section class="section glass-section">
+
+    <div class="section-heading">
+
+        <span>📸</span>
+
+        <div>
+
+            <h2>Face Registration</h2>
+
+            <p>
+                Register your face automatically using the camera
+            </p>
 
         </div>
 
-        <button
-            type="button"
-            id="attendanceButton"
-            class="primary-action attendance-action"
-            onclick="startFaceAttendance()"
-        >
-            📸 Capture Face
-        </button>
+    </div>
 
-        <div
-            id="attendanceResult"
-            class="face-message"
-        ></div>
-
-    </section>
-
-
-    <!-- =================================================
-         STUDENT LIST
-    ================================================= -->
-
-    <section class="section glass-section">
-
-        <div class="section-heading">
-            <span>👥</span>
-            <div>
-                <h2>Student List</h2>
-                <p>Search registered students</p>
-            </div>
-        </div>
+    <div class="form-grid">
 
         <input
             type="text"
-            id="searchStudent"
-            class="search-input"
-            placeholder="🔎 Search student by name or roll..."
-            oninput="displayStudents()"
+            id="faceName"
+            placeholder="👤 Student Name"
         >
 
-        <div id="studentList"></div>
+        <input
+            type="text"
+            id="faceRoll"
+            placeholder="🔢 Roll Number"
+        >
 
-    </section>
+        <input
+            type="text"
+            id="collegeName"
+            placeholder="🏫 College Name"
+        >
+
+        <input
+            type="text"
+            id="departmentName"
+            placeholder="🎓 Department"
+        >
+
+        <input
+            type="tel"
+            id="faceMobile"
+            placeholder="📱 Mobile Number"
+            maxlength="10"
+            inputmode="numeric"
+        >
+
+        <input
+            type="email"
+            id="faceEmail"
+            placeholder="📧 Email (Optional)"
+        >
+
+    </div>
+
+    <div class="camera-box">
+
+        <div class="camera-frame">
+
+            <video
+                id="registrationCamera"
+                autoplay
+                muted
+                playsinline
+            ></video>
+
+            <div class="camera-overlay">
+                <div class="face-guide"></div>
+            </div>
+
+        </div>
+
+        <div
+            id="registrationStatus"
+            class="camera-status"
+        >
+            Camera is OFF
+        </div>
+
+    </div>
+
+    <button
+        type="button"
+        id="registerFaceButton"
+        class="primary-action"
+        onclick="startAutomaticFaceRegistration()"
+    >
+        📸 Capture Face &amp; Register
+    </button>
+
+    <div
+        id="registrationMessage"
+        class="face-message"
+    ></div>
+
+</section>
+
+
+<!-- =================================================
+     FACE ATTENDANCE
+================================================= -->
+
+<section class="section glass-section">
+
+    <div class="section-heading">
+
+        <span>📸</span>
+
+        <div>
+
+            <h2>Face Attendance</h2>
+
+            <p>
+                Show your face and attendance will be marked automatically
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="camera-box">
+
+        <div class="camera-frame">
+
+            <video
+                id="attendanceCamera"
+                autoplay
+                muted
+                playsinline
+            ></video>
+
+            <div class="camera-overlay">
+                <div class="face-guide"></div>
+            </div>
+
+        </div>
+
+        <div
+            id="attendanceStatus"
+            class="camera-status"
+        >
+            Camera is OFF
+        </div>
+
+    </div>
+
+    <button
+        type="button"
+        id="attendanceButton"
+        class="primary-action attendance-action"
+        onclick="startFaceAttendance()"
+    >
+        📸 Capture Face
+    </button>
+
+    <div
+        id="attendanceResult"
+        class="face-message"
+    ></div>
+
+</section>
+
+
+<!-- =================================================
+     STUDENT LIST
+================================================= -->
+
+<section class="section glass-section">
+
+    <div class="section-heading">
+
+        <span>👥</span>
+
+        <div>
+
+            <h2>Student List</h2>
+
+            <p>Search registered students</p>
+
+        </div>
+
+    </div>
+
+    <input
+        type="text"
+        id="searchStudent"
+        class="search-input"
+        placeholder="🔎 Search student by name or roll..."
+        oninput="displayStudents()"
+    >
+
+    <div id="studentList"></div>
+
+</section>
 
 </div>
 </div>
@@ -523,11 +742,23 @@
 
         <h2>✏️ Edit My Details</h2>
 
-        <input type="text" id="editName" placeholder="Name">
+        <input
+            type="text"
+            id="editName"
+            placeholder="Name"
+        >
 
-        <input type="text" id="editRoll" placeholder="Roll">
+        <input
+            type="text"
+            id="editRoll"
+            placeholder="Roll"
+        >
 
-        <input type="text" id="editCollege" placeholder="College">
+        <input
+            type="text"
+            id="editCollege"
+            placeholder="College"
+        >
 
         <input
             type="text"
@@ -582,6 +813,7 @@
         <div id="registeredStudentsList"></div>
 
     </div>
+
 </div>
 
 
@@ -606,21 +838,33 @@
         <div class="attendance-summary">
 
             <div class="attendance-summary-box total-summary">
+
                 <span>📅</span>
+
                 <h3>Total Days</h3>
+
                 <h2 id="attendanceTotalDays">0</h2>
+
             </div>
 
             <div class="attendance-summary-box present-summary">
+
                 <span>✅</span>
+
                 <h3>Present</h3>
+
                 <h2 id="attendancePresentDays">0</h2>
+
             </div>
 
             <div class="attendance-summary-box absent-summary">
+
                 <span>❌</span>
+
                 <h3>Absent</h3>
+
                 <h2 id="attendanceAbsentDays">0</h2>
+
             </div>
 
         </div>
@@ -628,6 +872,7 @@
         <div id="attendanceHistory"></div>
 
     </div>
+
 </div>
 
 
@@ -654,17 +899,17 @@
             <strong>👤 Admin:</strong>
             Ayush Chatterjee
 
-            <br>
+            <br><br>
 
             <strong>📋 System:</strong>
             Smart Attendance System
 
-            <br>
+            <br><br>
 
             <strong>🏫 College:</strong>
             Hooghly Engineering &amp; Technology College
 
-            <br>
+            <br><br>
 
             <strong>🔐 Role:</strong>
             Administrator
@@ -672,6 +917,7 @@
         </div>
 
     </div>
+
 </div>
 
 
