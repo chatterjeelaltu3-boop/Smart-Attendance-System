@@ -120,3 +120,58 @@ function deleteStudent(index) {
 
     displayStudents();
 }
+// ================= FACE CAMERA =================
+
+async function startCameraForVideo(videoId, statusId) {
+
+    const video = document.getElementById(videoId);
+    const status = document.getElementById(statusId);
+
+    try {
+
+        const stream = await navigator.mediaDevices.getUserMedia({
+            video: {
+                facingMode: "user"
+            },
+            audio: false
+        });
+
+        video.srcObject = stream;
+
+        await video.play();
+
+        status.innerText = "Camera ON ✅";
+
+    } catch (error) {
+
+        console.error(error);
+
+        status.innerText =
+            "Camera permission denied or camera unavailable ❌";
+
+    }
+}
+
+
+// Registration Camera
+
+async function startRegistrationCamera() {
+
+    await startCameraForVideo(
+        "registrationCamera",
+        "registrationStatus"
+    );
+
+}
+
+
+// Attendance Camera
+
+async function startAttendanceCamera() {
+
+    await startCameraForVideo(
+        "attendanceCamera",
+        "attendanceStatus"
+    );
+
+}
