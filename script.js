@@ -1,30 +1,17 @@
 // =====================================================
 // SMART ATTENDANCE SYSTEM
-// FINAL VERSION
 // =====================================================
 
 
 // =====================================================
-// STUDENTS
+// DATA
 // =====================================================
 
 let students =
     JSON.parse(localStorage.getItem("students")) || [];
 
-
-// =====================================================
-// ATTENDANCE HISTORY
-// =====================================================
-
 let attendanceHistory =
-    JSON.parse(
-        localStorage.getItem("attendanceHistory")
-    ) || [];
-
-
-// =====================================================
-// CAMERA VARIABLES
-// =====================================================
+    JSON.parse(localStorage.getItem("attendanceHistory")) || [];
 
 let registrationStream = null;
 let attendanceStream = null;
@@ -62,7 +49,7 @@ function saveAttendanceHistory() {
 
 
 // =====================================================
-// DATE / DAY / TIME
+// DATE / TIME
 // =====================================================
 
 function getAttendanceDateTime() {
@@ -120,6 +107,16 @@ function showCurrentDate() {
 
 
 // =====================================================
+// MOBILE VALIDATION
+// =====================================================
+
+function isValidMobile(mobile) {
+
+    return /^[0-9]{10}$/.test(mobile);
+}
+
+
+// =====================================================
 // ADD STUDENT
 // =====================================================
 
@@ -157,6 +154,16 @@ function addStudent() {
     }
 
 
+    if (!isValidMobile(mobile)) {
+
+        alert(
+            "Mobile number must contain exactly 10 digits."
+        );
+
+        return;
+    }
+
+
     students.push({
 
         name,
@@ -164,6 +171,8 @@ function addStudent() {
         college,
         department,
         mobile,
+
+        email: "",
 
         status: "Not Marked",
 
@@ -198,6 +207,7 @@ function displayStudents() {
     const searchElement =
         document.getElementById("searchStudent");
 
+
     const search =
         searchElement
             ? searchElement.value.toLowerCase().trim()
@@ -210,13 +220,13 @@ function displayStudents() {
     const filtered =
         students.filter(student =>
 
-            student.name
+            (student.name || "")
                 .toLowerCase()
                 .includes(search)
 
             ||
 
-            student.roll
+            (student.roll || "")
                 .toLowerCase()
                 .includes(search)
 
@@ -241,6 +251,7 @@ function displayStudents() {
         const row =
             document.createElement("div");
 
+
         row.className =
             "student-row";
 
@@ -253,17 +264,14 @@ function displayStudents() {
             attendanceInfo = `
 
                 <br>
-
                 📅 Date:
                 ${student.attendanceDate}
 
                 <br>
-
                 📆 Day:
                 ${student.attendanceDay}
 
                 <br>
-
                 🕐 Time:
                 ${student.attendanceTime}
 
@@ -298,6 +306,11 @@ function displayStudents() {
 
                 📱 Mobile:
                 ${student.mobile || "Not added"}
+
+                <br>
+
+                📧 Email:
+                ${student.email || "Not added"}
 
                 ${attendanceInfo}
 
@@ -361,17 +374,20 @@ function markPresent(index) {
     students[index].status =
         "Present";
 
+
     students[index].attendanceDate =
         attendance.date;
 
+
     students[index].attendanceDay =
         attendance.day;
+
 
     students[index].attendanceTime =
         attendance.time;
 
 
-    addAttendanceHistory(
+    addDailyAttendance(
         students[index],
         "Present",
         attendance
@@ -400,17 +416,20 @@ function markAbsent(index) {
     students[index].status =
         "Absent";
 
+
     students[index].attendanceDate =
         attendance.date;
 
+
     students[index].attendanceDay =
         attendance.day;
+
 
     students[index].attendanceTime =
         attendance.time;
 
 
-    addAttendanceHistory(
+    addDailyAttendance(
         students[index],
         "Absent",
         attendance
@@ -427,49 +446,21 @@ function markAbsent(index) {
 
 
 // =====================================================
-// DELETE
+// DAILY ATTENDANCE SAVE
 // =====================================================
 
-function deleteStudent(index) {
-
-    if (
-        !confirm(
-            "Delete this student?"
-        )
-    ) {
-        return;
-    }
-
-
-    students.splice(index, 1);
-
-    saveStudents();
-
-    displayStudents();
-
-    updateDashboard();
-
-}
-
-
-// =====================================================
-// ADD ATTENDANCE HISTORY
-// =====================================================
-
-function addAttendanceHistory(
+function addDailyAttendance(
     student,
     status,
     attendance
 ) {
 
-    // Same student cannot be marked twice
-    // on the same date
-
     const alreadyExists =
-        attendanceHistory.some(item =>
+        attendanceHistory.some(record =>
 
-            item.roll === student.roll &&
-            item.dateKey === attendance.dateKey
+            record.roll === student.roll &&
+
+            record.dateKey === attendance.dateKey
 
         );
 
@@ -477,7 +468,6 @@ function addAttendanceHistory(
     if (alreadyExists) {
 
         return;
-
     }
 
 
@@ -493,13 +483,18 @@ function addAttendanceHistory(
 
         mobile: student.mobile || "",
 
+        email: student.email || "",
+
         status: status,
 
         date: attendance.date,
 
         day: attendance.day,
 
-        time: attendance.time,
+        time:
+            status === "Present"
+                ? attendance.time
+                : "",
 
         dateKey: attendance.dateKey
 
@@ -507,6 +502,33 @@ function addAttendanceHistory(
 
 
     saveAttendanceHistory();
+
+}
+
+
+// =====================================================
+// DELETE STUDENT
+// =====================================================
+
+function deleteStudent(index) {
+
+    if (
+        !confirm(
+            "Delete this student?"
+        )
+    ) {
+
+        return;
+    }
+
+
+    students.splice(index, 1);
+
+    saveStudents();
+
+    displayStudents();
+
+    updateDashboard();
 
 }
 
@@ -546,15 +568,18 @@ function updateDashboard() {
             "totalStudents"
         );
 
+
     const presentElement =
         document.getElementById(
             "presentStudents"
         );
 
+
     const absentElement =
         document.getElementById(
             "absentStudents"
         );
+
 
     const percentageElement =
         document.getElementById(
@@ -598,7 +623,6 @@ async function loadFaceModels() {
     if (faceModelLoaded) {
 
         return true;
-
     }
 
 
@@ -616,12 +640,10 @@ async function loadFaceModels() {
             .loadFromUri(MODEL_URL);
 
 
-        faceModelLoaded =
-            true;
+        faceModelLoaded = true;
 
 
         return true;
-
 
     } catch (error) {
 
@@ -632,13 +654,12 @@ async function loadFaceModels() {
 
 
         return false;
-
     }
 }
 
 
 // =====================================================
-// START CAMERA
+// CAMERA
 // =====================================================
 
 async function startCameraForVideo(
@@ -649,6 +670,7 @@ async function startCameraForVideo(
     const video =
         document.getElementById(videoId);
 
+
     const status =
         document.getElementById(statusId);
 
@@ -656,33 +678,31 @@ async function startCameraForVideo(
     if (!video) {
 
         return null;
-
     }
 
 
     try {
 
         const stream =
-            await navigator.mediaDevices
-                .getUserMedia({
+            await navigator.mediaDevices.getUserMedia({
 
-                    video: {
+                video: {
 
-                        facingMode: "user",
+                    facingMode: "user",
 
-                        width: {
-                            ideal: 640
-                        },
-
-                        height: {
-                            ideal: 480
-                        }
-
+                    width: {
+                        ideal: 640
                     },
 
-                    audio: false
+                    height: {
+                        ideal: 480
+                    }
 
-                });
+                },
+
+                audio: false
+
+            });
 
 
         video.srcObject =
@@ -695,8 +715,7 @@ async function startCameraForVideo(
         if (status) {
 
             status.innerText =
-                "Camera ON ✅";
-
+                "Camera ON 📸 — Looking for face...";
         }
 
 
@@ -712,23 +731,84 @@ async function startCameraForVideo(
 
             status.innerText =
                 "Camera permission denied ❌";
-
         }
 
 
-        alert(
-            "Camera permission is required."
-        );
-
-
         return null;
-
     }
 }
 
 
 // =====================================================
-// REGISTRATION
+// STOP REGISTRATION CAMERA
+// =====================================================
+
+function stopRegistrationCamera() {
+
+    if (registrationStream) {
+
+        registrationStream
+            .getTracks()
+            .forEach(
+                track => track.stop()
+            );
+
+        registrationStream =
+            null;
+    }
+
+
+    const video =
+        document.getElementById(
+            "registrationCamera"
+        );
+
+
+    if (video) {
+
+        video.srcObject =
+            null;
+    }
+
+}
+
+
+// =====================================================
+// STOP ATTENDANCE CAMERA
+// =====================================================
+
+function stopAttendanceCamera() {
+
+    if (attendanceStream) {
+
+        attendanceStream
+            .getTracks()
+            .forEach(
+                track => track.stop()
+            );
+
+        attendanceStream =
+            null;
+    }
+
+
+    const video =
+        document.getElementById(
+            "attendanceCamera"
+        );
+
+
+    if (video) {
+
+        video.srcObject =
+            null;
+    }
+
+}
+
+
+// =====================================================
+// FACE REGISTRATION START
 // =====================================================
 
 async function startAutomaticFaceRegistration() {
@@ -736,27 +816,37 @@ async function startAutomaticFaceRegistration() {
     const name =
         document.getElementById(
             "faceName"
-        )?.value.trim();
+        ).value.trim();
+
 
     const roll =
         document.getElementById(
             "faceRoll"
-        )?.value.trim();
+        ).value.trim();
+
 
     const college =
         document.getElementById(
             "collegeName"
-        )?.value.trim();
+        ).value.trim();
+
 
     const department =
         document.getElementById(
             "departmentName"
-        )?.value.trim();
+        ).value.trim();
+
 
     const mobile =
         document.getElementById(
             "faceMobile"
-        )?.value.trim();
+        ).value.trim();
+
+
+    const email =
+        document.getElementById(
+            "faceEmail"
+        ).value.trim();
 
 
     const status =
@@ -764,10 +854,12 @@ async function startAutomaticFaceRegistration() {
             "registrationStatus"
         );
 
+
     const message =
         document.getElementById(
             "registrationMessage"
         );
+
 
     const button =
         document.getElementById(
@@ -783,27 +875,34 @@ async function startAutomaticFaceRegistration() {
         !mobile
     ) {
 
-        if (message) {
-
-            message.innerHTML = `
-
-                <div class="success-message"
-                     style="
-                     background:#fff7ed;
-                     border-color:#f97316;
-                     color:#9a3412;
-                     ">
-
-                    ⚠️ Please fill all details.
-
-                </div>
-
-            `;
-
-        }
+        message.innerHTML =
+            `<div class="success-message">
+                ⚠️ Please fill all required details.
+            </div>`;
 
         return;
+    }
 
+
+    if (!isValidMobile(mobile)) {
+
+        message.innerHTML =
+            `<div class="success-message">
+                ⚠️ Mobile number must be exactly 10 digits.
+            </div>`;
+
+        return;
+    }
+
+
+    if (email && !isValidEmail(email)) {
+
+        message.innerHTML =
+            `<div class="success-message">
+                ⚠️ Please enter a valid email address.
+            </div>`;
+
+        return;
     }
 
 
@@ -817,22 +916,25 @@ async function startAutomaticFaceRegistration() {
 
     if (!modelsReady) {
 
-        if (message) {
-
-            message.innerHTML =
-                "❌ Face model could not load.";
-
-        }
+        message.innerHTML =
+            `<div class="success-message">
+                ❌ Face model could not load.
+            </div>`;
 
         button.disabled =
             false;
 
         return;
-
     }
 
 
-    if (!registrationStream) {
+    const video =
+        document.getElementById(
+            "registrationCamera"
+        );
+
+
+    if (!video.srcObject) {
 
         registrationStream =
             await startCameraForVideo(
@@ -847,14 +949,12 @@ async function startAutomaticFaceRegistration() {
                 false;
 
             return;
-
         }
-
     }
 
 
     status.innerText =
-        "📸 Camera ON — Looking for your face...";
+        "📸 Camera ON — Put your face in front of camera";
 
 
     registrationRunning =
@@ -866,7 +966,8 @@ async function startAutomaticFaceRegistration() {
         roll,
         college,
         department,
-        mobile
+        mobile,
+        email
     );
 
 }
@@ -881,13 +982,13 @@ async function detectRegistrationFace(
     roll,
     college,
     department,
-    mobile
+    mobile,
+    email
 ) {
 
     if (!registrationRunning) {
 
         return;
-
     }
 
 
@@ -895,6 +996,7 @@ async function detectRegistrationFace(
         document.getElementById(
             "registrationCamera"
         );
+
 
     const status =
         document.getElementById(
@@ -920,7 +1022,7 @@ async function detectRegistrationFace(
         if (detection) {
 
             status.innerText =
-                "✅ Face detected — Capturing...";
+                "✅ Face detected — Capturing automatically...";
 
 
             const descriptor =
@@ -929,19 +1031,23 @@ async function detectRegistrationFace(
                 );
 
 
+            const faceStudent = {
+
+                name,
+                roll,
+                college,
+                department,
+                mobile,
+                email,
+
+                descriptor
+
+            };
+
+
             localStorage.setItem(
                 "registeredFaceStudent",
-                JSON.stringify({
-
-                    name,
-                    roll,
-                    college,
-                    department,
-                    mobile,
-
-                    descriptor
-
-                })
+                JSON.stringify(faceStudent)
             );
 
 
@@ -965,6 +1071,9 @@ async function detectRegistrationFace(
                 existing.mobile =
                     mobile;
 
+                existing.email =
+                    email;
+
             } else {
 
                 students.push({
@@ -974,6 +1083,7 @@ async function detectRegistrationFace(
                     college,
                     department,
                     mobile,
+                    email,
 
                     status:
                         "Not Marked",
@@ -989,20 +1099,24 @@ async function detectRegistrationFace(
 
             saveStudents();
 
+
             displayStudents();
 
             updateDashboard();
 
 
-            registrationSuccessful();
+            registrationSuccessful(
+                name,
+                roll
+            );
+
 
             return;
-
         }
 
 
         status.innerText =
-            "📸 Looking for your face...";
+            "👤 Looking for your face...";
 
 
         setTimeout(
@@ -1013,11 +1127,12 @@ async function detectRegistrationFace(
                     roll,
                     college,
                     department,
-                    mobile
+                    mobile,
+                    email
                 );
 
             },
-            300
+            400
         );
 
 
@@ -1026,12 +1141,12 @@ async function detectRegistrationFace(
         console.error(error);
 
 
-        status.innerText =
-            "Face detection error ❌";
-
-
         registrationRunning =
             false;
+
+
+        status.innerText =
+            "Face detection error ❌";
 
 
         buttonEnable(
@@ -1047,7 +1162,10 @@ async function detectRegistrationFace(
 // REGISTRATION SUCCESS
 // =====================================================
 
-function registrationSuccessful() {
+function registrationSuccessful(
+    name,
+    roll
+) {
 
     registrationRunning =
         false;
@@ -1057,6 +1175,7 @@ function registrationSuccessful() {
         document.getElementById(
             "registrationStatus"
         );
+
 
     const message =
         document.getElementById(
@@ -1068,7 +1187,6 @@ function registrationSuccessful() {
 
         status.innerText =
             "✅ Face Captured Successfully!";
-
     }
 
 
@@ -1082,16 +1200,27 @@ function registrationSuccessful() {
                     ✅
                 </div>
 
-                Face Captured Successfully!
+                <h3>
+                    Face Registration Completed
+                </h3>
 
-                <br>
+                <p>
+                    👤 <strong>Name:</strong>
+                    ${name}
+                </p>
 
-                🎉 Face Registration Completed
+                <p>
+                    🔢 <strong>Roll:</strong>
+                    ${roll}
+                </p>
+
+                <p>
+                    📸 Face captured successfully.
+                </p>
 
             </div>
 
         `;
-
     }
 
 
@@ -1112,43 +1241,7 @@ function registrationSuccessful() {
 
 
 // =====================================================
-// STOP REGISTRATION CAMERA
-// =====================================================
-
-function stopRegistrationCamera() {
-
-    if (registrationStream) {
-
-        registrationStream
-            .getTracks()
-            .forEach(
-                track => track.stop()
-            );
-
-        registrationStream =
-            null;
-
-    }
-
-
-    const video =
-        document.getElementById(
-            "registrationCamera"
-        );
-
-
-    if (video) {
-
-        video.srcObject =
-            null;
-
-    }
-
-}
-
-
-// =====================================================
-// FACE ATTENDANCE
+// FACE ATTENDANCE START
 // =====================================================
 
 async function startFaceAttendance() {
@@ -1158,15 +1251,18 @@ async function startFaceAttendance() {
             "attendanceCamera"
         );
 
+
     const status =
         document.getElementById(
             "attendanceStatus"
         );
 
+
     const button =
         document.getElementById(
             "attendanceButton"
         );
+
 
     const result =
         document.getElementById(
@@ -1182,27 +1278,13 @@ async function startFaceAttendance() {
 
     if (!savedData) {
 
-        result.innerHTML = `
-
-            <div class="success-message"
-                 style="
-                 background:#fff7ed;
-                 border-color:#f97316;
-                 color:#9a3412;
-                 ">
-
+        result.innerHTML =
+            `<div class="success-message">
                 ❌ No face registered.
-
-                <br>
-
                 Please register your face first.
-
-            </div>
-
-        `;
+            </div>`;
 
         return;
-
     }
 
 
@@ -1224,11 +1306,10 @@ async function startFaceAttendance() {
             false;
 
         return;
-
     }
 
 
-    if (!attendanceStream) {
+    if (!video.srcObject) {
 
         attendanceStream =
             await startCameraForVideo(
@@ -1243,9 +1324,7 @@ async function startFaceAttendance() {
                 false;
 
             return;
-
         }
-
     }
 
 
@@ -1257,6 +1336,10 @@ async function startFaceAttendance() {
         true;
 
 
+    result.innerHTML =
+        "";
+
+
     detectAttendanceFace(
         registeredStudent
     );
@@ -1265,7 +1348,7 @@ async function startFaceAttendance() {
 
 
 // =====================================================
-// DETECT ATTENDANCE FACE
+// ATTENDANCE FACE DETECTION
 // =====================================================
 
 async function detectAttendanceFace(
@@ -1275,7 +1358,6 @@ async function detectAttendanceFace(
     if (!attendanceRunning) {
 
         return;
-
     }
 
 
@@ -1283,6 +1365,7 @@ async function detectAttendanceFace(
         document.getElementById(
             "attendanceCamera"
         );
+
 
     const status =
         document.getElementById(
@@ -1308,7 +1391,7 @@ async function detectAttendanceFace(
         if (!detection) {
 
             status.innerText =
-                "📸 Looking for your face...";
+                "👤 Looking for your face...";
 
 
             setTimeout(
@@ -1319,16 +1402,16 @@ async function detectAttendanceFace(
                     );
 
                 },
-                300
+                400
             );
 
-            return;
 
+            return;
         }
 
 
         status.innerText =
-            "✅ Face detected — Checking...";
+            "✅ Face detected — Checking identity...";
 
 
         const registeredDescriptor =
@@ -1352,12 +1435,11 @@ async function detectAttendanceFace(
 
         } else {
 
+            status.innerText =
+                "❌ Face does not match.";
+
             attendanceRunning =
                 false;
-
-
-            status.innerText =
-                "❌ Face does not match";
 
 
             stopAttendanceCamera();
@@ -1368,9 +1450,21 @@ async function detectAttendanceFace(
             );
 
 
-            alert(
-                "❌ Face does not match the registered face."
-            );
+            document.getElementById(
+                "attendanceResult"
+            ).innerHTML = `
+
+                <div class="success-message">
+
+                    ❌ Face does not match.
+
+                    <br><br>
+
+                    Please try again.
+
+                </div>
+
+            `;
 
         }
 
@@ -1419,136 +1513,58 @@ function showAttendanceSuccess(
         );
 
 
-    const status =
-        document.getElementById(
-            "attendanceStatus"
-        );
-
-
-    // Find student
-
     let index =
         students.findIndex(
             s => s.roll === student.roll
         );
 
 
-    // =================================================
-    // CHECK IF ALREADY MARKED TODAY
-    // =================================================
-
-    const alreadyMarkedToday =
-        attendanceHistory.some(item =>
-
-            item.roll === student.roll &&
-            item.dateKey === attendance.dateKey
-
-        );
-
-
-    if (alreadyMarkedToday) {
-
-        if (status) {
-
-            status.innerText =
-                "⚠️ Attendance already marked today.";
-
-        }
-
-
-        if (result) {
-
-            result.innerHTML = `
-
-                <div class="success-message"
-                     style="
-                     background:#fff7ed;
-                     border-color:#f59e0b;
-                     color:#92400e;
-                     ">
-
-                    <div class="success-icon">
-                        ⚠️
-                    </div>
-
-                    <h3>
-                        Attendance Already Marked
-                    </h3>
-
-                    <p>
-                        ${student.name}
-                    </p>
-
-                    <p>
-                        📅 ${attendance.date}
-                    </p>
-
-                </div>
-
-            `;
-
-        }
-
-
-        stopAttendanceCamera();
-
-
-        buttonEnable(
-            "attendanceButton"
-        );
-
-
-        alert(
-            "⚠️ Attendance already marked today."
-        );
-
-
-        return;
-
-    }
-
-
-    // =================================================
-    // UPDATE STUDENT
-    // =================================================
-
     if (index !== -1) {
 
         students[index].status =
             "Present";
 
+
         students[index].attendanceDate =
             attendance.date;
+
 
         students[index].attendanceDay =
             attendance.day;
 
+
         students[index].attendanceTime =
             attendance.time;
+
 
         students[index].mobile =
             student.mobile ||
             students[index].mobile ||
             "";
 
+
+        students[index].email =
+            student.email ||
+            students[index].email ||
+            "";
+
     } else {
 
         students.push({
 
-            name:
-                student.name,
+            name: student.name,
 
-            roll:
-                student.roll,
+            roll: student.roll,
 
-            college:
-                student.college,
+            college: student.college,
 
-            department:
-                student.department,
+            department: student.department,
 
             mobile:
                 student.mobile || "",
+
+            email:
+                student.email || "",
 
             status:
                 "Present",
@@ -1564,15 +1580,18 @@ function showAttendanceSuccess(
 
         });
 
+
+        index =
+            students.length - 1;
     }
 
 
-    // =================================================
-    // SAVE DAILY ATTENDANCE
-    // =================================================
+    /*
+       SAVE DAILY ATTENDANCE
+    */
 
-    addAttendanceHistory(
-        student,
+    addDailyAttendance(
+        students[index],
         "Present",
         attendance
     );
@@ -1580,12 +1599,6 @@ function showAttendanceSuccess(
 
     saveStudents();
 
-    saveAttendanceHistory();
-
-
-    // =================================================
-    // SUCCESS MESSAGE
-    // =================================================
 
     result.innerHTML = `
 
@@ -1595,51 +1608,71 @@ function showAttendanceSuccess(
                 ✅
             </div>
 
+
             <h3>
-                Attendance Successfully Marked!
+                Attendance Successfully Marked
             </h3>
 
+
             <p>
-                <strong>👤 Name:</strong>
+                👤 <strong>Name:</strong>
                 ${student.name}
             </p>
 
+
             <p>
-                <strong>🔢 Roll:</strong>
+                🔢 <strong>Roll:</strong>
                 ${student.roll}
             </p>
 
+
             <p>
-                <strong>🏫 College:</strong>
+                🏫 <strong>College:</strong>
                 ${student.college}
             </p>
 
+
             <p>
-                <strong>🎓 Department:</strong>
+                🎓 <strong>Department:</strong>
                 ${student.department}
             </p>
 
-            <hr
-                style="
-                margin:15px 0;
-                border:none;
-                border-top:1px solid #bbf7d0;
-                "
-            >
 
             <p>
-                <strong>📅 Date:</strong>
+                📱 <strong>Mobile:</strong>
+                ${student.mobile || "Not added"}
+            </p>
+
+
+            <p>
+                📧 <strong>Email:</strong>
+                ${student.email || "Not added"}
+            </p>
+
+
+            <hr>
+
+
+            <p>
+                📅 <strong>Date:</strong>
                 ${attendance.date}
             </p>
 
+
             <p>
-                <strong>📆 Day:</strong>
+                📆 <strong>Day:</strong>
                 ${attendance.day}
             </p>
 
+
             <p>
-                <strong>🕐 Time:</strong>
+                🕐 <strong>Time:</strong>
                 ${attendance.time}
+            </p>
+
+
+            <p class="success-note">
+                🎉 Your attendance has been saved successfully.
             </p>
 
         </div>
@@ -1647,17 +1680,22 @@ function showAttendanceSuccess(
     `;
 
 
+    displayStudents();
+
+    updateDashboard();
+
+
+    const status =
+        document.getElementById(
+            "attendanceStatus"
+        );
+
+
     if (status) {
 
         status.innerText =
             "✅ Attendance marked successfully!";
-
     }
-
-
-    displayStudents();
-
-    updateDashboard();
 
 
     stopAttendanceCamera();
@@ -1668,62 +1706,18 @@ function showAttendanceSuccess(
     );
 
 
-    // POPUP
+    /*
+       POPUP
+    */
 
     alert(
-        "✅ ATTENDANCE SUCCESSFULLY MARKED!\n\n" +
-
-        "👤 Name: " +
-        student.name +
-
-        "\n🔢 Roll: " +
-        student.roll +
-
-        "\n📅 Date: " +
-        attendance.date +
-
-        "\n📆 Day: " +
-        attendance.day +
-
-        "\n🕐 Time: " +
-        attendance.time
+        "✅ Attendance Successfully Marked!\n\n" +
+        "Name: " + student.name + "\n" +
+        "Roll: " + student.roll + "\n" +
+        "Date: " + attendance.date + "\n" +
+        "Day: " + attendance.day + "\n" +
+        "Time: " + attendance.time
     );
-
-}
-
-
-// =====================================================
-// STOP ATTENDANCE CAMERA
-// =====================================================
-
-function stopAttendanceCamera() {
-
-    if (attendanceStream) {
-
-        attendanceStream
-            .getTracks()
-            .forEach(
-                track => track.stop()
-            );
-
-        attendanceStream =
-            null;
-
-    }
-
-
-    const video =
-        document.getElementById(
-            "attendanceCamera"
-        );
-
-
-    if (video) {
-
-        video.srcObject =
-            null;
-
-    }
 
 }
 
@@ -1737,13 +1731,23 @@ function buttonEnable(id) {
     const button =
         document.getElementById(id);
 
+
     if (button) {
 
         button.disabled =
             false;
-
     }
 
+}
+
+
+// =====================================================
+// EMAIL VALIDATION
+// =====================================================
+
+function isValidEmail(email) {
+
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 }
 
 
@@ -1825,6 +1829,12 @@ function openEditDetails() {
         ).value =
             student.mobile || "";
 
+
+        document.getElementById(
+            "editEmail"
+        ).value =
+            student.email || "";
+
     }
 
 
@@ -1834,6 +1844,28 @@ function openEditDetails() {
 
 
     closeMenu();
+
+}
+
+
+// =====================================================
+// CLOSE MENU
+// =====================================================
+
+function closeMenu() {
+
+    const menu =
+        document.getElementById(
+            "mainMenu"
+        );
+
+
+    if (menu) {
+
+        menu.classList.remove(
+            "show"
+        );
+    }
 
 }
 
@@ -1855,7 +1887,6 @@ function closeEditDetails() {
         modal.classList.remove(
             "show"
         );
-
     }
 
 }
@@ -1870,27 +1901,37 @@ function saveEditedDetails() {
     const name =
         document.getElementById(
             "editName"
-        )?.value.trim();
+        ).value.trim();
+
 
     const roll =
         document.getElementById(
             "editRoll"
-        )?.value.trim();
+        ).value.trim();
+
 
     const college =
         document.getElementById(
             "editCollege"
-        )?.value.trim();
+        ).value.trim();
+
 
     const department =
         document.getElementById(
             "editDepartment"
-        )?.value.trim();
+        ).value.trim();
+
 
     const mobile =
         document.getElementById(
             "editMobile"
-        )?.value.trim();
+        ).value.trim();
+
+
+    const email =
+        document.getElementById(
+            "editEmail"
+        ).value.trim();
 
 
     if (
@@ -1902,10 +1943,60 @@ function saveEditedDetails() {
     ) {
 
         alert(
-            "Please fill all details."
+            "Please fill all required details."
         );
 
         return;
+    }
+
+
+    if (!isValidMobile(mobile)) {
+
+        alert(
+            "Mobile number must be exactly 10 digits."
+        );
+
+        return;
+    }
+
+
+    if (
+        email &&
+        !isValidEmail(email)
+    ) {
+
+        alert(
+            "Please enter a valid email."
+        );
+
+        return;
+    }
+
+
+    const index =
+        students.findIndex(
+            s => s.roll === roll
+        );
+
+
+    if (index !== -1) {
+
+        students[index].name =
+            name;
+
+        students[index].college =
+            college;
+
+        students[index].department =
+            department;
+
+        students[index].mobile =
+            mobile;
+
+        students[index].email =
+            email;
+
+        saveStudents();
 
     }
 
@@ -1937,36 +2028,14 @@ function saveEditedDetails() {
         student.mobile =
             mobile;
 
+        student.email =
+            email;
+
 
         localStorage.setItem(
             "registeredFaceStudent",
             JSON.stringify(student)
         );
-
-    }
-
-
-    const index =
-        students.findIndex(
-            s => s.roll === roll
-        );
-
-
-    if (index !== -1) {
-
-        students[index].name =
-            name;
-
-        students[index].college =
-            college;
-
-        students[index].department =
-            department;
-
-        students[index].mobile =
-            mobile;
-
-        saveStudents();
 
     }
 
@@ -1993,11 +2062,25 @@ function openMobileUpdate() {
 
     const mobile =
         prompt(
-            "Enter your mobile number:"
+            "Enter your 10 digit mobile number:"
         );
 
 
     if (!mobile) return;
+
+
+    const cleanMobile =
+        mobile.trim();
+
+
+    if (!isValidMobile(cleanMobile)) {
+
+        alert(
+            "❌ Mobile number must be exactly 10 digits."
+        );
+
+        return;
+    }
 
 
     const saved =
@@ -2013,7 +2096,6 @@ function openMobileUpdate() {
         );
 
         return;
-
     }
 
 
@@ -2022,7 +2104,7 @@ function openMobileUpdate() {
 
 
     student.mobile =
-        mobile.trim();
+        cleanMobile;
 
 
     localStorage.setItem(
@@ -2040,7 +2122,7 @@ function openMobileUpdate() {
     if (index !== -1) {
 
         students[index].mobile =
-            mobile.trim();
+            cleanMobile;
 
         saveStudents();
 
@@ -2067,6 +2149,7 @@ function showRegisteredStudents() {
         document.getElementById(
             "studentsModal"
         );
+
 
     const list =
         document.getElementById(
@@ -2103,7 +2186,8 @@ function showRegisteredStudents() {
                 div.innerHTML = `
 
                     <strong>
-                        ${index + 1}. ${student.name}
+                        ${index + 1}.
+                        ${student.name}
                     </strong>
 
                     <br>
@@ -2125,6 +2209,11 @@ function showRegisteredStudents() {
 
                     📱 Mobile:
                     ${student.mobile || "Not added"}
+
+                    <br>
+
+                    📧 Email:
+                    ${student.email || "Not added"}
 
                     <br>
 
@@ -2169,7 +2258,6 @@ function closeRegisteredStudents() {
         modal.classList.remove(
             "show"
         );
-
     }
 
 }
@@ -2187,10 +2275,157 @@ function showCheckAttendance() {
         );
 
 
+    const totalElement =
+        document.getElementById(
+            "attendanceTotalDays"
+        );
+
+
+    const presentElement =
+        document.getElementById(
+            "attendancePresentDays"
+        );
+
+
+    const absentElement =
+        document.getElementById(
+            "attendanceAbsentDays"
+        );
+
+
+    const historyElement =
+        document.getElementById(
+            "attendanceHistory"
+        );
+
+
     if (!modal) return;
 
 
-    updateAttendanceSummary();
+    /*
+       Number of saved attendance days
+    */
+
+    const totalDays =
+        new Set(
+            attendanceHistory.map(
+                record => record.dateKey
+            )
+        ).size;
+
+
+    const presentDays =
+        new Set(
+            attendanceHistory
+                .filter(
+                    r => r.status === "Present"
+                )
+                .map(
+                    r => r.dateKey
+                )
+        ).size;
+
+
+    const absentDays =
+        new Set(
+            attendanceHistory
+                .filter(
+                    r => r.status === "Absent"
+                )
+                .map(
+                    r => r.dateKey
+                )
+        ).size;
+
+
+    totalElement.innerText =
+        totalDays;
+
+
+    presentElement.innerText =
+        presentDays;
+
+
+    absentElement.innerText =
+        absentDays;
+
+
+    historyElement.innerHTML = "";
+
+
+    if (attendanceHistory.length === 0) {
+
+        historyElement.innerHTML =
+            "<p>No attendance history yet.</p>";
+
+    } else {
+
+        const sorted =
+            [...attendanceHistory].reverse();
+
+
+        sorted.forEach(record => {
+
+            const div =
+                document.createElement("div");
+
+
+            div.className =
+                "history-card " +
+                (
+                    record.status === "Present"
+                        ? "history-present"
+                        : "history-absent"
+                );
+
+
+            div.innerHTML = `
+
+                <strong>
+                    ${record.status === "Present"
+                        ? "🟢"
+                        : "🔴"}
+                    ${record.status}
+                </strong>
+
+                <br>
+
+                👤 Name:
+                ${record.name}
+
+                <br>
+
+                🔢 Roll:
+                ${record.roll}
+
+                <br>
+
+                📅 Date:
+                ${record.date}
+
+                <br>
+
+                📆 Day:
+                ${record.day}
+
+                ${
+                    record.time
+                        ? `
+                            <br>
+                            🕐 Time:
+                            ${record.time}
+                          `
+                        : ""
+                }
+
+            `;
+
+
+            historyElement.appendChild(div);
+
+        });
+
+    }
 
 
     modal.classList.add(
@@ -2220,142 +2455,7 @@ function closeCheckAttendance() {
         modal.classList.remove(
             "show"
         );
-
     }
-
-}
-
-
-// =====================================================
-// ATTENDANCE SUMMARY
-// =====================================================
-
-function updateAttendanceSummary() {
-
-    const total =
-        document.getElementById(
-            "attendanceTotalDays"
-        );
-
-    const present =
-        document.getElementById(
-            "attendancePresentDays"
-        );
-
-    const absent =
-        document.getElementById(
-            "attendanceAbsentDays"
-        );
-
-
-    const totalDays =
-        attendanceHistory.length;
-
-
-    const presentDays =
-        attendanceHistory.filter(
-            item => item.status === "Present"
-        ).length;
-
-
-    const absentDays =
-        attendanceHistory.filter(
-            item => item.status === "Absent"
-        ).length;
-
-
-    if (total)
-        total.innerText =
-            totalDays;
-
-
-    if (present)
-        present.innerText =
-            presentDays;
-
-
-    if (absent)
-        absent.innerText =
-            absentDays;
-
-
-    const history =
-        document.getElementById(
-            "attendanceHistory"
-        );
-
-
-    if (!history) return;
-
-
-    history.innerHTML = "";
-
-
-    if (attendanceHistory.length === 0) {
-
-        history.innerHTML =
-            "<p>No attendance history yet.</p>";
-
-        return;
-
-    }
-
-
-    const reversed =
-        [...attendanceHistory].reverse();
-
-
-    reversed.forEach(item => {
-
-        const div =
-            document.createElement(
-                "div"
-            );
-
-
-        div.className =
-            "attendance-history-item";
-
-
-        div.innerHTML = `
-
-            <strong>
-                👤 ${item.name}
-            </strong>
-
-            <br>
-
-            🔢 Roll:
-            ${item.roll}
-
-            <br>
-
-            📌 Status:
-            <strong>
-                ${item.status}
-            </strong>
-
-            <br>
-
-            📅 Date:
-            ${item.date}
-
-            <br>
-
-            📆 Day:
-            ${item.day}
-
-            <br>
-
-            🕐 Time:
-            ${item.time}
-
-        `;
-
-
-        history.appendChild(div);
-
-    });
 
 }
 
@@ -2402,33 +2502,38 @@ function closeAdminDetails() {
         modal.classList.remove(
             "show"
         );
-
     }
 
 }
 
 
 // =====================================================
-// CLOSE MENU
+// MOBILE INPUT — ONLY NUMBERS
 // =====================================================
 
-function closeMenu() {
+document.addEventListener(
+    "input",
+    function(event) {
 
-    const menu =
-        document.getElementById(
-            "mainMenu"
-        );
+        const id =
+            event.target.id;
 
 
-    if (menu) {
+        if (
+            id === "faceMobile" ||
+            id === "editMobile" ||
+            id === "studentMobile"
+        ) {
 
-        menu.classList.remove(
-            "show"
-        );
+            event.target.value =
+                event.target.value
+                    .replace(/\D/g, "")
+                    .slice(0, 10);
+
+        }
 
     }
-
-}
+);
 
 
 // =====================================================
@@ -2437,18 +2542,17 @@ function closeMenu() {
 
 window.addEventListener(
     "load",
-    async function () {
+    async function() {
 
         displayStudents();
 
         updateDashboard();
 
-        updateAttendanceSummary();
-
         showCurrentDate();
 
-
-        // Load face models
+        /*
+           Face models load in background.
+        */
 
         await loadFaceModels();
 
