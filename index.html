@@ -15,7 +15,9 @@
 
     <style>
 
-        /* ================= MENU ================= */
+        /* =====================================================
+           THREE HORIZONTAL BAR MENU
+        ===================================================== */
 
         .menu-container {
             position: relative;
@@ -33,6 +35,10 @@
             color: white;
             border: none;
             cursor: pointer;
+        }
+
+        .menu-button:hover {
+            opacity: 0.9;
         }
 
         .main-menu {
@@ -68,7 +74,16 @@
             opacity: 0.88;
         }
 
-        /* ================= MODAL ================= */
+        /* ADMIN BUTTON */
+
+        .main-menu .admin-menu-button {
+            background: #7c3aed;
+        }
+
+
+        /* =====================================================
+           MODAL
+        ===================================================== */
 
         .modal {
             display: none;
@@ -104,6 +119,7 @@
         .modal-content input {
             width: 100%;
             margin-bottom: 12px;
+            box-sizing: border-box;
         }
 
         .close-modal {
@@ -114,8 +130,20 @@
             height: 40px;
             padding: 0;
             background: #dc3545;
+            color: white;
+            border: none;
             border-radius: 50%;
+            cursor: pointer;
         }
+
+        .close-modal:hover {
+            opacity: 0.85;
+        }
+
+
+        /* =====================================================
+           ADMIN INFO
+        ===================================================== */
 
         .admin-info {
             background: #eff6ff;
@@ -123,7 +151,32 @@
             padding: 18px;
             border-radius: 12px;
             line-height: 1.8;
+            margin-bottom: 20px;
         }
+
+        .admin-title {
+            font-size: 25px;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .admin-student {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            line-height: 1.7;
+        }
+
+        .admin-mobile {
+            font-weight: bold;
+        }
+
+
+        /* =====================================================
+           REGISTERED STUDENT
+        ===================================================== */
 
         .registered-student {
             background: #f8fafc;
@@ -131,6 +184,21 @@
             padding: 15px;
             border-radius: 12px;
             margin-bottom: 12px;
+            line-height: 1.7;
+        }
+
+
+        /* =====================================================
+           ADMIN UNLOCKED MESSAGE
+        ===================================================== */
+
+        .admin-unlocked {
+            background: #ecfdf5;
+            border: 1px solid #86efac;
+            color: #166534;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 15px;
         }
 
     </style>
@@ -144,7 +212,9 @@
 <div class="container">
 
 
-    <!-- ================= HEADER ================= -->
+    <!-- =====================================================
+         HEADER
+    ===================================================== -->
 
     <header>
 
@@ -168,6 +238,9 @@
                 class="main-menu"
             >
 
+
+                <!-- EDIT DETAILS -->
+
                 <button
                     type="button"
                     onclick="openEditDetails()"
@@ -175,6 +248,8 @@
                     ✏️ Edit My Details
                 </button>
 
+
+                <!-- MOBILE -->
 
                 <button
                     type="button"
@@ -184,6 +259,8 @@
                 </button>
 
 
+                <!-- REGISTERED STUDENTS -->
+
                 <button
                     type="button"
                     onclick="showRegisteredStudents()"
@@ -192,14 +269,16 @@
                 </button>
 
 
-                <!-- ADMIN LAST -->
+                <!-- ADMIN - LAST -->
 
                 <button
                     type="button"
-                    onclick="showAdminDetails()"
+                    class="admin-menu-button"
+                    onclick="openAdminPanel()"
                 >
-                    👑 Admin: Ayush
+                    👤 Admin: Ayush Chatterjee
                 </button>
+
 
             </div>
 
@@ -214,10 +293,558 @@
 
 
 
-    <!-- ================= DASHBOARD ================= -->
+    <!-- =====================================================
+         DASHBOARD
+    ===================================================== -->
 
     <section class="dashboard">
 
+
         <div class="card">
+
             <h3>Total Students</h3>
-            <h2 id="totalStudents">0</
+
+            <h2 id="totalStudents">0</h2>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>Present</h3>
+
+            <h2 id="presentStudents">0</h2>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>Absent</h3>
+
+            <h2 id="absentStudents">0</h2>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>Attendance</h3>
+
+            <h2 id="attendancePercentage">0%</h2>
+
+        </div>
+
+
+    </section>
+
+
+
+    <!-- =====================================================
+         ADD STUDENT
+    ===================================================== -->
+
+    <section class="box">
+
+        <h2>➕ Add Student</h2>
+
+        <div class="form">
+
+            <input
+                type="text"
+                id="studentName"
+                placeholder="Student Name"
+            >
+
+            <input
+                type="text"
+                id="studentRoll"
+                placeholder="Roll Number"
+            >
+
+            <input
+                type="text"
+                id="studentCollege"
+                placeholder="College Name"
+            >
+
+            <input
+                type="text"
+                id="studentDepartment"
+                placeholder="Department"
+            >
+
+            <input
+                type="tel"
+                id="studentMobile"
+                placeholder="Mobile Number"
+            >
+
+            <button
+                type="button"
+                onclick="addStudent()"
+            >
+                Add Student
+            </button>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         SEARCH
+    ===================================================== -->
+
+    <section class="box">
+
+        <h2>🔍 Search Student</h2>
+
+        <input
+            class="search"
+            type="text"
+            id="searchStudent"
+            placeholder="Search by name or roll number"
+            oninput="displayStudents()"
+        >
+
+    </section>
+
+
+
+    <!-- =====================================================
+         TODAY ATTENDANCE
+    ===================================================== -->
+
+    <section class="box">
+
+        <h2>📋 Today's Attendance</h2>
+
+        <div
+            id="currentDate"
+            style="
+                margin-bottom:20px;
+                font-size:18px;
+                font-weight:bold;
+            "
+        ></div>
+
+        <div id="studentList"></div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         FACE REGISTRATION
+    ===================================================== -->
+
+    <section class="box face-section">
+
+
+        <div class="section-title">
+
+            <span>👤</span>
+
+            <div>
+
+                <h2>Face Registration</h2>
+
+                <p>
+                    Enter student details and register your face
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- STUDENT INFORMATION -->
+
+        <div class="face-form">
+
+            <input
+                type="text"
+                id="faceName"
+                placeholder="Student Name"
+            >
+
+            <input
+                type="text"
+                id="faceRoll"
+                placeholder="Roll Number"
+            >
+
+            <input
+                type="text"
+                id="collegeName"
+                placeholder="College Name"
+            >
+
+            <input
+                type="text"
+                id="departmentName"
+                placeholder="Department"
+            >
+
+            <input
+                type="tel"
+                id="faceMobile"
+                placeholder="Mobile Number"
+            >
+
+        </div>
+
+
+        <!-- REGISTRATION CAMERA -->
+
+        <div class="camera-box">
+
+            <video
+                id="registrationCamera"
+                autoplay
+                playsinline
+            ></video>
+
+            <div id="registrationStatus">
+                Camera is ready
+            </div>
+
+        </div>
+
+
+        <!-- START CAMERA -->
+
+        <button
+            type="button"
+            class="face-register-btn"
+            onclick="startRegistrationCamera()"
+        >
+            📷 Start Registration Camera
+        </button>
+
+
+        <!-- REGISTER FACE -->
+
+        <button
+            id="registerFaceButton"
+            type="button"
+            class="face-register-btn"
+            onclick="startAutomaticFaceRegistration()"
+        >
+            📸 Register Face
+        </button>
+
+
+        <p id="registrationMessage"></p>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         FACE ATTENDANCE
+    ===================================================== -->
+
+    <section class="box face-attendance-section">
+
+
+        <div class="section-title">
+
+            <span>📷</span>
+
+            <div>
+
+                <h2>Face Attendance</h2>
+
+                <p>
+                    Face will be detected automatically
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- ATTENDANCE CAMERA -->
+
+        <div class="camera-box">
+
+            <video
+                id="attendanceCamera"
+                autoplay
+                playsinline
+            ></video>
+
+            <div id="attendanceStatus">
+                Camera is ready
+            </div>
+
+        </div>
+
+
+        <!-- FACE ATTENDANCE -->
+
+        <button
+            id="attendanceButton"
+            type="button"
+            class="face-register-btn"
+            onclick="startFaceAttendance()"
+        >
+            📷 Start Face Attendance
+        </button>
+
+
+        <!-- RESULT -->
+
+        <div
+            id="attendanceResult"
+            class="attendance-result"
+        ></div>
+
+    </section>
+
+
+</div>
+
+
+
+<!-- =====================================================
+     EDIT MY DETAILS POPUP
+===================================================== -->
+
+<div
+    id="editDetailsModal"
+    class="modal"
+>
+
+
+    <div class="modal-content">
+
+
+        <button
+            class="close-modal"
+            type="button"
+            onclick="closeEditDetails()"
+        >
+            ✖
+        </button>
+
+
+        <h2>✏️ Edit My Details</h2>
+
+
+        <input
+            type="text"
+            id="editName"
+            placeholder="Student Name"
+        >
+
+
+        <input
+            type="text"
+            id="editRoll"
+            placeholder="Roll Number"
+        >
+
+
+        <input
+            type="text"
+            id="editCollege"
+            placeholder="College Name"
+        >
+
+
+        <input
+            type="text"
+            id="editDepartment"
+            placeholder="Department"
+        >
+
+
+        <input
+            type="tel"
+            id="editMobile"
+            placeholder="Mobile Number"
+        >
+
+
+        <button
+            type="button"
+            onclick="saveEditedDetails()"
+        >
+            💾 Save Details
+        </button>
+
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     REGISTERED STUDENTS POPUP
+===================================================== -->
+
+<div
+    id="studentsModal"
+    class="modal"
+>
+
+
+    <div class="modal-content">
+
+
+        <button
+            class="close-modal"
+            type="button"
+            onclick="closeRegisteredStudents()"
+        >
+            ✖
+        </button>
+
+
+        <h2>👥 Registered Students</h2>
+
+
+        <div id="registeredStudentsList"></div>
+
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     ADMIN LOGIN POPUP
+===================================================== -->
+
+<div
+    id="adminLoginModal"
+    class="modal"
+>
+
+
+    <div class="modal-content">
+
+
+        <button
+            class="close-modal"
+            type="button"
+            onclick="closeAdminLogin()"
+        >
+            ✖
+        </button>
+
+
+        <h2>🔐 Admin Login</h2>
+
+
+        <div class="admin-info">
+
+            <strong>👤 Admin:</strong>
+            Ayush Chatterjee
+
+            <br>
+
+            <strong>🔒 Access:</strong>
+            Administrator Only
+
+        </div>
+
+
+        <input
+            type="password"
+            id="adminPassword"
+            placeholder="Enter Admin Password"
+        >
+
+
+        <button
+            type="button"
+            onclick="verifyAdminPassword()"
+        >
+            🔓 Login as Admin
+        </button>
+
+
+        <p
+            id="adminLoginMessage"
+            style="
+                margin-top:15px;
+                font-weight:bold;
+            "
+        ></p>
+
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     ADMIN PANEL
+===================================================== -->
+
+<div
+    id="adminPanelModal"
+    class="modal"
+>
+
+
+    <div class="modal-content">
+
+
+        <button
+            class="close-modal"
+            type="button"
+            onclick="closeAdminPanel()"
+        >
+            ✖
+        </button>
+
+
+        <div class="admin-title">
+            👤 Admin Panel
+        </div>
+
+
+        <div class="admin-unlocked">
+
+            ✅ Admin Access Granted
+
+            <br>
+
+            👤 <strong>Ayush Chatterjee</strong>
+
+        </div>
+
+
+        <h2>
+            👥 All Registered Students
+        </h2>
+
+
+        <div id="adminStudentsList"></div>
+
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     JAVASCRIPT
+===================================================== -->
+
+<script src="script.js"></script>
+
+
+</body>
+
+</html>
