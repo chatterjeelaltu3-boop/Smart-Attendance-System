@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,51 +9,20 @@
 
     <link rel="stylesheet" href="style.css">
 
-    <!-- Face API -->
+    <!-- =====================================================
+         FACE API
+    ====================================================== -->
     <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
 
-    <!-- Firebase -->
-    <script type="module">
-        import { initializeApp }
-        from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
-
-        import {
-            getAuth,
-            RecaptchaVerifier,
-            signInWithPhoneNumber
-        }
-        from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyCcvk2aGKaVJvlDSS76DnkQCy8GwAuloEE",
-            authDomain: "smart-attendance-system-82b82.firebaseapp.com",
-            projectId: "smart-attendance-system-82b82",
-            storageBucket: "smart-attendance-system-82b82.firebasestorage.app",
-            messagingSenderId: "234543808646",
-            appId: "1:234543808646:web:23aaab1d197522bd725107",
-            measurementId: "G-58XHQHDY30"
-        };
-
-        try {
-            const app = initializeApp(firebaseConfig);
-            const auth = getAuth(app);
-
-            window.firebaseAuth = auth;
-            window.RecaptchaVerifier = RecaptchaVerifier;
-            window.signInWithPhoneNumber = signInWithPhoneNumber;
-
-            console.log("Firebase initialized successfully ✅");
-        } catch (error) {
-            console.error("Firebase initialization error:", error);
-        }
-    </script>
 </head>
+
 
 <body>
 
+
 <!-- =====================================================
      LOGIN PAGE
-===================================================== -->
+====================================================== -->
 
 <div id="loginPage" class="auth-page">
 
@@ -72,27 +42,20 @@
             Secure Student Attendance Portal
         </p>
 
+
         <div class="auth-form">
 
-            <!-- NAME -->
-
-            <label for="loginName">
-                👤 Name
-            </label>
+            <label>👤 Name</label>
 
             <input
                 type="text"
                 id="loginName"
-                placeholder="Enter your registered name"
+                placeholder="Enter your name"
                 autocomplete="name"
             >
 
 
-            <!-- MOBILE -->
-
-            <label for="loginMobile">
-                📱 Mobile Number
-            </label>
+            <label>📱 Mobile Number</label>
 
             <input
                 type="tel"
@@ -100,29 +63,10 @@
                 placeholder="10 digit mobile number"
                 maxlength="10"
                 inputmode="numeric"
-                autocomplete="tel"
             >
 
 
-            <!-- EMAIL -->
-
-            <label for="loginEmail">
-                📧 Email
-            </label>
-
-            <input
-                type="email"
-                id="loginEmail"
-                placeholder="Enter your registered email"
-                autocomplete="email"
-            >
-
-
-            <!-- PIN -->
-
-            <label for="loginPin">
-                🔐 4 Digit PIN
-            </label>
+            <label>🔐 4 Digit PIN</label>
 
             <input
                 type="password"
@@ -130,11 +74,8 @@
                 placeholder="Enter 4 digit PIN"
                 maxlength="4"
                 inputmode="numeric"
-                autocomplete="current-password"
             >
 
-
-            <!-- LOGIN -->
 
             <button
                 type="button"
@@ -144,8 +85,6 @@
                 🔓 Login
             </button>
 
-
-            <!-- FORGOT PIN -->
 
             <button
                 type="button"
@@ -160,8 +99,6 @@
                 <span>New user?</span>
             </div>
 
-
-            <!-- CREATE ACCOUNT -->
 
             <button
                 type="button"
@@ -184,9 +121,10 @@
 </div>
 
 
+
 <!-- =====================================================
      CREATE ACCOUNT PAGE
-===================================================== -->
+====================================================== -->
 
 <div
     id="createAccountPage"
@@ -210,28 +148,20 @@
             Create your secure attendance account
         </p>
 
+
         <div class="auth-form">
 
-
-            <!-- NAME -->
-
-            <label for="createName">
-                👤 Name
-            </label>
+            <label>👤 Name</label>
 
             <input
                 type="text"
                 id="createName"
-                placeholder="Enter your full name"
+                placeholder="Enter your name"
                 autocomplete="name"
             >
 
 
-            <!-- MOBILE -->
-
-            <label for="createMobile">
-                📱 Mobile Number
-            </label>
+            <label>📱 Mobile Number</label>
 
             <input
                 type="tel"
@@ -239,84 +169,63 @@
                 placeholder="10 digit mobile number"
                 maxlength="10"
                 inputmode="numeric"
-                autocomplete="tel"
             >
 
 
-            <!-- EMAIL -->
-
-            <label for="createEmail">
-                📧 Email
+            <label>
+                📧 Email <span>(Optional)</span>
             </label>
 
             <input
                 type="email"
                 id="createEmail"
-                placeholder="Enter your email address"
+                placeholder="Enter email if you want"
                 autocomplete="email"
             >
 
 
-            <!-- PIN -->
-
-            <label for="createPin">
-                🔐 Create 4 Digit PIN
-            </label>
+            <label>🔐 Create 4 Digit PIN</label>
 
             <input
                 type="password"
                 id="createPin"
-                placeholder="Create 4 digit PIN"
+                placeholder="4 digit PIN"
                 maxlength="4"
                 inputmode="numeric"
-                autocomplete="new-password"
             >
 
 
-            <!-- CONFIRM PIN -->
-
-            <label for="confirmPin">
-                🔐 Confirm PIN
-            </label>
+            <label>🔐 Confirm PIN</label>
 
             <input
                 type="password"
                 id="confirmPin"
-                placeholder="Confirm your PIN"
+                placeholder="Confirm 4 digit PIN"
                 maxlength="4"
                 inputmode="numeric"
-                autocomplete="new-password"
             >
 
 
-            <!-- PHONE OTP RECAPTCHA -->
+            <!-- reCAPTCHA -->
 
-            <div
-                id="recaptcha-container"
-            ></div>
+            <div id="recaptcha-container"></div>
 
-
-            <!-- SEND OTP -->
 
             <button
                 type="button"
                 id="sendCreateOtpButton"
                 class="auth-main-button"
             >
-                📱 Send Mobile OTP
+                📱 Send OTP
             </button>
 
-
-            <!-- OTP SECTION -->
 
             <div
                 id="createOtpSection"
                 style="display:none;"
             >
 
-                <label for="createOtp">
-                    🔢 Mobile OTP
-                </label>
+                <label>🔢 OTP</label>
 
                 <input
                     type="tel"
@@ -337,8 +246,6 @@
 
             </div>
 
-
-            <!-- BACK -->
 
             <button
                 type="button"
@@ -361,9 +268,10 @@
 </div>
 
 
+
 <!-- =====================================================
      FORGOT PIN PAGE
-===================================================== -->
+====================================================== -->
 
 <div
     id="forgotPinPage"
@@ -375,9 +283,7 @@
 
     <div class="auth-card">
 
-        <div class="auth-logo">
-            🔐
-        </div>
+        <div class="auth-logo">🔐</div>
 
         <h1>Forgot PIN</h1>
 
@@ -386,30 +292,22 @@
         </p>
 
         <p class="auth-subtitle">
-            Verify your registered details
+            Verify your mobile number and create a new PIN
         </p>
+
 
         <div class="auth-form">
 
-
-            <!-- NAME -->
-
-            <label for="forgotName">
-                👤 Registered Name
-            </label>
+            <label>👤 Registered Name</label>
 
             <input
                 type="text"
                 id="forgotName"
-                placeholder="Enter your registered name"
+                placeholder="Enter your name"
             >
 
 
-            <!-- MOBILE -->
-
-            <label for="forgotMobile">
-                📱 Registered Mobile
-            </label>
+            <label>📱 Registered Mobile</label>
 
             <input
                 type="tel"
@@ -417,52 +315,27 @@
                 placeholder="10 digit mobile number"
                 maxlength="10"
                 inputmode="numeric"
-                autocomplete="tel"
             >
 
 
-            <!-- EMAIL -->
+            <div id="forgot-recaptcha-container"></div>
 
-            <label for="forgotEmail">
-                📧 Registered Email
-            </label>
-
-            <input
-                type="email"
-                id="forgotEmail"
-                placeholder="Enter your registered email"
-                autocomplete="email"
-            >
-
-
-            <!-- RECAPTCHA -->
-
-            <div
-                id="forgot-recaptcha-container"
-            ></div>
-
-
-            <!-- SEND OTP -->
 
             <button
                 type="button"
                 id="sendForgotOtpButton"
                 class="auth-main-button"
             >
-                📱 Send Mobile OTP
+                📱 Send OTP
             </button>
 
-
-            <!-- OTP SECTION -->
 
             <div
                 id="forgotOtpSection"
                 style="display:none;"
             >
 
-                <label for="forgotOtp">
-                    🔢 OTP
-                </label>
+                <label>🔢 OTP</label>
 
                 <input
                     type="tel"
@@ -473,11 +346,7 @@
                 >
 
 
-                <!-- NEW PIN -->
-
-                <label for="newPin">
-                    🔐 New 4 Digit PIN
-                </label>
+                <label>🔐 New 4 Digit PIN</label>
 
                 <input
                     type="password"
@@ -488,11 +357,7 @@
                 >
 
 
-                <!-- CONFIRM NEW PIN -->
-
-                <label for="confirmNewPin">
-                    🔐 Confirm New PIN
-                </label>
+                <label>🔐 Confirm New PIN</label>
 
                 <input
                     type="password"
@@ -502,8 +367,6 @@
                     inputmode="numeric"
                 >
 
-
-                <!-- RESET -->
 
                 <button
                     type="button"
@@ -515,8 +378,6 @@
 
             </div>
 
-
-            <!-- BACK -->
 
             <button
                 type="button"
@@ -539,9 +400,10 @@
 </div>
 
 
+
 <!-- =====================================================
      DASHBOARD
-===================================================== -->
+====================================================== -->
 
 <div
     id="dashboardPage"
@@ -658,9 +520,10 @@
         </header>
 
 
+
         <!-- =================================================
              DASHBOARD CARDS
-        ================================================= -->
+        ================================================== -->
 
         <section class="dashboard">
 
@@ -735,18 +598,17 @@
         </section>
 
 
+
         <!-- =================================================
              FACE REGISTRATION
-        ================================================= -->
+        ================================================== -->
 
         <section class="section glass-section">
 
 
             <div class="section-heading">
 
-                <span>
-                    📸
-                </span>
+                <span>📸</span>
 
                 <div>
 
@@ -806,10 +668,11 @@
                 <input
                     type="email"
                     id="faceEmail"
-                    placeholder="📧 Email Address"
+                    placeholder="📧 Email (Optional)"
                 >
 
             </div>
+
 
 
             <div class="camera-box">
@@ -861,18 +724,17 @@
         </section>
 
 
+
         <!-- =================================================
              FACE ATTENDANCE
-        ================================================= -->
+        ================================================== -->
 
         <section class="section glass-section">
 
 
             <div class="section-heading">
 
-                <span>
-                    📸
-                </span>
+                <span>📸</span>
 
                 <div>
 
@@ -938,18 +800,17 @@
         </section>
 
 
+
         <!-- =================================================
              STUDENT LIST
-        ================================================= -->
+        ================================================== -->
 
         <section class="section glass-section">
 
 
             <div class="section-heading">
 
-                <span>
-                    👥
-                </span>
+                <span>👥</span>
 
                 <div>
 
@@ -984,9 +845,10 @@
 </div>
 
 
+
 <!-- =====================================================
      EDIT DETAILS MODAL
-===================================================== -->
+====================================================== -->
 
 <div
     id="editDetailsModal"
@@ -1049,7 +911,7 @@
         <input
             type="email"
             id="editEmail"
-            placeholder="Email Address"
+            placeholder="Email (Optional)"
         >
 
 
@@ -1066,9 +928,10 @@
 </div>
 
 
+
 <!-- =====================================================
      REGISTERED STUDENTS MODAL
-===================================================== -->
+====================================================== -->
 
 <div
     id="studentsModal"
@@ -1098,9 +961,10 @@
 </div>
 
 
+
 <!-- =====================================================
      CHECK ATTENDANCE MODAL
-===================================================== -->
+====================================================== -->
 
 <div
     id="attendanceCheckModal"
@@ -1128,9 +992,7 @@
 
             <div class="attendance-summary-box total-summary">
 
-                <span>
-                    📅
-                </span>
+                <span>📅</span>
 
                 <h3>
                     Total Days
@@ -1145,9 +1007,7 @@
 
             <div class="attendance-summary-box present-summary">
 
-                <span>
-                    ✅
-                </span>
+                <span>✅</span>
 
                 <h3>
                     Present
@@ -1162,9 +1022,7 @@
 
             <div class="attendance-summary-box absent-summary">
 
-                <span>
-                    ❌
-                </span>
+                <span>❌</span>
 
                 <h3>
                     Absent
@@ -1186,9 +1044,10 @@
 </div>
 
 
+
 <!-- =====================================================
      ADMIN MODAL
-===================================================== -->
+====================================================== -->
 
 <div
     id="adminModal"
@@ -1213,37 +1072,22 @@
 
         <div class="admin-info">
 
-            <strong>
-                👤 Admin:
-            </strong>
-
+            <strong>👤 Admin:</strong>
             Ayush Chatterjee
 
             <br><br>
 
-
-            <strong>
-                📋 System:
-            </strong>
-
+            <strong>📋 System:</strong>
             Smart Attendance System
 
             <br><br>
 
-
-            <strong>
-                🏫 College:
-            </strong>
-
+            <strong>🏫 College:</strong>
             Hooghly Engineering &amp; Technology College
 
             <br><br>
 
-
-            <strong>
-                🔐 Role:
-            </strong>
-
+            <strong>🔐 Role:</strong>
             Administrator
 
         </div>
@@ -1253,14 +1097,13 @@
 </div>
 
 
-<!-- =====================================================
-     MAIN JAVASCRIPT
-===================================================== -->
 
-<script
-    type="module"
-    src="script.js"
-></script>
+<!-- =====================================================
+     FIREBASE + MAIN SCRIPT
+====================================================== -->
+
+<script type="module" src="script.js"></script>
+
 
 </body>
 </html>
