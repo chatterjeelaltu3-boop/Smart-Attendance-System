@@ -14,12 +14,11 @@
     <!-- Firebase -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
         import {
             getAuth,
             RecaptchaVerifier,
-            signInWithPhoneNumber,
-            EmailAuthProvider,
-            linkWithCredential
+            signInWithPhoneNumber
         } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
 
         const firebaseConfig = {
@@ -131,6 +130,7 @@
         </div>
 
     </div>
+
 </div>
 
 
@@ -210,6 +210,7 @@
                 inputmode="numeric"
             >
 
+            <!-- reCAPTCHA -->
             <div id="recaptcha-container"></div>
 
             <button
@@ -261,6 +262,7 @@
         </div>
 
     </div>
+
 </div>
 
 
@@ -310,6 +312,7 @@
                 inputmode="numeric"
             >
 
+            <!-- Forgot PIN reCAPTCHA -->
             <div id="forgot-recaptcha-container"></div>
 
             <button
@@ -381,6 +384,7 @@
         </div>
 
     </div>
+
 </div>
 
 
@@ -394,333 +398,368 @@
     style="display:none;"
 >
 
-<div class="container">
+    <div class="container">
 
-<header class="main-header">
+        <header class="main-header">
 
-    <div class="menu-container">
+            <div class="menu-container">
 
-        <button
-            type="button"
-            class="menu-button"
-            onclick="toggleMenu()"
-        >
-            ☰
-        </button>
+                <button
+                    type="button"
+                    class="menu-button"
+                    onclick="toggleMenu()"
+                >
+                    ☰
+                </button>
 
-        <div id="mainMenu" class="main-menu">
+                <div id="mainMenu" class="main-menu">
 
-            <button
-                type="button"
-                onclick="openEditDetails()"
-            >
-                ✏️ Edit My Details
-            </button>
+                    <button
+                        type="button"
+                        onclick="openEditDetails()"
+                    >
+                        ✏️ Edit My Details
+                    </button>
 
-            <button
-                type="button"
-                onclick="openMobileUpdate()"
-            >
-                📱 Add / Update Mobile
-            </button>
+                    <button
+                        type="button"
+                        onclick="openMobileUpdate()"
+                    >
+                        📱 Add / Update Mobile
+                    </button>
 
-            <button
-                type="button"
-                onclick="openEmailUpdate()"
-            >
-                📧 Add / Update Email
-            </button>
+                    <button
+                        type="button"
+                        onclick="openEmailUpdate()"
+                    >
+                        📧 Add / Update Email
+                    </button>
 
-            <button
-                type="button"
-                onclick="showRegisteredStudents()"
-            >
-                👥 Registered Students
-            </button>
+                    <button
+                        type="button"
+                        onclick="showRegisteredStudents()"
+                    >
+                        👥 Registered Students
+                    </button>
 
-            <button
-                type="button"
-                onclick="showCheckAttendance()"
-            >
-                📊 Check Attendance
-            </button>
+                    <button
+                        type="button"
+                        onclick="showCheckAttendance()"
+                    >
+                        📊 Check Attendance
+                    </button>
 
-            <button
-                type="button"
-                onclick="showAdminDetails()"
-            >
-                👑 Admin: Ayush Chatterjee
-            </button>
+                    <button
+                        type="button"
+                        onclick="showAdminDetails()"
+                    >
+                        👑 Admin: Ayush Chatterjee
+                    </button>
 
-            <button
-                type="button"
-                onclick="logoutUser()"
-                class="logout-menu-button"
-            >
-                🚪 Logout
-            </button>
+                    <button
+                        type="button"
+                        onclick="logoutUser()"
+                        class="logout-menu-button"
+                    >
+                        🚪 Logout
+                    </button>
 
-        </div>
+                </div>
 
-    </div>
-
-    <div class="header-content">
-
-        <div class="header-icon">📊</div>
-
-        <h1>Smart Attendance System</h1>
-
-        <h2>
-            Hooghly Engineering &amp; Technology College
-        </h2>
-
-        <p>Student Attendance Dashboard</p>
-
-        <p id="currentDate"></p>
-
-    </div>
-
-</header>
-
-
-<!-- =================================================
-     DASHBOARD CARDS
-================================================= -->
-
-<section class="dashboard">
-
-    <div class="card total-card">
-        <div class="card-icon">👥</div>
-        <h3>Total Students</h3>
-        <h2 id="totalStudents">0</h2>
-    </div>
-
-    <div class="card present-card">
-        <div class="card-icon">✅</div>
-        <h3>Present</h3>
-        <h2 id="presentStudents">0</h2>
-    </div>
-
-    <div class="card absent-card">
-        <div class="card-icon">❌</div>
-        <h3>Absent</h3>
-        <h2 id="absentStudents">0</h2>
-    </div>
-
-    <div class="card attendance-card">
-        <div class="card-icon">📈</div>
-        <h3>Attendance</h3>
-        <h2 id="attendancePercentage">0%</h2>
-    </div>
-
-</section>
-
-
-<!-- =================================================
-     FACE REGISTRATION
-================================================= -->
-
-<section class="section glass-section">
-
-    <div class="section-heading">
-
-        <span>📸</span>
-
-        <div>
-
-            <h2>Face Registration</h2>
-
-            <p>
-                Register your face automatically using the camera
-            </p>
-
-        </div>
-
-    </div>
-
-    <div class="form-grid">
-
-        <input
-            type="text"
-            id="faceName"
-            placeholder="👤 Student Name"
-        >
-
-        <input
-            type="text"
-            id="faceRoll"
-            placeholder="🔢 Roll Number"
-        >
-
-        <input
-            type="text"
-            id="collegeName"
-            placeholder="🏫 College Name"
-        >
-
-        <input
-            type="text"
-            id="departmentName"
-            placeholder="🎓 Department"
-        >
-
-        <input
-            type="tel"
-            id="faceMobile"
-            placeholder="📱 Mobile Number"
-            maxlength="10"
-            inputmode="numeric"
-        >
-
-        <input
-            type="email"
-            id="faceEmail"
-            placeholder="📧 Email (Optional)"
-        >
-
-    </div>
-
-    <div class="camera-box">
-
-        <div class="camera-frame">
-
-            <video
-                id="registrationCamera"
-                autoplay
-                muted
-                playsinline
-            ></video>
-
-            <div class="camera-overlay">
-                <div class="face-guide"></div>
             </div>
 
-        </div>
+            <div class="header-content">
 
-        <div
-            id="registrationStatus"
-            class="camera-status"
-        >
-            Camera is OFF
-        </div>
+                <div class="header-icon">📊</div>
 
-    </div>
+                <h1>Smart Attendance System</h1>
 
-    <button
-        type="button"
-        id="registerFaceButton"
-        class="primary-action"
-        onclick="startAutomaticFaceRegistration()"
-    >
-        📸 Capture Face &amp; Register
-    </button>
+                <h2>
+                    Hooghly Engineering &amp; Technology College
+                </h2>
 
-    <div
-        id="registrationMessage"
-        class="face-message"
-    ></div>
+                <p>Student Attendance Dashboard</p>
 
-</section>
+                <p id="currentDate"></p>
 
-
-<!-- =================================================
-     FACE ATTENDANCE
-================================================= -->
-
-<section class="section glass-section">
-
-    <div class="section-heading">
-
-        <span>📸</span>
-
-        <div>
-
-            <h2>Face Attendance</h2>
-
-            <p>
-                Show your face and attendance will be marked automatically
-            </p>
-
-        </div>
-
-    </div>
-
-    <div class="camera-box">
-
-        <div class="camera-frame">
-
-            <video
-                id="attendanceCamera"
-                autoplay
-                muted
-                playsinline
-            ></video>
-
-            <div class="camera-overlay">
-                <div class="face-guide"></div>
             </div>
 
-        </div>
+        </header>
 
-        <div
-            id="attendanceStatus"
-            class="camera-status"
-        >
-            Camera is OFF
-        </div>
+
+        <!-- =================================================
+             DASHBOARD CARDS
+        ================================================= -->
+
+        <section class="dashboard">
+
+            <div class="card total-card">
+
+                <div class="card-icon">👥</div>
+
+                <h3>Total Students</h3>
+
+                <h2 id="totalStudents">0</h2>
+
+            </div>
+
+
+            <div class="card present-card">
+
+                <div class="card-icon">✅</div>
+
+                <h3>Present</h3>
+
+                <h2 id="presentStudents">0</h2>
+
+            </div>
+
+
+            <div class="card absent-card">
+
+                <div class="card-icon">❌</div>
+
+                <h3>Absent</h3>
+
+                <h2 id="absentStudents">0</h2>
+
+            </div>
+
+
+            <div class="card attendance-card">
+
+                <div class="card-icon">📈</div>
+
+                <h3>Attendance</h3>
+
+                <h2 id="attendancePercentage">0%</h2>
+
+            </div>
+
+        </section>
+
+
+        <!-- =================================================
+             FACE REGISTRATION
+        ================================================= -->
+
+        <section class="section glass-section">
+
+            <div class="section-heading">
+
+                <span>📸</span>
+
+                <div>
+
+                    <h2>Face Registration</h2>
+
+                    <p>
+                        Register your face automatically using the camera
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="form-grid">
+
+                <input
+                    type="text"
+                    id="faceName"
+                    placeholder="👤 Student Name"
+                >
+
+                <input
+                    type="text"
+                    id="faceRoll"
+                    placeholder="🔢 Roll Number"
+                >
+
+                <input
+                    type="text"
+                    id="collegeName"
+                    placeholder="🏫 College Name"
+                >
+
+                <input
+                    type="text"
+                    id="departmentName"
+                    placeholder="🎓 Department"
+                >
+
+                <input
+                    type="tel"
+                    id="faceMobile"
+                    placeholder="📱 Mobile Number"
+                    maxlength="10"
+                    inputmode="numeric"
+                >
+
+                <input
+                    type="email"
+                    id="faceEmail"
+                    placeholder="📧 Email (Optional)"
+                >
+
+            </div>
+
+
+            <div class="camera-box">
+
+                <div class="camera-frame">
+
+                    <video
+                        id="registrationCamera"
+                        autoplay
+                        muted
+                        playsinline
+                    ></video>
+
+                    <div class="camera-overlay">
+
+                        <div class="face-guide"></div>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="registrationStatus"
+                    class="camera-status"
+                >
+                    Camera is OFF
+                </div>
+
+            </div>
+
+
+            <button
+                type="button"
+                id="registerFaceButton"
+                class="primary-action"
+                onclick="startAutomaticFaceRegistration()"
+            >
+                📸 Capture Face &amp; Register
+            </button>
+
+
+            <div
+                id="registrationMessage"
+                class="face-message"
+            ></div>
+
+        </section>
+
+
+        <!-- =================================================
+             FACE ATTENDANCE
+        ================================================= -->
+
+        <section class="section glass-section">
+
+            <div class="section-heading">
+
+                <span>📸</span>
+
+                <div>
+
+                    <h2>Face Attendance</h2>
+
+                    <p>
+                        Show your face and attendance will be marked automatically
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="camera-box">
+
+                <div class="camera-frame">
+
+                    <video
+                        id="attendanceCamera"
+                        autoplay
+                        muted
+                        playsinline
+                    ></video>
+
+                    <div class="camera-overlay">
+
+                        <div class="face-guide"></div>
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    id="attendanceStatus"
+                    class="camera-status"
+                >
+                    Camera is OFF
+                </div>
+
+            </div>
+
+
+            <button
+                type="button"
+                id="attendanceButton"
+                class="primary-action attendance-action"
+                onclick="startFaceAttendance()"
+            >
+                📸 Capture Face
+            </button>
+
+
+            <div
+                id="attendanceResult"
+                class="face-message"
+            ></div>
+
+        </section>
+
+
+        <!-- =================================================
+             STUDENT LIST
+        ================================================= -->
+
+        <section class="section glass-section">
+
+            <div class="section-heading">
+
+                <span>👥</span>
+
+                <div>
+
+                    <h2>Student List</h2>
+
+                    <p>Search registered students</p>
+
+                </div>
+
+            </div>
+
+
+            <input
+                type="text"
+                id="searchStudent"
+                class="search-input"
+                placeholder="🔎 Search student by name or roll..."
+                oninput="displayStudents()"
+            >
+
+
+            <div id="studentList"></div>
+
+        </section>
 
     </div>
 
-    <button
-        type="button"
-        id="attendanceButton"
-        class="primary-action attendance-action"
-        onclick="startFaceAttendance()"
-    >
-        📸 Capture Face
-    </button>
-
-    <div
-        id="attendanceResult"
-        class="face-message"
-    ></div>
-
-</section>
-
-
-<!-- =================================================
-     STUDENT LIST
-================================================= -->
-
-<section class="section glass-section">
-
-    <div class="section-heading">
-
-        <span>👥</span>
-
-        <div>
-
-            <h2>Student List</h2>
-
-            <p>Search registered students</p>
-
-        </div>
-
-    </div>
-
-    <input
-        type="text"
-        id="searchStudent"
-        class="search-input"
-        placeholder="🔎 Search student by name or roll..."
-        oninput="displayStudents()"
-    >
-
-    <div id="studentList"></div>
-
-</section>
-
-</div>
 </div>
 
 
@@ -789,6 +828,7 @@
         </button>
 
     </div>
+
 </div>
 
 
@@ -835,6 +875,7 @@
 
         <h2>📊 Check Attendance</h2>
 
+
         <div class="attendance-summary">
 
             <div class="attendance-summary-box total-summary">
@@ -847,6 +888,7 @@
 
             </div>
 
+
             <div class="attendance-summary-box present-summary">
 
                 <span>✅</span>
@@ -856,6 +898,7 @@
                 <h2 id="attendancePresentDays">0</h2>
 
             </div>
+
 
             <div class="attendance-summary-box absent-summary">
 
@@ -868,6 +911,7 @@
             </div>
 
         </div>
+
 
         <div id="attendanceHistory"></div>
 
@@ -892,7 +936,9 @@
             ✕
         </button>
 
+
         <h2>👑 Admin Details</h2>
+
 
         <div class="admin-info">
 
@@ -920,6 +966,10 @@
 
 </div>
 
+
+<!-- =====================================================
+     SCRIPT
+===================================================== -->
 
 <script type="module" src="script.js"></script>
 
