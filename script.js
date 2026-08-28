@@ -1799,6 +1799,370 @@ function closeRegisteredStudents() {
 // =====================================================
 
 window.addEventListener(
+    // =====================================================
+// ADMIN
+// =====================================================
+
+const ADMIN_NAME = "Ayush Chatterjee";
+
+// Simple admin mode for this browser
+let isAdmin = localStorage.getItem("isAdmin") === "true";
+
+
+// =====================================================
+// ADMIN MENU
+// =====================================================
+
+function openAdminPanel() {
+
+    const password = prompt(
+        "🔐 Enter Admin Password:"
+    );
+
+    // এখানে নিজের password বসাবে
+    if (password === "AyushAdmin123") {
+
+        isAdmin = true;
+
+        localStorage.setItem(
+            "isAdmin",
+            "true"
+        );
+
+        alert(
+            "✅ Admin access granted!\n\n👤 Admin: Ayush Chatterjee"
+        );
+
+        showRegisteredStudents();
+
+    } else {
+
+        alert(
+            "❌ Wrong admin password."
+        );
+    }
+}
+
+
+// =====================================================
+// LOGOUT ADMIN
+// =====================================================
+
+function logoutAdmin() {
+
+    isAdmin = false;
+
+    localStorage.removeItem(
+        "isAdmin"
+    );
+
+    alert(
+        "Admin mode logged out."
+    );
+}
+
+
+// =====================================================
+// ADMIN NAME DISPLAY
+// =====================================================
+
+function showAdminName() {
+
+    if (!isAdmin) {
+        return;
+    }
+
+    const menu =
+        document.getElementById("mainMenu");
+
+    if (!menu) {
+        return;
+    }
+
+    let adminButton =
+        document.getElementById("adminMenuButton");
+
+    if (!adminButton) {
+
+        adminButton =
+            document.createElement("button");
+
+        adminButton.id =
+            "adminMenuButton";
+
+        adminButton.type =
+            "button";
+
+        adminButton.innerHTML =
+            "👤 Admin: Ayush Chatterjee";
+
+        adminButton.onclick =
+            function () {
+
+                showRegisteredStudents();
+            };
+
+        menu.appendChild(adminButton);
+    }
+}
+
+
+// =====================================================
+// UPDATED REGISTERED STUDENTS
+// =====================================================
+
+function showRegisteredStudents() {
+
+    const modal =
+        document.getElementById(
+            "studentsModal"
+        );
+
+    const list =
+        document.getElementById(
+            "registeredStudentsList"
+        );
+
+    if (!modal || !list) {
+        return;
+    }
+
+    list.innerHTML = "";
+
+
+    // =============================================
+    // ADMIN INFORMATION
+    // =============================================
+
+    if (isAdmin) {
+
+        const adminBox =
+            document.createElement("div");
+
+        adminBox.style.padding =
+            "15px";
+
+        adminBox.style.marginBottom =
+            "15px";
+
+        adminBox.style.borderRadius =
+            "12px";
+
+        adminBox.style.background =
+            "#eef2ff";
+
+        adminBox.innerHTML = `
+
+            <strong>
+                👤 Admin: Ayush Chatterjee
+            </strong>
+
+            <br>
+
+            🔐 Admin Mode: ACTIVE
+
+        `;
+
+        list.appendChild(adminBox);
+    }
+
+
+    // =============================================
+    // NO STUDENTS
+    // =============================================
+
+    if (students.length === 0) {
+
+        const empty =
+            document.createElement("p");
+
+        empty.innerText =
+            "No students registered yet.";
+
+        list.appendChild(empty);
+
+        modal.classList.add("show");
+
+        return;
+    }
+
+
+    // =============================================
+    // STUDENT LIST
+    // =============================================
+
+    students.forEach(
+        (student, index) => {
+
+            const div =
+                document.createElement("div");
+
+            div.style.padding =
+                "15px";
+
+            div.style.marginBottom =
+                "10px";
+
+            div.style.borderRadius =
+                "12px";
+
+            div.style.background =
+                "#f0f7ff";
+
+
+            // =====================================
+            // MOBILE VISIBILITY
+            // =====================================
+
+            let mobileText = "";
+
+            if (isAdmin) {
+
+                // ADMIN CAN SEE EVERYONE'S MOBILE
+                mobileText = `
+                    <br>
+                    📱 Mobile:
+                    ${student.mobile || "Not added"}
+                `;
+
+            } else {
+
+                // NORMAL USER
+                // Only show own mobile
+                const saved =
+                    localStorage.getItem(
+                        "registeredFaceStudent"
+                    );
+
+                let ownRoll = "";
+
+                if (saved) {
+
+                    try {
+
+                        const ownStudent =
+                            JSON.parse(saved);
+
+                        ownRoll =
+                            ownStudent.roll || "";
+
+                    } catch (error) {
+
+                        ownRoll = "";
+                    }
+                }
+
+
+                if (
+                    ownRoll &&
+                    ownRoll === student.roll
+                ) {
+
+                    mobileText = `
+                        <br>
+                        📱 Mobile:
+                        ${student.mobile || "Not added"}
+                    `;
+
+                } else {
+
+                    mobileText = `
+                        <br>
+                        📱 Mobile:
+                        🔒 Private
+                    `;
+                }
+            }
+
+
+            div.innerHTML = `
+
+                <strong>
+                    ${index + 1}. ${student.name}
+                </strong>
+
+                <br>
+
+                🔢 Roll:
+                ${student.roll}
+
+                <br>
+
+                🏫 College:
+                ${student.college}
+
+                <br>
+
+                🎓 Department:
+                ${student.department}
+
+                ${mobileText}
+
+                <br>
+
+                📌 Status:
+                ${student.status}
+
+            `;
+
+
+            list.appendChild(div);
+
+        }
+    );
+
+
+    // =============================================
+    // ADMIN LOGOUT BUTTON
+    // =============================================
+
+    if (isAdmin) {
+
+        const logoutButton =
+            document.createElement("button");
+
+        logoutButton.type =
+            "button";
+
+        logoutButton.innerText =
+            "🔓 Logout Admin";
+
+        logoutButton.style.marginTop =
+            "15px";
+
+        logoutButton.onclick =
+            logoutAdmin;
+
+        list.appendChild(
+            logoutButton
+        );
+    }
+
+
+    modal.classList.add("show");
+}
+
+
+// =====================================================
+// PAGE LOAD
+// =====================================================
+
+window.addEventListener(
+    "load",
+    async function () {
+
+        displayStudents();
+
+        updateDashboard();
+
+        showCurrentDate();
+
+        await loadFaceModels();
+
+        showAdminName();
+
+    }
+);
     "load",
     async function () {
 
