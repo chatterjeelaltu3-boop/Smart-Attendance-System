@@ -1,46 +1,35 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Smart Attendance System</title>
 
-    <!-- CSS -->
     <link rel="stylesheet" href="style.css">
 
-    <!-- Face API -->
     <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
-
-    <!-- Firebase -->
-    <script type="module" src="script.js"></script>
 </head>
 
 <body>
-
-<!-- =====================================================
-     LOGIN PAGE
-===================================================== -->
 
 <section id="loginPage" class="page login-page">
 
     <div class="login-card">
 
         <div class="college-logo-area">
+
             <div class="college-logo">
-                🏫
+                <img src="logo.png" alt="HETC Logo">
             </div>
 
             <h1>Smart Attendance</h1>
 
             <p class="college-name">
-                Your College Name
+                Hooghly Engineering & Technology College
             </p>
-        </div>
 
+        </div>
 
         <h2>Welcome Back 👋</h2>
 
@@ -48,30 +37,18 @@
             Login to your attendance dashboard
         </p>
 
-
         <div class="input-group">
             <label>Full Name</label>
-
-            <input
-                type="text"
-                id="loginName"
-                placeholder="Enter your name">
+            <input type="text" id="loginName" placeholder="Enter your name">
         </div>
-
 
         <div class="input-group">
             <label>Mobile Number or Email</label>
-
-            <input
-                type="text"
-                id="loginIdentity"
-                placeholder="Mobile number or email">
+            <input type="text" id="loginIdentity" placeholder="Mobile number or email">
         </div>
-
 
         <div class="input-group">
             <label>4 Digit PIN</label>
-
             <input
                 type="password"
                 id="loginPin"
@@ -80,79 +57,49 @@
                 placeholder="Enter 4 digit PIN">
         </div>
 
-
-        <button
-            id="loginButton"
-            class="primary-button">
+        <button id="loginButton" class="primary-button">
             🔐 Login
         </button>
 
-
-        <button
-            id="createAccountButton"
-            class="secondary-button">
+        <button id="createAccountButton" class="secondary-button">
             ✨ Create Account
         </button>
 
-
-        <button
-            id="forgotPinButton"
-            class="text-button">
+        <button id="forgotPinButton" class="text-button">
             Forgot PIN?
         </button>
 
-
-        <div
-            id="loginMessage"
-            class="auth-message">
-        </div>
+        <div id="loginMessage" class="auth-message"></div>
 
     </div>
 
 </section>
 
 
-<!-- =====================================================
-     CREATE ACCOUNT PAGE
-===================================================== -->
-
-<section
-    id="createAccountPage"
-    class="page create-page"
-    style="display:none;">
+<section id="createAccountPage" class="page create-page" style="display:none;">
 
     <div class="form-card">
 
         <div class="page-header">
 
             <div class="college-logo small-logo">
-                🏫
+                <img src="logo.png" alt="HETC Logo">
             </div>
 
             <div>
                 <h1>Create Account</h1>
-
-                <p>
-                    Register your Smart Attendance account
-                </p>
+                <p>Register your Smart Attendance account</p>
             </div>
 
         </div>
 
-
         <div class="input-group">
             <label>Full Name *</label>
-
-            <input
-                type="text"
-                id="createName"
-                placeholder="Enter your full name">
+            <input type="text" id="createName" placeholder="Enter your full name">
         </div>
-
 
         <div class="input-group">
             <label>Mobile Number *</label>
-
             <input
                 type="tel"
                 id="createMobile"
@@ -161,20 +108,16 @@
                 placeholder="10 digit mobile number">
         </div>
 
-
         <div class="input-group">
             <label>Email Address</label>
-
             <input
                 type="email"
                 id="createEmail"
                 placeholder="Enter email address">
         </div>
 
-
         <div class="input-group">
             <label>Create 4 Digit PIN *</label>
-
             <input
                 type="password"
                 id="createPin"
@@ -183,10 +126,8 @@
                 placeholder="Create PIN">
         </div>
 
-
         <div class="input-group">
             <label>Confirm 4 Digit PIN *</label>
-
             <input
                 type="password"
                 id="confirmPin"
@@ -195,69 +136,46 @@
                 placeholder="Confirm PIN">
         </div>
 
-
         <div class="input-group">
             <label>College Name *</label>
-
             <input
                 type="text"
                 id="createCollege"
-                placeholder="Enter college name">
+                value="Hooghly Engineering & Technology College">
         </div>
-
 
         <div class="input-group">
             <label>Department / Branch *</label>
-
             <input
                 type="text"
                 id="createDepartment"
                 placeholder="Example: CSE">
         </div>
 
-
         <div class="input-group">
             <label>Roll Number *</label>
-
             <input
                 type="text"
                 id="createRoll"
                 placeholder="Enter roll number">
         </div>
 
-
-        <button
-            id="createAccountSubmit"
-            class="primary-button">
+        <button id="createAccountSubmit" class="primary-button">
             🚀 Create Account
         </button>
 
-
-        <button
-            id="backToLoginButton"
-            class="text-button">
+        <button id="backToLoginButton" class="text-button">
             ← Back to Login
         </button>
 
-
-        <div
-            id="createMessage"
-            class="auth-message">
-        </div>
+        <div id="createMessage" class="auth-message"></div>
 
     </div>
 
 </section>
 
 
-<!-- =====================================================
-     FORGOT PIN PAGE
-===================================================== -->
-
-<section
-    id="forgotPinPage"
-    class="page"
-    style="display:none;">
+<section id="forgotPinPage" class="page" style="display:none;">
 
     <div class="form-card">
 
@@ -267,192 +185,120 @@
 
         <h1>Reset PIN</h1>
 
-        <p>
-            Enter your registered mobile or email
-        </p>
-
+        <p>Enter your registered mobile or email</p>
 
         <div class="input-group">
-
             <label>Name</label>
-
             <input
                 type="text"
                 id="forgotName"
                 placeholder="Enter your name">
-
         </div>
 
-
         <div class="input-group">
-
             <label>Mobile Number or Email</label>
-
             <input
                 type="text"
                 id="forgotIdentity"
                 placeholder="Mobile or email">
-
         </div>
 
-
         <div class="input-group">
-
             <label>New 4 Digit PIN</label>
-
             <input
                 type="password"
                 id="newPin"
                 maxlength="4"
                 inputmode="numeric"
                 placeholder="New PIN">
-
         </div>
 
-
         <div class="input-group">
-
             <label>Confirm New PIN</label>
-
             <input
                 type="password"
                 id="confirmNewPin"
                 maxlength="4"
                 inputmode="numeric"
                 placeholder="Confirm PIN">
-
         </div>
 
-
-        <button
-            id="resetPinButton"
-            class="primary-button">
+        <button id="resetPinButton" class="primary-button">
             🔄 Reset PIN
         </button>
 
-
-        <button
-            id="forgotBackButton"
-            class="text-button">
+        <button id="forgotBackButton" class="text-button">
             ← Back to Login
         </button>
 
-
-        <div
-            id="forgotMessage"
-            class="auth-message">
-        </div>
+        <div id="forgotMessage" class="auth-message"></div>
 
     </div>
 
 </section>
 
 
-<!-- =====================================================
-     DASHBOARD
-===================================================== -->
-
-<section
-    id="dashboardPage"
-    class="dashboard-page"
-    style="display:none;">
-
-
-    <!-- SIDEBAR -->
+<section id="dashboardPage" class="dashboard-page" style="display:none;">
 
     <aside class="sidebar">
 
         <div class="sidebar-logo">
 
             <div class="college-logo">
-                🏫
+                <img src="logo.png" alt="HETC Logo">
             </div>
 
             <h2>Smart Attendance</h2>
 
             <p>
-                Your College Name
+                Hooghly Engineering & Technology College
             </p>
 
         </div>
 
-
         <nav class="side-menu">
 
-            <button
-                class="menu-item active"
-                id="dashboardMenuButton">
+            <button class="menu-item active" id="dashboardMenuButton">
                 🏠 Dashboard
             </button>
 
-
-            <button
-                class="menu-item"
-                id="faceRegistrationMenuButton">
+            <button class="menu-item" id="faceRegistrationMenuButton">
                 👤 Face Registration
             </button>
 
-
-            <button
-                class="menu-item"
-                id="attendanceMenuButton">
+            <button class="menu-item" id="attendanceMenuButton">
                 📸 Mark Attendance
             </button>
 
-
-            <button
-                class="menu-item"
-                id="studentsMenuButton">
+            <button class="menu-item" id="studentsMenuButton">
                 👥 Students
             </button>
 
-
-            <button
-                class="menu-item"
-                id="checkAttendanceMenuButton">
+            <button class="menu-item" id="checkAttendanceMenuButton">
                 📊 My Attendance
             </button>
 
-
-            <button
-                class="menu-item"
-                id="editDetailsMenuButton">
+            <button class="menu-item" id="editDetailsMenuButton">
                 ✏️ Edit Details
             </button>
 
         </nav>
 
-
-        <button
-            id="logoutButton"
-            class="logout-button">
+        <button id="logoutButton" class="logout-button">
             🚪 Logout
         </button>
 
     </aside>
 
 
-    <!-- MAIN CONTENT -->
-
     <main class="main-content">
-
-
-        <!-- TOP BAR -->
 
         <header class="topbar">
 
             <div>
-
-                <h1>
-                    Dashboard
-                </h1>
-
-                <p id="currentDate">
-                    Loading date...
-                </p>
-
+                <h1>Dashboard</h1>
+                <p id="currentDate">Loading date...</p>
             </div>
-
 
             <div class="profile-area">
 
@@ -461,15 +307,8 @@
                 </div>
 
                 <div>
-
-                    <strong id="dashboardUserName">
-                        Student
-                    </strong>
-
-                    <small id="dashboardUserRoll">
-                        Roll
-                    </small>
-
+                    <strong id="dashboardUserName">Student</strong>
+                    <small id="dashboardUserRoll">Roll</small>
                 </div>
 
             </div>
@@ -477,34 +316,23 @@
         </header>
 
 
-        <!-- DASHBOARD HOME -->
-
-        <section
-            id="dashboardHome"
-            class="dashboard-section">
-
-
-            <!-- WELCOME -->
+        <section id="dashboardHome" class="dashboard-section">
 
             <div class="welcome-card">
 
                 <div>
 
-                    <span>
-                        Welcome back 👋
-                    </span>
+                    <span>Welcome back 👋</span>
 
                     <h2 id="welcomeName">
                         Student
                     </h2>
 
                     <p>
-                        Manage your attendance easily
-                        using face recognition.
+                        Hooghly Engineering & Technology College
                     </p>
 
                 </div>
-
 
                 <div class="welcome-icon">
                     📚
@@ -513,163 +341,65 @@
             </div>
 
 
-            <!-- STAT CARDS -->
-
             <div class="stats-grid">
 
                 <div class="stat-card blue">
-
-                    <div class="stat-icon">
-                        👥
-                    </div>
-
+                    <div class="stat-icon">👥</div>
                     <div>
-
-                        <p>
-                            Total Students
-                        </p>
-
-                        <h2 id="totalStudents">
-                            0
-                        </h2>
-
+                        <p>Total Students</p>
+                        <h2 id="totalStudents">0</h2>
                     </div>
-
                 </div>
-
 
                 <div class="stat-card green">
-
-                    <div class="stat-icon">
-                        ✅
-                    </div>
-
+                    <div class="stat-icon">✅</div>
                     <div>
-
-                        <p>
-                            Present Today
-                        </p>
-
-                        <h2 id="presentStudents">
-                            0
-                        </h2>
-
+                        <p>Present Today</p>
+                        <h2 id="presentStudents">0</h2>
                     </div>
-
                 </div>
-
 
                 <div class="stat-card red">
-
-                    <div class="stat-icon">
-                        ❌
-                    </div>
-
+                    <div class="stat-icon">❌</div>
                     <div>
-
-                        <p>
-                            Absent Today
-                        </p>
-
-                        <h2 id="absentStudents">
-                            0
-                        </h2>
-
+                        <p>Absent Today</p>
+                        <h2 id="absentStudents">0</h2>
                     </div>
-
                 </div>
-
 
                 <div class="stat-card purple">
-
-                    <div class="stat-icon">
-                        📊
-                    </div>
-
+                    <div class="stat-icon">📊</div>
                     <div>
-
-                        <p>
-                            Attendance
-                        </p>
-
-                        <h2 id="attendancePercentage">
-                            0%
-                        </h2>
-
+                        <p>Attendance</p>
+                        <h2 id="attendancePercentage">0%</h2>
                     </div>
-
                 </div>
 
             </div>
 
 
-            <!-- QUICK ACTIONS -->
-
             <div class="section-title">
-
-                <h2>
-                    Quick Actions
-                </h2>
-
+                <h2>Quick Actions</h2>
             </div>
-
 
             <div class="quick-actions">
 
-                <button
-                    id="quickFaceRegistration"
-                    class="action-card">
-
-                    <span class="action-icon">
-                        👤
-                    </span>
-
-                    <strong>
-                        Register Face
-                    </strong>
-
-                    <small>
-                        Automatically capture your face
-                    </small>
-
+                <button id="quickFaceRegistration" class="action-card">
+                    <span class="action-icon">👤</span>
+                    <strong>Register Face</strong>
+                    <small>Automatically capture your face</small>
                 </button>
 
-
-                <button
-                    id="quickAttendance"
-                    class="action-card">
-
-                    <span class="action-icon">
-                        📸
-                    </span>
-
-                    <strong>
-                        Mark Attendance
-                    </strong>
-
-                    <small>
-                        Scan your face automatically
-                    </small>
-
+                <button id="quickAttendance" class="action-card">
+                    <span class="action-icon">📸</span>
+                    <strong>Mark Attendance</strong>
+                    <small>Scan your face automatically</small>
                 </button>
 
-
-                <button
-                    id="quickCheckAttendance"
-                    class="action-card">
-
-                    <span class="action-icon">
-                        📊
-                    </span>
-
-                    <strong>
-                        Check Attendance
-                    </strong>
-
-                    <small>
-                        View your attendance history
-                    </small>
-
+                <button id="quickCheckAttendance" class="action-card">
+                    <span class="action-icon">📊</span>
+                    <strong>Check Attendance</strong>
+                    <small>View your attendance history</small>
                 </button>
 
             </div>
@@ -677,161 +407,92 @@
         </section>
 
 
-        <!-- =================================================
-             FACE REGISTRATION SECTION
-        ================================================= -->
-
-        <section
-            id="faceRegistrationSection"
-            class="dashboard-section"
-            style="display:none;">
+        <section id="faceRegistrationSection"
+                 class="dashboard-section"
+                 style="display:none;">
 
             <div class="section-header">
-
                 <div>
-
-                    <h2>
-                        Face Registration
-                    </h2>
-
-                    <p>
-                        Your face will be captured automatically.
-                    </p>
-
+                    <h2>Face Registration</h2>
+                    <p>Your face will be captured automatically.</p>
                 </div>
-
             </div>
-
 
             <div class="face-layout">
 
-
-                <!-- FORM -->
-
                 <div class="details-card">
 
-                    <h3>
-                        Student Details
-                    </h3>
-
+                    <h3>Student Details</h3>
 
                     <div class="input-group">
-
                         <label>Name</label>
-
-                        <input
-                            type="text"
-                            id="faceName">
-
+                        <input type="text" id="faceName">
                     </div>
 
-
                     <div class="input-group">
-
                         <label>Roll Number</label>
-
-                        <input
-                            type="text"
-                            id="faceRoll">
-
+                        <input type="text" id="faceRoll">
                     </div>
 
-
                     <div class="input-group">
-
                         <label>College Name</label>
-
-                        <input
-                            type="text"
-                            id="collegeName">
-
+                        <input type="text"
+                               id="collegeName"
+                               value="Hooghly Engineering & Technology College">
                     </div>
 
-
                     <div class="input-group">
-
                         <label>Department</label>
-
-                        <input
-                            type="text"
-                            id="departmentName">
-
+                        <input type="text" id="departmentName">
                     </div>
 
-
                     <div class="input-group">
-
                         <label>Mobile</label>
-
-                        <input
-                            type="text"
-                            id="faceMobile">
-
+                        <input type="text" id="faceMobile">
                     </div>
-
 
                     <div class="input-group">
-
                         <label>Email</label>
-
-                        <input
-                            type="email"
-                            id="faceEmail">
-
+                        <input type="email" id="faceEmail">
                     </div>
 
-
-                    <button
-                        id="startFaceRegistrationButton"
-                        class="primary-button">
-
+                    <button id="startFaceRegistrationButton"
+                            class="primary-button">
                         📷 Capture Face Automatically
-
                     </button>
 
-
-                    <div
-                        id="registrationMessage"
-                        class="auth-message">
+                    <div id="registrationMessage"
+                         class="auth-message">
                     </div>
 
                 </div>
 
-
-                <!-- CAMERA -->
 
                 <div class="camera-card">
 
                     <div class="camera-title">
 
-                        <h3>
-                            Face Camera
-                        </h3>
+                        <h3>Face Camera</h3>
 
-                        <span
-                            id="registrationStatus">
+                        <span id="registrationStatus">
                             Camera is OFF
                         </span>
 
                     </div>
 
-
                     <div class="camera-wrapper">
 
-                        <video
-                            id="registrationCamera"
-                            autoplay
-                            muted
-                            playsinline>
+                        <video id="registrationCamera"
+                               autoplay
+                               muted
+                               playsinline>
                         </video>
-
 
                         <div class="face-guide">
                             <span></span>
                         </div>
 
                     </div>
-
 
                     <p>
                         Look directly at the camera.
@@ -845,58 +506,42 @@
         </section>
 
 
-        <!-- =================================================
-             ATTENDANCE SECTION
-        ================================================= -->
-
-        <section
-            id="attendanceSection"
-            class="dashboard-section"
-            style="display:none;">
+        <section id="attendanceSection"
+                 class="dashboard-section"
+                 style="display:none;">
 
             <div class="section-header">
 
                 <div>
-
-                    <h2>
-                        Mark Attendance
-                    </h2>
+                    <h2>Mark Attendance</h2>
 
                     <p>
                         Face recognition will automatically
                         detect and mark your attendance.
                     </p>
-
                 </div>
 
             </div>
-
 
             <div class="attendance-camera-card">
 
                 <div class="camera-title">
 
-                    <h3>
-                        📸 Attendance Camera
-                    </h3>
+                    <h3>📸 Attendance Camera</h3>
 
-                    <span
-                        id="attendanceStatus">
+                    <span id="attendanceStatus">
                         Camera is OFF
                     </span>
 
                 </div>
 
-
                 <div class="camera-wrapper large-camera">
 
-                    <video
-                        id="attendanceCamera"
-                        autoplay
-                        muted
-                        playsinline>
+                    <video id="attendanceCamera"
+                           autoplay
+                           muted
+                           playsinline>
                     </video>
-
 
                     <div class="face-guide">
                         <span></span>
@@ -904,19 +549,13 @@
 
                 </div>
 
-
-                <button
-                    id="startFaceAttendanceButton"
-                    class="primary-button attendance-button">
-
+                <button id="startFaceAttendanceButton"
+                        class="primary-button attendance-button">
                     📸 Capture Face & Mark Attendance
-
                 </button>
 
-
-                <div
-                    id="attendanceResult"
-                    class="attendance-result">
+                <div id="attendanceResult"
+                     class="attendance-result">
                 </div>
 
             </div>
@@ -924,69 +563,46 @@
         </section>
 
 
-        <!-- =================================================
-             STUDENTS SECTION
-        ================================================= -->
-
-        <section
-            id="studentsSection"
-            class="dashboard-section"
-            style="display:none;">
+        <section id="studentsSection"
+                 class="dashboard-section"
+                 style="display:none;">
 
             <div class="section-header">
 
                 <div>
-
-                    <h2>
-                        Registered Students
-                    </h2>
-
-                    <p>
-                        View registered student details.
-                    </p>
-
+                    <h2>Registered Students</h2>
+                    <p>View registered student details.</p>
                 </div>
 
             </div>
 
-
             <div class="search-box">
 
-                <input
-                    type="text"
-                    id="searchStudent"
-                    placeholder="🔍 Search by name or roll...">
+                <input type="text"
+                       id="searchStudent"
+                       placeholder="🔍 Search by name or roll...">
 
             </div>
 
-
-            <div
-                id="studentList"
-                class="student-list">
+            <div id="studentList"
+                 class="student-list">
             </div>
 
         </section>
-
 
     </main>
 
 </section>
 
 
-<!-- =====================================================
-     ATTENDANCE POPUP
-===================================================== -->
-
-<div
-    id="attendancePopup"
-    class="popup-overlay"
-    style="display:none;">
+<div id="attendancePopup"
+     class="popup-overlay"
+     style="display:none;">
 
     <div class="popup-card">
 
-        <div
-            id="popupIcon"
-            class="popup-icon">
+        <div id="popupIcon"
+             class="popup-icon">
             ✅
         </div>
 
@@ -998,9 +614,8 @@
             Your attendance has been successfully saved.
         </p>
 
-        <button
-            id="closeAttendancePopup"
-            class="primary-button">
+        <button id="closeAttendancePopup"
+                class="primary-button">
             OK
         </button>
 
@@ -1009,203 +624,115 @@
 </div>
 
 
-<!-- =====================================================
-     REGISTERED STUDENTS MODAL
-===================================================== -->
-
-<div
-    id="studentsModal"
-    class="popup-overlay"
-    style="display:none;">
+<div id="studentsModal"
+     class="popup-overlay"
+     style="display:none;">
 
     <div class="modal-card">
 
-        <button
-            id="closeStudentsModal"
-            class="close-button">
+        <button id="closeStudentsModal"
+                class="close-button">
             ✕
         </button>
 
-        <h2>
-            👥 Registered Students
-        </h2>
+        <h2>👥 Registered Students</h2>
 
-        <div
-            id="registeredStudentsList">
-        </div>
+        <div id="registeredStudentsList"></div>
 
     </div>
 
 </div>
 
 
-<!-- =====================================================
-     MY ATTENDANCE MODAL
-===================================================== -->
-
-<div
-    id="attendanceCheckModal"
-    class="popup-overlay"
-    style="display:none;">
+<div id="attendanceCheckModal"
+     class="popup-overlay"
+     style="display:none;">
 
     <div class="modal-card">
 
-        <button
-            id="closeCheckAttendanceModal"
-            class="close-button">
+        <button id="closeCheckAttendanceModal"
+                class="close-button">
             ✕
         </button>
 
-        <h2>
-            📊 My Attendance
-        </h2>
-
+        <h2>📊 My Attendance</h2>
 
         <div class="attendance-summary">
 
             <div>
-                <strong id="attendanceTotalDays">
-                    0
-                </strong>
-
-                <span>
-                    Total Days
-                </span>
+                <strong id="attendanceTotalDays">0</strong>
+                <span>Total Days</span>
             </div>
 
-
             <div>
-                <strong id="attendancePresentDays">
-                    0
-                </strong>
-
-                <span>
-                    Present
-                </span>
+                <strong id="attendancePresentDays">0</strong>
+                <span>Present</span>
             </div>
 
-
             <div>
-                <strong id="attendanceAbsentDays">
-                    0
-                </strong>
-
-                <span>
-                    Absent
-                </span>
+                <strong id="attendanceAbsentDays">0</strong>
+                <span>Absent</span>
             </div>
 
         </div>
 
+        <h3>Attendance History</h3>
 
-        <h3>
-            Attendance History
-        </h3>
-
-
-        <div
-            id="attendanceHistory">
-        </div>
+        <div id="attendanceHistory"></div>
 
     </div>
 
 </div>
 
 
-<!-- =====================================================
-     EDIT DETAILS MODAL
-===================================================== -->
-
-<div
-    id="editDetailsModal"
-    class="popup-overlay"
-    style="display:none;">
+<div id="editDetailsModal"
+     class="popup-overlay"
+     style="display:none;">
 
     <div class="modal-card">
 
-        <button
-            id="closeEditDetailsModal"
-            class="close-button">
+        <button id="closeEditDetailsModal"
+                class="close-button">
             ✕
         </button>
 
-        <h2>
-            ✏️ Edit Details
-        </h2>
-
+        <h2>✏️ Edit Details</h2>
 
         <div class="input-group">
-
             <label>Name</label>
-
-            <input
-                type="text"
-                id="editName">
-
+            <input type="text" id="editName">
         </div>
 
-
         <div class="input-group">
-
             <label>Roll</label>
-
-            <input
-                type="text"
-                id="editRoll">
-
+            <input type="text" id="editRoll">
         </div>
 
-
         <div class="input-group">
-
             <label>College</label>
-
-            <input
-                type="text"
-                id="editCollege">
-
+            <input type="text"
+                   id="editCollege"
+                   value="Hooghly Engineering & Technology College">
         </div>
 
-
         <div class="input-group">
-
             <label>Department</label>
-
-            <input
-                type="text"
-                id="editDepartment">
-
+            <input type="text" id="editDepartment">
         </div>
 
-
         <div class="input-group">
-
             <label>Mobile</label>
-
-            <input
-                type="text"
-                id="editMobile">
-
+            <input type="text" id="editMobile">
         </div>
-
 
         <div class="input-group">
-
             <label>Email</label>
-
-            <input
-                type="email"
-                id="editEmail">
-
+            <input type="email" id="editEmail">
         </div>
 
-
-        <button
-            id="saveEditedDetailsButton"
-            class="primary-button">
-
+        <button id="saveEditedDetailsButton"
+                class="primary-button">
             💾 Save Changes
-
         </button>
 
     </div>
@@ -1213,6 +740,7 @@
 </div>
 
 
+<script src="script.js"></script>
+
 </body>
 </html>
-```
