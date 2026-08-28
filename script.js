@@ -3269,8 +3269,1032 @@ window.addEventListener(
 
 
         // Load models
+// =====================================================
+// LOGIN SYSTEM
+// =====================================================
 
+function loginUser() {
+
+    const name =
+        document.getElementById("loginName")?.value.trim();
+
+    const mobile =
+        document.getElementById("loginMobile")?.value.trim();
+
+    const pin =
+        document.getElementById("loginPin")?.value.trim();
+
+
+    if (!name || !mobile || !pin) {
+
+        alert("⚠️ Please enter Name, Mobile Number and PIN.");
+        return;
+    }
+
+
+    if (!/^[0-9]{10}$/.test(mobile)) {
+
+        alert("📱 Mobile number must contain exactly 10 digits.");
+        return;
+    }
+
+
+    if (!/^[0-9]{4}$/.test(pin)) {
+
+        alert("🔐 PIN must contain exactly 4 digits.");
+        return;
+    }
+
+
+    // Get saved login account
+    const savedAccount =
+        JSON.parse(
+            localStorage.getItem("smartAttendanceAccount")
+        );
+
+
+    // If no account exists
+    if (!savedAccount) {
+
+        alert(
+            "❌ No account found.\n\n" +
+            "Please register your face/student details first."
+        );
+
+        return;
+    }
+
+
+    // Check login details
+    if (
+        savedAccount.name === name &&
+        savedAccount.mobile === mobile &&
+        savedAccount.pin === pin
+    ) {
+
+        localStorage.setItem(
+            "smartAttendanceLoggedIn",
+            "true"
+        );
+
+
+        alert("✅ Login Successful!");
+
+
+        // Hide login page
+        const loginPage =
+            document.getElementById("loginPage");
+
+        if (loginPage) {
+
+            loginPage.style.display = "none";
+        }
+
+
+        // Show dashboard
+        const dashboard =
+            document.getElementById("dashboardPage");
+
+        if (dashboard) {
+
+            dashboard.style.display = "block";
+        }
+
+
+        // If your HTML uses another dashboard container
+        const mainContainer =
+            document.getElementById("mainContainer");
+
+        if (mainContainer) {
+
+            mainContainer.style.display = "block";
+        }
+
+
+        displayStudents();
+        updateDashboard();
+        showCurrentDate();
+
+    } else {
+
+        alert(
+            "❌ Login failed!\n\n" +
+            "Name, Mobile Number or PIN is incorrect."
+        );
+    }
+}
+
+
+// =====================================================
+// FORGOT PIN
+// =====================================================
+
+function forgotPIN() {
+
+    const name =
+        prompt("Enter your registered name:");
+
+    if (!name) return;
+
+
+    const mobile =
+        prompt("Enter your registered 10 digit mobile number:");
+
+    if (!mobile) return;
+
+
+    const cleanMobile =
+        mobile.trim();
+
+
+    if (!/^[0-9]{10}$/.test(cleanMobile)) {
+
+        alert(
+            "📱 Please enter a valid 10 digit mobile number."
+        );
+
+        return;
+    }
+
+
+    const savedAccount =
+        JSON.parse(
+            localStorage.getItem("smartAttendanceAccount")
+        );
+
+
+    if (!savedAccount) {
+
+        alert(
+            "❌ No account found."
+        );
+
+        return;
+    }
+
+
+    if (
+        savedAccount.name === name.trim() &&
+        savedAccount.mobile === cleanMobile
+    ) {
+
+        alert(
+            "🔐 Your PIN is: " +
+            savedAccount.pin
+        );
+
+    } else {
+
+        alert(
+            "❌ Name and mobile number do not match."
+        );
+    }
+}
+
+
+// =====================================================
+// LOGIN PAGE CHECK
+// =====================================================
+
+function checkLoginStatus() {
+
+    const loggedIn =
+        localStorage.getItem(
+            "smartAttendanceLoggedIn"
+        );
+
+
+    const loginPage =
+        document.getElementById("loginPage");
+
+    const dashboardPage =
+        document.getElementById("dashboardPage");
+
+
+    if (loggedIn === "true") {
+
+        if (loginPage) {
+
+            loginPage.style.display =
+                "none";
+        }
+
+
+        if (dashboardPage) {
+
+            dashboardPage.style.display =
+                "block";
+        }
+
+    } else {
+
+        if (loginPage) {
+
+            loginPage.style.display =
+                "flex";
+        }
+
+
+        if (dashboardPage) {
+
+            dashboardPage.style.display =
+                "none";
+        }
+    }
+}
+
+
+// =====================================================
+// LOGOUT
+// =====================================================
+
+function logoutUser() {
+
+    localStorage.removeItem(
+        "smartAttendanceLoggedIn"
+    );
+
+
+    location.reload();
+}
+
+
+// =====================================================
+// LOGIN BUTTON CONNECTION
+// =====================================================
+
+function setupLoginButtons() {
+
+    const loginButton =
+        document.getElementById(
+            "loginButton"
+        );
+
+
+    if (loginButton) {
+
+        loginButton.addEventListener(
+            "click",
+            loginUser
+        );
+    }
+
+
+    const forgotButton =
+        document.getElementById(
+            "forgotPinButton"
+        );
+
+
+    if (forgotButton) {
+
+        forgotButton.addEventListener(
+            "click",
+            forgotPIN
+        );
+    }
+}
+
+
+// =====================================================
+// LOGIN PIN INPUT
+// =====================================================
+
+function setupLoginPin() {
+
+    const pin =
+        document.getElementById(
+            "loginPin"
+        );
+
+
+    if (!pin) return;
+
+
+    pin.setAttribute(
+        "maxlength",
+        "4"
+    );
+
+    pin.setAttribute(
+        "inputmode",
+        "numeric"
+    );
+
+
+    pin.addEventListener(
+        "input",
+        function() {
+
+            this.value =
+                this.value
+                    .replace(/\D/g, "")
+                    .slice(0, 4);
+        }
+    );
+}
+
+
+// =====================================================
+// PAGE LOAD - LOGIN
+// =====================================================
+
+window.addEventListener(
+    "load",
+    function() {
+
+        setupLoginButtons();
+
+        setupLoginPin();
+
+        checkLoginStatus();
+
+    }
+);// =====================================================
+// LOGIN SYSTEM
+// =====================================================
+
+function loginUser() {
+
+    const name =
+        document.getElementById("loginName")?.value.trim();
+
+    const mobile =
+        document.getElementById("loginMobile")?.value.trim();
+
+    const pin =
+        document.getElementById("loginPin")?.value.trim();
+
+
+    if (!name || !mobile || !pin) {
+
+        alert("⚠️ Please enter Name, Mobile Number and PIN.");
+        return;
+    }
+
+
+    if (!/^[0-9]{10}$/.test(mobile)) {
+
+        alert("📱 Mobile number must contain exactly 10 digits.");
+        return;
+    }
+
+
+    if (!/^[0-9]{4}$/.test(pin)) {
+
+        alert("🔐 PIN must contain exactly 4 digits.");
+        return;
+    }
+
+
+    // Get saved login account
+    const savedAccount =
+        JSON.parse(
+            localStorage.getItem("smartAttendanceAccount")
+        );
+
+
+    // If no account exists
+    if (!savedAccount) {
+
+        alert(
+            "❌ No account found.\n\n" +
+            "Please register your face/student details first."
+        );
+
+        return;
+    }
+
+
+    // Check login details
+    if (
+        savedAccount.name === name &&
+        savedAccount.mobile === mobile &&
+        savedAccount.pin === pin
+    ) {
+
+        localStorage.setItem(
+            "smartAttendanceLoggedIn",
+            "true"
+        );
+
+
+        alert("✅ Login Successful!");
+
+
+        // Hide login page
+        const loginPage =
+            document.getElementById("loginPage");
+
+        if (loginPage) {
+
+            loginPage.style.display = "none";
+        }
+
+
+        // Show dashboard
+        const dashboard =
+            document.getElementById("dashboardPage");
+
+        if (dashboard) {
+
+            dashboard.style.display = "block";
+        }
+
+
+        // If your HTML uses another dashboard container
+        const mainContainer =
+            document.getElementById("mainContainer");
+
+        if (mainContainer) {
+
+            mainContainer.style.display = "block";
+        }
+
+
+        displayStudents();
+        updateDashboard();
+        showCurrentDate();
+
+    } else {
+
+        alert(
+            "❌ Login failed!\n\n" +
+            "Name, Mobile Number or PIN is incorrect."
+        );
+    }
+}
+
+
+// =====================================================
+// FORGOT PIN
+// =====================================================
+
+function forgotPIN() {
+
+    const name =
+        prompt("Enter your registered name:");
+
+    if (!name) return;
+
+
+    const mobile =
+        prompt("Enter your registered 10 digit mobile number:");
+
+    if (!mobile) return;
+
+
+    const cleanMobile =
+        mobile.trim();
+
+
+    if (!/^[0-9]{10}$/.test(cleanMobile)) {
+
+        alert(
+            "📱 Please enter a valid 10 digit mobile number."
+        );
+
+        return;
+    }
+
+
+    const savedAccount =
+        JSON.parse(
+            localStorage.getItem("smartAttendanceAccount")
+        );
+
+
+    if (!savedAccount) {
+
+        alert(
+            "❌ No account found."
+        );
+
+        return;
+    }
+
+
+    if (
+        savedAccount.name === name.trim() &&
+        savedAccount.mobile === cleanMobile
+    ) {
+
+        alert(
+            "🔐 Your PIN is: " +
+            savedAccount.pin
+        );
+
+    } else {
+
+        alert(
+            "❌ Name and mobile number do not match."
+        );
+    }
+}
+
+
+// =====================================================
+// LOGIN PAGE CHECK
+// =====================================================
+
+function checkLoginStatus() {
+
+    const loggedIn =
+        localStorage.getItem(
+            "smartAttendanceLoggedIn"
+        );
+
+
+    const loginPage =
+        document.getElementById("loginPage");
+
+    const dashboardPage =
+        document.getElementById("dashboardPage");
+
+
+    if (loggedIn === "true") {
+
+        if (loginPage) {
+
+            loginPage.style.display =
+                "none";
+        }
+
+
+        if (dashboardPage) {
+
+            dashboardPage.style.display =
+                "block";
+        }
+
+    } else {
+
+        if (loginPage) {
+
+            loginPage.style.display =
+                "flex";
+        }
+
+
+        if (dashboardPage) {
+
+            dashboardPage.style.display =
+                "none";
+        }
+    }
+}
+
+
+// =====================================================
+// LOGOUT
+// =====================================================
+
+function logoutUser() {
+
+    localStorage.removeItem(
+        "smartAttendanceLoggedIn"
+    );
+
+
+    location.reload();
+}
+
+
+// =====================================================
+// LOGIN BUTTON CONNECTION
+// =====================================================
+
+function setupLoginButtons() {
+
+    const loginButton =
+        document.getElementById(
+            "loginButton"
+        );
+
+
+    if (loginButton) {
+
+        loginButton.addEventListener(
+            "click",
+            loginUser
+        );
+    }
+
+
+    const forgotButton =
+        document.getElementById(
+            "forgotPinButton"
+        );
+
+
+    if (forgotButton) {
+
+        forgotButton.addEventListener(
+            "click",
+            forgotPIN
+        );
+    }
+}
+
+
+// =====================================================
+// LOGIN PIN INPUT
+// =====================================================
+
+function setupLoginPin() {
+
+    const pin =
+        document.getElementById(
+            "loginPin"
+        );
+
+
+    if (!pin) return;
+
+
+    pin.setAttribute(
+        "maxlength",
+        "4"
+    );
+
+    pin.setAttribute(
+        "inputmode",
+        "numeric"
+    );
+
+
+    pin.addEventListener(
+        "input",
+        function() {
+
+            this.value =
+                this.value
+                    .replace(/\D/g, "")
+                    .slice(0, 4);
+        }
+    );
+}
+
+
+// =====================================================
+// PAGE LOAD - LOGIN
+// =====================================================
+
+window.addEventListener(
+    "load",
+    function() {
+
+        setupLoginButtons();
+
+        setupLoginPin();
+
+        checkLoginStatus();
+
+    }
+);
         await loadFaceModels();
+
+    }
+);
+// =====================================================
+// LOGIN SYSTEM
+// =====================================================
+
+function loginUser() {
+
+    const name =
+        document.getElementById("loginName")?.value.trim();
+
+    const mobile =
+        document.getElementById("loginMobile")?.value.trim();
+
+    const pin =
+        document.getElementById("loginPin")?.value.trim();
+
+
+    if (!name || !mobile || !pin) {
+
+        alert("⚠️ Please enter Name, Mobile Number and PIN.");
+        return;
+    }
+
+
+    if (!/^[0-9]{10}$/.test(mobile)) {
+
+        alert("📱 Mobile number must contain exactly 10 digits.");
+        return;
+    }
+
+
+    if (!/^[0-9]{4}$/.test(pin)) {
+
+        alert("🔐 PIN must contain exactly 4 digits.");
+        return;
+    }
+
+
+    // Get saved login account
+    const savedAccount =
+        JSON.parse(
+            localStorage.getItem("smartAttendanceAccount")
+        );
+
+
+    // If no account exists
+    if (!savedAccount) {
+
+        alert(
+            "❌ No account found.\n\n" +
+            "Please register your face/student details first."
+        );
+
+        return;
+    }
+
+
+    // Check login details
+    if (
+        savedAccount.name === name &&
+        savedAccount.mobile === mobile &&
+        savedAccount.pin === pin
+    ) {
+
+        localStorage.setItem(
+            "smartAttendanceLoggedIn",
+            "true"
+        );
+
+
+        alert("✅ Login Successful!");
+
+
+        // Hide login page
+        const loginPage =
+            document.getElementById("loginPage");
+
+        if (loginPage) {
+
+            loginPage.style.display = "none";
+        }
+
+
+        // Show dashboard
+        const dashboard =
+            document.getElementById("dashboardPage");
+
+        if (dashboard) {
+
+            dashboard.style.display = "block";
+        }
+
+
+        // If your HTML uses another dashboard container
+        const mainContainer =
+            document.getElementById("mainContainer");
+
+        if (mainContainer) {
+
+            mainContainer.style.display = "block";
+        }
+
+
+        displayStudents();
+        updateDashboard();
+        showCurrentDate();
+
+    } else {
+
+        alert(
+            "❌ Login failed!\n\n" +
+            "Name, Mobile Number or PIN is incorrect."
+        );
+    }
+}
+
+
+// =====================================================
+// FORGOT PIN
+// =====================================================
+
+function forgotPIN() {
+
+    const name =
+        prompt("Enter your registered name:");
+
+    if (!name) return;
+
+
+    const mobile =
+        prompt("Enter your registered 10 digit mobile number:");
+
+    if (!mobile) return;
+
+
+    const cleanMobile =
+        mobile.trim();
+
+
+    if (!/^[0-9]{10}$/.test(cleanMobile)) {
+
+        alert(
+            "📱 Please enter a valid 10 digit mobile number."
+        );
+
+        return;
+    }
+
+
+    const savedAccount =
+        JSON.parse(
+            localStorage.getItem("smartAttendanceAccount")
+        );
+
+
+    if (!savedAccount) {
+
+        alert(
+            "❌ No account found."
+        );
+
+        return;
+    }
+
+
+    if (
+        savedAccount.name === name.trim() &&
+        savedAccount.mobile === cleanMobile
+    ) {
+
+        alert(
+            "🔐 Your PIN is: " +
+            savedAccount.pin
+        );
+
+    } else {
+
+        alert(
+            "❌ Name and mobile number do not match."
+        );
+    }
+}
+
+
+// =====================================================
+// LOGIN PAGE CHECK
+// =====================================================
+
+function checkLoginStatus() {
+
+    const loggedIn =
+        localStorage.getItem(
+            "smartAttendanceLoggedIn"
+        );
+
+
+    const loginPage =
+        document.getElementById("loginPage");
+
+    const dashboardPage =
+        document.getElementById("dashboardPage");
+
+
+    if (loggedIn === "true") {
+
+        if (loginPage) {
+
+            loginPage.style.display =
+                "none";
+        }
+
+
+        if (dashboardPage) {
+
+            dashboardPage.style.display =
+                "block";
+        }
+
+    } else {
+
+        if (loginPage) {
+
+            loginPage.style.display =
+                "flex";
+        }
+
+
+        if (dashboardPage) {
+
+            dashboardPage.style.display =
+                "none";
+        }
+    }
+}
+
+
+// =====================================================
+// LOGOUT
+// =====================================================
+
+function logoutUser() {
+
+    localStorage.removeItem(
+        "smartAttendanceLoggedIn"
+    );
+
+
+    location.reload();
+}
+
+
+// =====================================================
+// LOGIN BUTTON CONNECTION
+// =====================================================
+
+function setupLoginButtons() {
+
+    const loginButton =
+        document.getElementById(
+            "loginButton"
+        );
+
+
+    if (loginButton) {
+
+        loginButton.addEventListener(
+            "click",
+            loginUser
+        );
+    }
+
+
+    const forgotButton =
+        document.getElementById(
+            "forgotPinButton"
+        );
+
+
+    if (forgotButton) {
+
+        forgotButton.addEventListener(
+            "click",
+            forgotPIN
+        );
+    }
+}
+
+
+// =====================================================
+// LOGIN PIN INPUT
+// =====================================================
+
+function setupLoginPin() {
+
+    const pin =
+        document.getElementById(
+            "loginPin"
+        );
+
+
+    if (!pin) return;
+
+
+    pin.setAttribute(
+        "maxlength",
+        "4"
+    );
+
+    pin.setAttribute(
+        "inputmode",
+        "numeric"
+    );
+
+
+    pin.addEventListener(
+        "input",
+        function() {
+
+            this.value =
+                this.value
+                    .replace(/\D/g, "")
+                    .slice(0, 4);
+        }
+    );
+}
+
+
+// =====================================================
+// PAGE LOAD - LOGIN
+// =====================================================
+
+window.addEventListener(
+    "load",
+    function() {
+
+        setupLoginButtons();
+
+        setupLoginPin();
+
+        checkLoginStatus();
 
     }
 );
