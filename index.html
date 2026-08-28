@@ -1,222 +1,318 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Smart Attendance System</title>
 
     <link rel="stylesheet" href="style.css">
+
+    <!-- Face API -->
     <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+
 </head>
+
 
 <body>
 
-    <div class="container">
-
-        <header>
-            <h1>Smart Attendance System</h1>
-            <p>Student Attendance Dashboard</p>
-        </header>
-
-        <!-- Dashboard Cards -->
-
-        <section class="dashboard">
-
-            <div class="card">
-                <h3>Total Students</h3>
-                <h2 id="totalStudents">0</h2>
-            </div>
-
-            <div class="card">
-                <h3>Present</h3>
-                <h2 id="presentStudents">0</h2>
-            </div>
-
-            <div class="card">
-                <h3>Absent</h3>
-                <h2 id="absentStudents">0</h2>
-            </div>
-
-            <div class="card">
-                <h3>Attendance</h3>
-                <h2 id="attendancePercentage">0%</h2>
-            </div>
-
-        </section>
+<div class="container">
 
 
-        <!-- Add Student -->
+    <!-- ================= HEADER ================= -->
+
+    <header>
+
+        <h1>Smart Attendance System</h1>
+
+        <p>Student Attendance Dashboard</p>
+
+    </header>
+
+
+
+    <!-- ================= DASHBOARD ================= -->
+
+    <section class="dashboard">
+
+        <div class="card">
+
+            <h3>Total Students</h3>
+
+            <h2 id="totalStudents">0</h2>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>Present</h3>
+
+            <h2 id="presentStudents">0</h2>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>Absent</h3>
+
+            <h2 id="absentStudents">0</h2>
+
+        </div>
+
+
+        <div class="card">
+
+            <h3>Attendance</h3>
+
+            <h2 id="attendancePercentage">0%</h2>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ================= ADD STUDENT ================= -->
 
     <section class="box">
 
-    <h2>Add Student</h2>
+        <h2>➕ Add Student</h2>
 
-    <div class="form">
+        <div class="form">
+
+            <input
+                type="text"
+                id="studentName"
+                placeholder="Student Name"
+            >
+
+            <input
+                type="text"
+                id="studentRoll"
+                placeholder="Roll Number"
+            >
+
+            <input
+                type="text"
+                id="studentCollege"
+                placeholder="College Name"
+            >
+
+            <input
+                type="text"
+                id="studentDepartment"
+                placeholder="Department"
+            >
+
+            <button onclick="addStudent()">
+                Add Student
+            </button>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- ================= SEARCH ================= -->
+
+    <section class="box">
+
+        <h2>🔍 Search Student</h2>
 
         <input
+            class="search"
             type="text"
-            id="studentName"
-            placeholder="Student Name"
+            id="searchStudent"
+            placeholder="Search by name or roll number"
+            oninput="displayStudents()"
         >
 
-        <input
-            type="text"
-            id="studentRoll"
-            placeholder="Roll Number"
-        >
+    </section>
 
-        <input
-            type="text"
-            id="studentCollege"
-            placeholder="College Name"
-        >
 
-        <input
-            type="text"
-            id="studentDepartment"
-            placeholder="Department"
-        >
 
-        <button onclick="addStudent()">
-            Add Student
-        </button>
+    <!-- ================= TODAY ATTENDANCE ================= -->
 
-    </div>
+    <section class="box">
 
-</section>
+        <h2>📋 Today's Attendance</h2>
+
+        <div id="studentList"></div>
+
+    </section>
+
+
+
+    <!-- ================= FACE REGISTRATION ================= -->
+
+    <section class="box face-section">
+
+        <div class="section-title">
+
+            <span>👤</span>
+
+            <div>
+
+                <h2>Face Registration</h2>
+
+                <p>
+                    Enter student details and register your face
+                </p>
 
             </div>
 
-        </section>
+        </div>
 
 
-        <!-- Search -->
+        <!-- Student Information -->
 
-        <section class="box">
-
-            <h2>Search Student</h2>
+        <div class="face-form">
 
             <input
-                class="search"
                 type="text"
-                id="searchStudent"
-                placeholder="Search by name or roll number"
-                oninput="displayStudents()"
+                id="faceName"
+                placeholder="Student Name"
             >
 
-        </section>
+            <input
+                type="text"
+                id="faceRoll"
+                placeholder="Roll Number"
+            >
 
+            <input
+                type="text"
+                id="collegeName"
+                placeholder="College Name"
+            >
 
-        <!-- Attendance -->
+            <input
+                type="text"
+                id="departmentName"
+                placeholder="Department"
+            >
 
-        <section class="box">
-
-            <h2>Today's Attendance</h2>
-
-            <div id="studentList"></div>
-
-        </section>
-<section class="box face-section">
-
-    <div class="section-title">
-        <span>👤</span>
-        <div>
-            <h2>Face Registration</h2>
-            <p>Enter student details and register face automatically</p>
-        </div>
-    </div>
-
-    <div class="face-form">
-
-        <input
-            type="text"
-            id="faceName"
-            placeholder="Student Name"
-        >
-
-        <input
-            type="text"
-            id="faceRoll"
-            placeholder="Roll Number"
-        >
-
-        <input
-            type="text"
-            id="collegeName"
-            placeholder="College Name"
-        >
-
-        <input
-            type="text"
-            id="departmentName"
-            placeholder="Department"
-        >
-
-    </div>
-
-    <div class="camera-box">
-
-        <video
-            id="camera"
-            autoplay
-            playsinline
-        ></video>
-
-        <div id="faceStatus">
-            Camera is ready for registration
         </div>
 
-    </div>
 
-    <button
-        id="registerFaceButton"
-        class="face-register-btn"
-        onclick="startAutomaticFaceRegistration()"
-    >
-        📸 Capture Face Automatically
-    </button>
+        <!-- Registration Camera -->
 
-    <canvas
-        id="snapshot"
-        style="display:none;"
-    ></canvas>
+        <div class="camera-box">
 
-    <p id="captureMessage"></p>
+            <video
+                id="registrationCamera"
+                autoplay
+                playsinline
+            ></video>
 
-</section>
-    <h2>Face Attendance</h2>
+            <div id="registrationStatus">
 
-    <video id="camera" autoplay playsinline></video>
+                Camera is ready
 
-    <p id="faceMessage">
-        
-    </p>
-<button onclick="captureFace()"><input
-    type="text"
-    id="faceName"
-    placeholder="Enter your name"
->
+            </div>
 
-<button onclick="captureFace()">
-    📸 Capture My Face
-</button>
-    📸 Capture My Face
-</button>
-
-<canvas id="snapshot" style="display:none;"></canvas>
-
-<p id="captureMessage"></p>
-    <button onclick="startCamera()">
-        Start Camera
-    </button>
-
-</section>
-    </div>
+        </div>
 
 
-    <script src="script.js"></script>
+        <!-- ONE BUTTON ONLY -->
+
+        <button
+            id="registerFaceButton"
+            class="face-register-btn"
+            onclick="startAutomaticFaceRegistration()"
+        >
+
+            📸 Register Face
+
+        </button>
+
+
+        <p id="registrationMessage"></p>
+
+
+    </section>
+
+
+
+    <!-- ================= FACE ATTENDANCE ================= -->
+
+    <section class="box face-attendance-section">
+
+        <div class="section-title">
+
+            <span>📷</span>
+
+            <div>
+
+                <h2>Face Attendance</h2>
+
+                <p>
+                    Face will be detected automatically
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- Attendance Camera -->
+
+        <div class="camera-box">
+
+            <video
+                id="attendanceCamera"
+                autoplay
+                playsinline
+            ></video>
+
+            <div id="attendanceStatus">
+
+                Camera is ready
+
+            </div>
+
+        </div>
+
+
+        <!-- ONLY ONE BUTTON -->
+
+        <button
+            id="attendanceButton"
+            class="face-register-btn"
+            onclick="startFaceAttendance()"
+        >
+
+            📷 Start Face Attendance
+
+        </button>
+
+
+        <!-- Result -->
+
+        <div
+            id="attendanceResult"
+            class="attendance-result"
+        >
+
+        </div>
+
+    </section>
+
+
+
+</div>
+
+
+
+<!-- ================= JAVASCRIPT ================= -->
+
 <script src="script.js"></script>
+
 </body>
+
 </html>
