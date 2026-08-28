@@ -3,13 +3,67 @@
 // script.js
 // ============================================================
 
+
+// ============================================================
+// FIREBASE IMPORTS
+// ============================================================
+
+import {
+    initializeApp
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-app.js";
+
 import {
     getAuth,
     RecaptchaVerifier,
     signInWithPhoneNumber,
-    sendEmailVerification,
     onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
+
+
+// ============================================================
+// FIREBASE CONFIG
+// ============================================================
+
+const firebaseConfig = {
+
+    apiKey:
+        "AIzaSyCcvk2aGKaVJvlDSS76DnkQCy8GwAuloEE",
+
+    authDomain:
+        "smart-attendance-system-82b82.firebaseapp.com",
+
+    projectId:
+        "smart-attendance-system-82b82",
+
+    storageBucket:
+        "smart-attendance-system-82b82.firebasestorage.app",
+
+    messagingSenderId:
+        "234543808646",
+
+    appId:
+        "1:234543808646:web:23aaab1d197522bd725107",
+
+    measurementId:
+        "G-58XHQHDY30"
+};
+
+
+// ============================================================
+// INITIALIZE FIREBASE
+// ============================================================
+
+const app =
+    initializeApp(firebaseConfig);
+
+const auth =
+    getAuth(app);
+
+
+// Make available globally if needed
+
+window.firebaseAuth =
+    auth;
 
 
 // ============================================================
@@ -17,75 +71,183 @@ import {
 // ============================================================
 
 let confirmationResult = null;
+
 let forgotConfirmationResult = null;
 
 let currentUser = null;
 
 let registrationStream = null;
+
 let attendanceStream = null;
 
+let createRecaptchaVerifier = null;
+
+let forgotRecaptchaVerifier = null;
+
+
+// ============================================================
+// LOCAL STORAGE
+// ============================================================
+
 let registeredStudents =
-    JSON.parse(localStorage.getItem("registeredStudents") || "[]");
+    JSON.parse(
+        localStorage.getItem("registeredStudents") || "[]"
+    );
+
 
 let attendanceData =
-    JSON.parse(localStorage.getItem("attendanceData") || "{}");
+    JSON.parse(
+        localStorage.getItem("attendanceData") || "{}"
+    );
 
 
 // ============================================================
-// FIREBASE AUTH
+// FACE API MODEL STATUS
 // ============================================================
 
-const auth = window.firebaseAuth;
+let faceModelsLoaded = false;
 
 
 // ============================================================
-// HELPER FUNCTIONS
+// HELPER
 // ============================================================
 
 function $(id) {
+
     return document.getElementById(id);
+
 }
 
-function showMessage(id, message, type = "info") {
 
-    const el = $(id);
+// ============================================================
+// MESSAGE
+// ============================================================
 
-    if (!el) return;
+function showMessage(
+    id,
+    message,
+    type = "info"
+) {
 
-    el.textContent = message;
+    const element =
+        $(id);
 
-    el.className = "auth-message " + type;
+    if (!element) return;
+
+    element.textContent =
+        message;
+
+    element.className =
+        "auth-message " + type;
+
 }
+
+
+// ============================================================
+// FACE MESSAGE
+// ============================================================
+
+function showFaceMessage(
+    id,
+    message,
+    type = ""
+) {
+
+    const element =
+        $(id);
+
+    if (!element) return;
+
+    element.textContent =
+        message;
+
+    element.className =
+        "face-message " + type;
+
+}
+
+
+// ============================================================
+// MOBILE
+// ============================================================
 
 function cleanMobile(mobile) {
 
     return String(mobile || "")
         .replace(/\D/g, "")
         .slice(-10);
+
 }
+
 
 function getPhoneNumber(mobile) {
 
-    const number = cleanMobile(mobile);
+    return "+91" + cleanMobile(mobile);
 
-    return "+91" + number;
 }
+
 
 function validMobile(mobile) {
 
-    return /^[6-9]\d{9}$/.test(cleanMobile(mobile));
+    return /^[6-9]\d{9}$/
+        .test(cleanMobile(mobile));
+
 }
+
+
+// ============================================================
+// PIN
+// ============================================================
 
 function validPin(pin) {
 
-    return /^\d{4}$/.test(pin);
+    return /^\d{4}$/.test(
+        String(pin || "")
+    );
+
 }
+
+
+// ============================================================
+// EMAIL
+// ============================================================
 
 function validEmail(email) {
 
     if (!email) return true;
 
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+        .test(email);
+
+}
+
+
+// ============================================================
+// ESCAPE HTML
+// ============================================================
+
+function escapeHTML(value) {
+
+    return String(value ?? "")
+        .replace(
+            /[&<>"']/g,
+            char => {
+
+                const map = {
+
+                    "&": "&amp;",
+                    "<": "&lt;",
+                    ">": "&gt;",
+                    '"': "&quot;",
+                    "'": "&#039;"
+
+                };
+
+                return map[char];
+
+            }
+        );
+
 }
 
 
@@ -97,8 +259,11 @@ function saveStudents() {
 
     localStorage.setItem(
         "registeredStudents",
-        JSON.stringify(registeredStudents)
+        JSON.stringify(
+            registeredStudents
+        )
     );
+
 }
 
 
@@ -110,8 +275,11 @@ function saveAttendance() {
 
     localStorage.setItem(
         "attendanceData",
-        JSON.stringify(attendanceData)
+        JSON.stringify(
+            attendanceData
+        )
     );
+
 }
 
 
@@ -122,22 +290,31 @@ function saveAttendance() {
 function showPage(pageId) {
 
     const pages = [
+
         "loginPage",
         "createAccountPage",
         "forgotPinPage",
         "dashboardPage"
+
     ];
 
-    pages.forEach(id => {
 
-        const page = $(id);
+    pages.forEach(
+        id => {
 
-        if (page) {
+            const page =
+                $(id);
+
+            if (!page) return;
+
             page.style.display =
-                id === pageId ? "block" : "none";
-        }
+                id === pageId
+                    ? "block"
+                    : "none";
 
-    });
+        }
+    );
+
 }
 
 
@@ -147,58 +324,110 @@ function showPage(pageId) {
 
 function openCreateAccount() {
 
-    showPage("createAccountPage");
+    showPage(
+        "createAccountPage"
+    );
 
-    $("createOtpSection").style.display = "none";
 
-    showMessage("createMessage", "");
+    if ($("createOtpSection")) {
 
-    $("createName").focus();
+        $("createOtpSection")
+            .style.display =
+            "none";
+
+    }
+
+
+    showMessage(
+        "createMessage",
+        ""
+    );
+
+
+    if ($("createName")) {
+
+        $("createName").focus();
+
+    }
+
 }
 
 
 // ============================================================
-// BACK TO LOGIN
+// BACK LOGIN
 // ============================================================
 
 function backToLogin() {
 
-    showPage("loginPage");
+    cleanupCreateRecaptcha();
 
-    showMessage("loginMessage", "");
+    showPage(
+        "loginPage"
+    );
+
+    showMessage(
+        "loginMessage",
+        ""
+    );
+
 }
+
 
 function backFromForgot() {
 
-    showPage("loginPage");
+    cleanupForgotRecaptcha();
 
-    showMessage("forgotMessage", "");
+    showPage(
+        "loginPage"
+    );
+
+    showMessage(
+        "forgotMessage",
+        ""
+    );
+
 }
 
 
 // ============================================================
-// CREATE ACCOUNT
+// CREATE ACCOUNT OTP
 // ============================================================
 
 async function sendCreateOTP() {
 
     const name =
-        $("createName").value.trim();
+        $("createName")
+            .value
+            .trim();
+
 
     const mobile =
-        cleanMobile($("createMobile").value);
+        cleanMobile(
+            $("createMobile").value
+        );
+
 
     const email =
-        $("createEmail").value.trim();
+        $("createEmail")
+            .value
+            .trim();
+
 
     const pin =
-        $("createPin").value.trim();
+        $("createPin")
+            .value
+            .trim();
+
 
     const confirmPin =
-        $("confirmPin").value.trim();
+        $("confirmPin")
+            .value
+            .trim();
 
 
+    // --------------------------------------------------------
     // VALIDATION
+    // --------------------------------------------------------
 
     if (!name) {
 
@@ -209,6 +438,7 @@ async function sendCreateOTP() {
         );
 
         return;
+
     }
 
 
@@ -221,10 +451,14 @@ async function sendCreateOTP() {
         );
 
         return;
+
     }
 
 
-    if (email && !validEmail(email)) {
+    if (
+        email &&
+        !validEmail(email)
+    ) {
 
         showMessage(
             "createMessage",
@@ -233,6 +467,7 @@ async function sendCreateOTP() {
         );
 
         return;
+
     }
 
 
@@ -245,6 +480,7 @@ async function sendCreateOTP() {
         );
 
         return;
+
     }
 
 
@@ -257,16 +493,20 @@ async function sendCreateOTP() {
         );
 
         return;
+
     }
 
 
-    // CHECK DUPLICATE MOBILE
+    // --------------------------------------------------------
+    // DUPLICATE MOBILE
+    // --------------------------------------------------------
 
     const existingMobile =
         registeredStudents.find(
             student =>
                 student.mobile === mobile
         );
+
 
     if (existingMobile) {
 
@@ -277,10 +517,13 @@ async function sendCreateOTP() {
         );
 
         return;
+
     }
 
 
-    // CHECK DUPLICATE EMAIL
+    // --------------------------------------------------------
+    // DUPLICATE EMAIL
+    // --------------------------------------------------------
 
     if (email) {
 
@@ -288,9 +531,11 @@ async function sendCreateOTP() {
             registeredStudents.find(
                 student =>
                     student.email &&
-                    student.email.toLowerCase() ===
+                    student.email
+                        .toLowerCase() ===
                     email.toLowerCase()
             );
+
 
         if (existingEmail) {
 
@@ -301,19 +546,9 @@ async function sendCreateOTP() {
             );
 
             return;
+
         }
-    }
 
-
-    if (!auth) {
-
-        showMessage(
-            "createMessage",
-            "Firebase is not initialized. Please reload the page.",
-            "error"
-        );
-
-        return;
     }
 
 
@@ -326,32 +561,26 @@ async function sendCreateOTP() {
         );
 
 
-        // Remove previous reCAPTCHA
-
-        if (window.createRecaptchaVerifier) {
-
-            try {
-                window.createRecaptchaVerifier.clear();
-            } catch (e) {}
-
-        }
+        cleanupCreateRecaptcha();
 
 
-        window.createRecaptchaVerifier =
+        createRecaptchaVerifier =
             new RecaptchaVerifier(
                 auth,
                 "recaptcha-container",
                 {
+
                     size: "normal",
-                    callback: function () {
+
+                    callback: () => {
 
                         console.log(
-                            "Create account reCAPTCHA completed."
+                            "Create reCAPTCHA completed."
                         );
 
                     },
 
-                    "expired-callback": function () {
+                    "expired-callback": () => {
 
                         showMessage(
                             "createMessage",
@@ -360,6 +589,7 @@ async function sendCreateOTP() {
                         );
 
                     }
+
                 }
             );
 
@@ -372,26 +602,26 @@ async function sendCreateOTP() {
             await signInWithPhoneNumber(
                 auth,
                 phoneNumber,
-                window.createRecaptchaVerifier
+                createRecaptchaVerifier
             );
 
 
-        // Save temporary registration data
+        // ----------------------------------------------------
+        // TEMPORARY DATA
+        // ----------------------------------------------------
 
         window.pendingRegistration = {
 
-            name: name,
-
-            mobile: mobile,
-
-            email: email,
-
-            pin: pin
+            name,
+            mobile,
+            email,
+            pin
 
         };
 
 
-        $("createOtpSection").style.display =
+        $("createOtpSection")
+            .style.display =
             "block";
 
 
@@ -408,24 +638,20 @@ async function sendCreateOTP() {
 
     catch (error) {
 
-        console.error(error);
+        console.error(
+            "Create OTP error:",
+            error
+        );
 
-        let message =
-            firebaseErrorMessage(error);
 
         showMessage(
             "createMessage",
-            message,
+            firebaseErrorMessage(error),
             "error"
         );
 
-        if (window.createRecaptchaVerifier) {
 
-            try {
-                window.createRecaptchaVerifier.clear();
-            } catch (e) {}
-
-        }
+        cleanupCreateRecaptcha();
 
     }
 
@@ -433,13 +659,16 @@ async function sendCreateOTP() {
 
 
 // ============================================================
-// VERIFY CREATE ACCOUNT OTP
+// VERIFY CREATE OTP
 // ============================================================
 
 async function verifyCreateOTP() {
 
     const otp =
-        $("createOtp").value.trim();
+        $("createOtp")
+            .value
+            .trim();
+
 
     if (!/^\d{6}$/.test(otp)) {
 
@@ -450,6 +679,7 @@ async function verifyCreateOTP() {
         );
 
         return;
+
     }
 
 
@@ -462,6 +692,7 @@ async function verifyCreateOTP() {
         );
 
         return;
+
     }
 
 
@@ -478,6 +709,7 @@ async function verifyCreateOTP() {
         );
 
         return;
+
     }
 
 
@@ -491,19 +723,18 @@ async function verifyCreateOTP() {
 
 
         const result =
-            await confirmationResult.confirm(otp);
+            await confirmationResult
+                .confirm(otp);
 
 
-        currentUser =
+        const firebaseUser =
             result.user;
 
-
-        // Save local student
 
         const student = {
 
             id:
-                currentUser.uid,
+                firebaseUser.uid,
 
             name:
                 data.name,
@@ -517,53 +748,46 @@ async function verifyCreateOTP() {
             pin:
                 data.pin,
 
+            roll:
+                "",
+
+            college:
+                "",
+
+            department:
+                "",
+
             faceDescriptor:
                 null,
 
             registeredAt:
-                new Date().toISOString(),
-
-            attendance:
-                []
+                new Date().toISOString()
 
         };
 
 
-        registeredStudents.push(student);
+        registeredStudents.push(
+            student
+        );
+
 
         saveStudents();
 
 
-        // EMAIL VERIFICATION
+        currentUser =
+            student;
 
-        if (currentUser && data.email) {
-
-            try {
-
-                // Firebase email verification requires
-                // an email/password credential.
-                //
-                // Since PIN is not an email password,
-                // we cannot directly attach this email here.
-
-                console.log(
-                    "Email saved for student:",
-                    data.email
-                );
-
-            } catch (emailError) {
-
-                console.error(emailError);
-
-            }
-
-        }
-
-
-        // AUTO LOGIN
 
         window.currentStudentId =
             student.id;
+
+
+        window.pendingRegistration =
+            null;
+
+
+        confirmationResult =
+            null;
 
 
         showMessage(
@@ -573,18 +797,26 @@ async function verifyCreateOTP() {
         );
 
 
-        setTimeout(() => {
+        setTimeout(
+            () => {
 
-            openDashboard(student);
+                openDashboard(
+                    student
+                );
 
-        }, 1000);
-
+            },
+            800
+        );
 
     }
 
     catch (error) {
 
-        console.error(error);
+        console.error(
+            "OTP verification error:",
+            error
+        );
+
 
         showMessage(
             "createMessage",
@@ -604,13 +836,21 @@ async function verifyCreateOTP() {
 function loginUser() {
 
     const name =
-        $("loginName").value.trim();
+        $("loginName")
+            .value
+            .trim();
+
 
     const mobile =
-        cleanMobile($("loginMobile").value);
+        cleanMobile(
+            $("loginMobile").value
+        );
+
 
     const pin =
-        $("loginPin").value.trim();
+        $("loginPin")
+            .value
+            .trim();
 
 
     if (!name) {
@@ -622,6 +862,7 @@ function loginUser() {
         );
 
         return;
+
     }
 
 
@@ -634,6 +875,7 @@ function loginUser() {
         );
 
         return;
+
     }
 
 
@@ -646,18 +888,27 @@ function loginUser() {
         );
 
         return;
+
     }
 
 
     const student =
         registeredStudents.find(
             s =>
-                s.name.toLowerCase() ===
-                name.toLowerCase() &&
 
-                s.mobile === mobile &&
+                String(s.name)
+                    .toLowerCase() ===
+                name.toLowerCase()
 
-                s.pin === pin
+                &&
+
+                cleanMobile(s.mobile) ===
+                mobile
+
+                &&
+
+                String(s.pin) ===
+                pin
         );
 
 
@@ -670,15 +921,16 @@ function loginUser() {
         );
 
         return;
+
     }
-
-
-    window.currentStudentId =
-        student.id;
 
 
     currentUser =
         student;
+
+
+    window.currentStudentId =
+        student.id;
 
 
     showMessage(
@@ -688,42 +940,60 @@ function loginUser() {
     );
 
 
-    setTimeout(() => {
+    setTimeout(
+        () => {
 
-        openDashboard(student);
+            openDashboard(
+                student
+            );
 
-    }, 500);
+        },
+        400
+    );
 
 }
 
 
 // ============================================================
-// FORGOT PIN PAGE
+// FORGOT PIN
 // ============================================================
 
 function openForgotPin() {
 
-    showPage("forgotPinPage");
+    showPage(
+        "forgotPinPage"
+    );
 
-    $("forgotOtpSection").style.display =
+
+    $("forgotOtpSection")
+        .style.display =
         "none";
 
-    showMessage("forgotMessage", "");
+
+    showMessage(
+        "forgotMessage",
+        ""
+    );
 
 }
 
 
 // ============================================================
-// FORGOT PIN OTP
+// SEND FORGOT OTP
 // ============================================================
 
 async function sendForgotOTP() {
 
     const name =
-        $("forgotName").value.trim();
+        $("forgotName")
+            .value
+            .trim();
+
 
     const mobile =
-        cleanMobile($("forgotMobile").value);
+        cleanMobile(
+            $("forgotMobile").value
+        );
 
 
     if (!name) {
@@ -735,6 +1005,7 @@ async function sendForgotOTP() {
         );
 
         return;
+
     }
 
 
@@ -747,16 +1018,22 @@ async function sendForgotOTP() {
         );
 
         return;
+
     }
 
 
     const student =
         registeredStudents.find(
             s =>
-                s.name.toLowerCase() ===
-                name.toLowerCase() &&
 
-                s.mobile === mobile
+                String(s.name)
+                    .toLowerCase() ===
+                name.toLowerCase()
+
+                &&
+
+                cleanMobile(s.mobile) ===
+                mobile
         );
 
 
@@ -769,26 +1046,41 @@ async function sendForgotOTP() {
         );
 
         return;
+
     }
 
 
     try {
 
-        if (window.forgotRecaptchaVerifier) {
-
-            try {
-                window.forgotRecaptchaVerifier.clear();
-            } catch (e) {}
-
-        }
+        cleanupForgotRecaptcha();
 
 
-        window.forgotRecaptchaVerifier =
+        forgotRecaptchaVerifier =
             new RecaptchaVerifier(
                 auth,
                 "forgot-recaptcha-container",
                 {
-                    size: "normal"
+
+                    size: "normal",
+
+                    callback: () => {
+
+                        console.log(
+                            "Forgot PIN reCAPTCHA completed."
+                        );
+
+                    },
+
+                    "expired-callback": () => {
+
+                        showMessage(
+                            "forgotMessage",
+                            "reCAPTCHA expired. Please try again.",
+                            "error"
+                        );
+
+                    }
+
                 }
             );
 
@@ -797,7 +1089,7 @@ async function sendForgotOTP() {
             await signInWithPhoneNumber(
                 auth,
                 getPhoneNumber(mobile),
-                window.forgotRecaptchaVerifier
+                forgotRecaptchaVerifier
             );
 
 
@@ -805,7 +1097,8 @@ async function sendForgotOTP() {
             student.id;
 
 
-        $("forgotOtpSection").style.display =
+        $("forgotOtpSection")
+            .style.display =
             "block";
 
 
@@ -816,17 +1109,26 @@ async function sendForgotOTP() {
         );
 
 
+        $("forgotOtp").focus();
+
     }
 
     catch (error) {
 
-        console.error(error);
+        console.error(
+            "Forgot OTP error:",
+            error
+        );
+
 
         showMessage(
             "forgotMessage",
             firebaseErrorMessage(error),
             "error"
         );
+
+
+        cleanupForgotRecaptcha();
 
     }
 
@@ -840,13 +1142,21 @@ async function sendForgotOTP() {
 async function resetPIN() {
 
     const otp =
-        $("forgotOtp").value.trim();
+        $("forgotOtp")
+            .value
+            .trim();
+
 
     const newPin =
-        $("newPin").value.trim();
+        $("newPin")
+            .value
+            .trim();
+
 
     const confirmNewPin =
-        $("confirmNewPin").value.trim();
+        $("confirmNewPin")
+            .value
+            .trim();
 
 
     if (!/^\d{6}$/.test(otp)) {
@@ -858,6 +1168,7 @@ async function resetPIN() {
         );
 
         return;
+
     }
 
 
@@ -865,11 +1176,12 @@ async function resetPIN() {
 
         showMessage(
             "forgotMessage",
-            "New PIN must contain 4 digits.",
+            "New PIN must contain exactly 4 digits.",
             "error"
         );
 
         return;
+
     }
 
 
@@ -882,6 +1194,7 @@ async function resetPIN() {
         );
 
         return;
+
     }
 
 
@@ -894,12 +1207,26 @@ async function resetPIN() {
         );
 
         return;
+
     }
 
 
     try {
 
-        await forgotConfirmationResult.confirm(otp);
+        showMessage(
+            "forgotMessage",
+            "Verifying OTP...",
+            "info"
+        );
+
+
+        const result =
+            await forgotConfirmationResult
+                .confirm(otp);
+
+
+        const firebaseUser =
+            result.user;
 
 
         const student =
@@ -919,6 +1246,33 @@ async function resetPIN() {
             );
 
             return;
+
+        }
+
+
+        // Extra protection:
+        // Firebase verified phone must match student mobile
+
+        const firebasePhone =
+            cleanMobile(
+                firebaseUser.phoneNumber
+            );
+
+
+        if (
+            firebasePhone &&
+            firebasePhone !==
+            cleanMobile(student.mobile)
+        ) {
+
+            showMessage(
+                "forgotMessage",
+                "Mobile verification does not match this account.",
+                "error"
+            );
+
+            return;
+
         }
 
 
@@ -929,6 +1283,14 @@ async function resetPIN() {
         saveStudents();
 
 
+        forgotConfirmationResult =
+            null;
+
+
+        window.pendingForgotStudent =
+            null;
+
+
         showMessage(
             "forgotMessage",
             "PIN reset successfully. You can now login.",
@@ -936,17 +1298,26 @@ async function resetPIN() {
         );
 
 
-        setTimeout(() => {
+        setTimeout(
+            () => {
 
-            showPage("loginPage");
+                showPage(
+                    "loginPage"
+                );
 
-        }, 1200);
+            },
+            1200
+        );
 
     }
 
     catch (error) {
 
-        console.error(error);
+        console.error(
+            "PIN reset error:",
+            error
+        );
+
 
         showMessage(
             "forgotMessage",
@@ -960,13 +1331,15 @@ async function resetPIN() {
 
 
 // ============================================================
-// FIREBASE ERROR MESSAGE
+// FIREBASE ERROR
 // ============================================================
 
 function firebaseErrorMessage(error) {
 
     if (!error) {
+
         return "Something went wrong.";
+
     }
 
 
@@ -986,7 +1359,7 @@ function firebaseErrorMessage(error) {
             return "Firebase SMS quota has been exceeded.";
 
         case "auth/captcha-check-failed":
-            return "reCAPTCHA verification failed. Please try again.";
+            return "reCAPTCHA verification failed.";
 
         case "auth/invalid-verification-code":
             return "Incorrect OTP.";
@@ -999,6 +1372,15 @@ function firebaseErrorMessage(error) {
 
         case "auth/billing-not-enabled":
             return "Firebase billing/SMS setup is not enabled.";
+
+        case "auth/operation-not-allowed":
+            return "Phone authentication is not enabled in Firebase.";
+
+        case "auth/app-not-authorized":
+            return "This website domain is not authorized in Firebase.";
+
+        case "auth/network-request-failed":
+            return "Network error. Please check your internet connection.";
 
         default:
 
@@ -1013,18 +1395,24 @@ function firebaseErrorMessage(error) {
 
 
 // ============================================================
-// OPEN DASHBOARD
+// DASHBOARD
 // ============================================================
 
 function openDashboard(student) {
 
-    showPage("dashboardPage");
+    showPage(
+        "dashboardPage"
+    );
+
 
     currentUser =
         student;
 
 
-    fillFaceRegistrationFields(student);
+    fillFaceRegistrationFields(
+        student
+    );
+
 
     updateDashboard();
 
@@ -1036,10 +1424,12 @@ function openDashboard(student) {
 
 
 // ============================================================
-// FACE REGISTRATION FIELDS
+// FILL FACE DETAILS
 // ============================================================
 
-function fillFaceRegistrationFields(student) {
+function fillFaceRegistrationFields(
+    student
+) {
 
     if (!student) return;
 
@@ -1047,8 +1437,22 @@ function fillFaceRegistrationFields(student) {
     $("faceName").value =
         student.name || "";
 
+
+    $("faceRoll").value =
+        student.roll || "";
+
+
+    $("collegeName").value =
+        student.college || "";
+
+
+    $("departmentName").value =
+        student.department || "";
+
+
     $("faceMobile").value =
         student.mobile || "";
+
 
     $("faceEmail").value =
         student.email || "";
@@ -1062,32 +1466,68 @@ function fillFaceRegistrationFields(student) {
 
 function updateDate() {
 
-    const el =
+    const element =
         $("currentDate");
 
-    if (!el) return;
+
+    if (!element) return;
 
 
-    const now =
-        new Date();
+    element.textContent =
+        new Date()
+            .toLocaleDateString(
+                "en-IN",
+                {
 
+                    weekday: "long",
 
-    el.textContent =
-        now.toLocaleDateString(
-            "en-IN",
-            {
-                weekday: "long",
-                year: "numeric",
-                month: "long",
-                day: "numeric"
-            }
-        );
+                    year: "numeric",
+
+                    month: "long",
+
+                    day: "numeric"
+
+                }
+            );
 
 }
 
 
 // ============================================================
-// DASHBOARD
+// TODAY DATE
+// ============================================================
+
+function getTodayDate() {
+
+    const now =
+        new Date();
+
+
+    const year =
+        now.getFullYear();
+
+
+    const month =
+        String(
+            now.getMonth() + 1
+        )
+            .padStart(2, "0");
+
+
+    const day =
+        String(
+            now.getDate()
+        )
+            .padStart(2, "0");
+
+
+    return `${year}-${month}-${day}`;
+
+}
+
+
+// ============================================================
+// DASHBOARD UPDATE
 // ============================================================
 
 function updateDashboard() {
@@ -1096,30 +1536,41 @@ function updateDashboard() {
         registeredStudents.length;
 
 
-    let present = 0;
-
-
     const today =
-        new Date()
-            .toISOString()
-            .slice(0, 10);
+        getTodayDate();
 
 
-    registeredStudents.forEach(student => {
+    let present =
+        0;
 
-        const records =
-            attendanceData[student.id] || [];
 
-        if (
-            records.some(
-                record =>
-                    record.date === today
-            )
-        ) {
-            present++;
+    registeredStudents.forEach(
+        student => {
+
+            const records =
+                attendanceData[
+                    student.id
+                ] || [];
+
+
+            const isPresent =
+                records.some(
+                    record =>
+                        record.date ===
+                        today &&
+                        record.status ===
+                        "Present"
+                );
+
+
+            if (isPresent) {
+
+                present++;
+
+            }
+
         }
-
-    });
+    );
 
 
     const absent =
@@ -1137,24 +1588,238 @@ function updateDashboard() {
             : 0;
 
 
-    if ($("totalStudents"))
-        $("totalStudents").textContent =
+    if ($("totalStudents")) {
+
+        $("totalStudents")
+            .textContent =
             total;
 
+    }
 
-    if ($("presentStudents"))
-        $("presentStudents").textContent =
+
+    if ($("presentStudents")) {
+
+        $("presentStudents")
+            .textContent =
             present;
 
+    }
 
-    if ($("absentStudents"))
-        $("absentStudents").textContent =
+
+    if ($("absentStudents")) {
+
+        $("absentStudents")
+            .textContent =
             absent;
 
+    }
 
-    if ($("attendancePercentage"))
-        $("attendancePercentage").textContent =
+
+    if ($("attendancePercentage")) {
+
+        $("attendancePercentage")
+            .textContent =
             percentage + "%";
+
+    }
+
+}
+
+
+// ============================================================
+// FACE API MODEL LOADING
+// ============================================================
+
+async function loadFaceModels() {
+
+    if (
+        typeof faceapi ===
+        "undefined"
+    ) {
+
+        console.error(
+            "face-api.js is not loaded."
+        );
+
+        return false;
+
+    }
+
+
+    if (faceModelsLoaded) {
+
+        return true;
+
+    }
+
+
+    try {
+
+        console.log(
+            "Loading Face API models..."
+        );
+
+
+        // ----------------------------------------------------
+        // IMPORTANT
+        // Models are loaded from jsDelivr
+        // ----------------------------------------------------
+
+        const MODEL_URL =
+            "https://justadudewhohacks.github.io/face-api.js/models";
+
+
+        await Promise.all([
+
+            faceapi.nets.tinyFaceDetector
+                .loadFromUri(MODEL_URL),
+
+            faceapi.nets.faceLandmark68Net
+                .loadFromUri(MODEL_URL),
+
+            faceapi.nets.faceRecognitionNet
+                .loadFromUri(MODEL_URL)
+
+        ]);
+
+
+        faceModelsLoaded =
+            true;
+
+
+        console.log(
+            "Face API models loaded successfully ✅"
+        );
+
+
+        return true;
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Face model loading failed:",
+            error
+        );
+
+
+        faceModelsLoaded =
+            false;
+
+
+        return false;
+
+    }
+
+}
+
+
+// ============================================================
+// WAIT FOR VIDEO
+// ============================================================
+
+async function waitForVideoReady(
+    video
+) {
+
+    return new Promise(
+        resolve => {
+
+            if (
+                video.readyState >=
+                3
+            ) {
+
+                resolve();
+
+                return;
+
+            }
+
+
+            const handler =
+                () => {
+
+                    video.removeEventListener(
+                        "loadeddata",
+                        handler
+                    );
+
+                    resolve();
+
+                };
+
+
+            video.addEventListener(
+                "loadeddata",
+                handler
+            );
+
+        }
+    );
+
+}
+
+
+// ============================================================
+// FACE DESCRIPTOR
+// ============================================================
+
+async function detectFaceDescriptor(
+    video
+) {
+
+    const modelsReady =
+        await loadFaceModels();
+
+
+    if (!modelsReady) {
+
+        return null;
+
+    }
+
+
+    try {
+
+        const detection =
+            await faceapi
+                .detectSingleFace(
+                    video,
+                    new faceapi.TinyFaceDetectorOptions(
+                        {
+                            inputSize: 224,
+                            scoreThreshold: 0.5
+                        }
+                    )
+                )
+                .withFaceLandmarks()
+                .withFaceDescriptor();
+
+
+        if (!detection) {
+
+            return null;
+
+        }
+
+
+        return detection.descriptor;
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Face detection error:",
+            error
+        );
+
+
+        return null;
+
+    }
 
 }
 
@@ -1167,101 +1832,200 @@ async function startAutomaticFaceRegistration() {
 
     if (!currentUser) {
 
-        showMessage(
+        showFaceMessage(
             "registrationMessage",
             "Please login first.",
             "error"
         );
 
         return;
+
     }
 
 
     const name =
-        $("faceName").value.trim();
+        $("faceName")
+            .value
+            .trim();
+
 
     const roll =
-        $("faceRoll").value.trim();
+        $("faceRoll")
+            .value
+            .trim();
+
 
     const college =
-        $("collegeName").value.trim();
+        $("collegeName")
+            .value
+            .trim();
+
 
     const department =
-        $("departmentName").value.trim();
+        $("departmentName")
+            .value
+            .trim();
+
 
     const mobile =
-        cleanMobile($("faceMobile").value);
+        cleanMobile(
+            $("faceMobile").value
+        );
+
 
     const email =
-        $("faceEmail").value.trim();
+        $("faceEmail")
+            .value
+            .trim();
 
 
-    if (!name || !roll || !college || !department) {
+    if (
+        !name ||
+        !roll ||
+        !college ||
+        !department
+    ) {
 
-        $("registrationMessage").textContent =
-            "Please fill Name, Roll, College and Department.";
+        showFaceMessage(
+            "registrationMessage",
+            "Please fill Name, Roll, College and Department.",
+            "error"
+        );
 
         return;
+
     }
 
 
     if (!validMobile(mobile)) {
 
-        $("registrationMessage").textContent =
-            "Enter a valid mobile number.";
+        showFaceMessage(
+            "registrationMessage",
+            "Enter a valid mobile number.",
+            "error"
+        );
 
         return;
+
+    }
+
+
+    if (
+        email &&
+        !validEmail(email)
+    ) {
+
+        showFaceMessage(
+            "registrationMessage",
+            "Enter a valid email address.",
+            "error"
+        );
+
+        return;
+
     }
 
 
     try {
+
+        const modelsReady =
+            await loadFaceModels();
+
+
+        if (!modelsReady) {
+
+            showFaceMessage(
+                "registrationMessage",
+                "Face recognition models could not be loaded. Check internet connection.",
+                "error"
+            );
+
+            return;
+
+        }
+
 
         const video =
             $("registrationCamera");
 
 
         registrationStream =
-            await navigator.mediaDevices.getUserMedia(
-                {
-                    video: {
-                        facingMode: "user"
-                    },
+            await navigator
+                .mediaDevices
+                .getUserMedia(
+                    {
 
-                    audio: false
-                }
-            );
+                        video: {
+
+                            facingMode:
+                                "user",
+
+                            width:
+                                {
+                                    ideal: 640
+                                },
+
+                            height:
+                                {
+                                    ideal: 480
+                                }
+
+                        },
+
+                        audio: false
+
+                    }
+                );
 
 
         video.srcObject =
             registrationStream;
 
 
-        $("registrationStatus").textContent =
+        await video.play();
+
+
+        await waitForVideoReady(
+            video
+        );
+
+
+        $("registrationStatus")
+            .textContent =
             "Camera ON — keep your face inside the guide.";
 
 
-        $("registrationMessage").textContent =
-            "Camera started. Capturing face...";
+        showFaceMessage(
+            "registrationMessage",
+            "Camera started. Please keep your face steady...",
+            "info"
+        );
 
 
-        await new Promise(
-            resolve =>
-                setTimeout(resolve, 2000)
+        await delay(
+            2000
         );
 
 
         const descriptor =
-            await detectFaceDescriptor(video);
+            await detectFaceDescriptor(
+                video
+            );
 
 
         if (!descriptor) {
 
-            $("registrationMessage").textContent =
-                "No clear face detected. Please try again.";
+            showFaceMessage(
+                "registrationMessage",
+                "No clear face detected. Keep your face inside the guide and try again.",
+                "error"
+            );
+
 
             stopRegistrationCamera();
 
             return;
+
         }
 
 
@@ -1273,39 +2037,76 @@ async function startAutomaticFaceRegistration() {
             );
 
 
-        if (student) {
+        if (!student) {
 
-            student.name =
-                name;
+            showFaceMessage(
+                "registrationMessage",
+                "Student account not found.",
+                "error"
+            );
 
-            student.roll =
-                roll;
 
-            student.college =
-                college;
+            stopRegistrationCamera();
 
-            student.department =
-                department;
-
-            student.mobile =
-                mobile;
-
-            student.email =
-                email;
-
-            student.faceDescriptor =
-                Array.from(descriptor);
-
-            saveStudents();
+            return;
 
         }
 
 
-        $("registrationMessage").textContent =
-            "Face registered successfully ✅";
+        student.name =
+            name;
+
+
+        student.roll =
+            roll;
+
+
+        student.college =
+            college;
+
+
+        student.department =
+            department;
+
+
+        student.mobile =
+            mobile;
+
+
+        student.email =
+            email;
+
+
+        student.faceDescriptor =
+            Array.from(
+                descriptor
+            );
+
+
+        if (!student.registeredAt) {
+
+            student.registeredAt =
+                new Date().toISOString();
+
+        }
+
+
+        saveStudents();
+
+
+        currentUser =
+            student;
+
+
+        showFaceMessage(
+            "registrationMessage",
+            "Face registered successfully ✅",
+            "success"
+        );
 
 
         stopRegistrationCamera();
+
 
         updateDashboard();
 
@@ -1315,11 +2116,19 @@ async function startAutomaticFaceRegistration() {
 
     catch (error) {
 
-        console.error(error);
+        console.error(
+            "Registration camera error:",
+            error
+        );
 
-        $("registrationMessage").textContent =
+
+        showFaceMessage(
+            "registrationMessage",
             "Camera error: " +
-            error.message;
+            error.message,
+            "error"
+        );
+
 
         stopRegistrationCamera();
 
@@ -1329,54 +2138,18 @@ async function startAutomaticFaceRegistration() {
 
 
 // ============================================================
-// FACE API DESCRIPTOR
+// DELAY
 // ============================================================
 
-async function detectFaceDescriptor(video) {
+function delay(ms) {
 
-    if (
-        typeof faceapi ===
-        "undefined"
-    ) {
-
-        console.warn(
-            "face-api.js not loaded."
-        );
-
-        return new Float32Array(
-            128
-        );
-
-    }
-
-
-    try {
-
-        const detection =
-            await faceapi
-                .detectSingleFace(
-                    video
-                )
-                .withFaceLandmarks()
-                .withFaceDescriptor();
-
-
-        if (!detection) {
-            return null;
-        }
-
-
-        return detection.descriptor;
-
-    }
-
-    catch (error) {
-
-        console.error(error);
-
-        return null;
-
-    }
+    return new Promise(
+        resolve =>
+            setTimeout(
+                resolve,
+                ms
+            )
+    );
 
 }
 
@@ -1396,6 +2169,7 @@ function stopRegistrationCamera() {
                     track.stop()
             );
 
+
         registrationStream =
             null;
 
@@ -1405,14 +2179,19 @@ function stopRegistrationCamera() {
     const video =
         $("registrationCamera");
 
+
     if (video) {
-        video.srcObject = null;
+
+        video.srcObject =
+            null;
+
     }
 
 
     if ($("registrationStatus")) {
 
-        $("registrationStatus").textContent =
+        $("registrationStatus")
+            .textContent =
             "Camera is OFF";
 
     }
@@ -1428,61 +2207,117 @@ async function startFaceAttendance() {
 
     if (!currentUser) {
 
-        $("attendanceResult").textContent =
-            "Please login first.";
+        showFaceMessage(
+            "attendanceResult",
+            "Please login first.",
+            "error"
+        );
 
         return;
+
     }
 
 
     try {
+
+        const modelsReady =
+            await loadFaceModels();
+
+
+        if (!modelsReady) {
+
+            showFaceMessage(
+                "attendanceResult",
+                "Face recognition models could not be loaded.",
+                "error"
+            );
+
+            return;
+
+        }
+
 
         const video =
             $("attendanceCamera");
 
 
         attendanceStream =
-            await navigator.mediaDevices.getUserMedia(
-                {
-                    video: {
-                        facingMode: "user"
-                    },
+            await navigator
+                .mediaDevices
+                .getUserMedia(
+                    {
 
-                    audio: false
-                }
-            );
+                        video: {
+
+                            facingMode:
+                                "user",
+
+                            width:
+                                {
+                                    ideal: 640
+                                },
+
+                            height:
+                                {
+                                    ideal: 480
+                                }
+
+                        },
+
+                        audio: false
+
+                    }
+                );
 
 
         video.srcObject =
             attendanceStream;
 
 
-        $("attendanceStatus").textContent =
+        await video.play();
+
+
+        await waitForVideoReady(
+            video
+        );
+
+
+        $("attendanceStatus")
+            .textContent =
             "Camera ON — detecting face...";
 
 
-        $("attendanceResult").textContent =
-            "Please look at the camera.";
+        showFaceMessage(
+            "attendanceResult",
+            "Please look directly at the camera.",
+            "info"
+        );
 
 
-        await new Promise(
-            resolve =>
-                setTimeout(resolve, 2000)
+        await delay(
+            2000
         );
 
 
         const descriptor =
-            await detectFaceDescriptor(video);
+            await detectFaceDescriptor(
+                video
+            );
 
 
         if (!descriptor) {
 
-            $("attendanceResult").textContent =
-                "No face detected. Please try again.";
+            showFaceMessage(
+                "attendanceResult",
+                "No face detected. Please try again.",
+                "error"
+            );
+
 
             stopAttendanceCamera();
 
             return;
+
         }
 
 
@@ -1494,23 +2329,49 @@ async function startFaceAttendance() {
 
         if (!student) {
 
-            $("attendanceResult").textContent =
-                "Face not registered.";
+            showFaceMessage(
+                "attendanceResult",
+                "Face not registered or face does not match.",
+                "error"
+            );
+
 
             stopAttendanceCamera();
 
             return;
+
         }
 
 
-        markAttendance(student);
+        const result =
+            markAttendance(
+                student
+            );
 
 
-        $("attendanceResult").textContent =
-            "Attendance marked successfully ✅";
+        if (result === "already") {
+
+            showFaceMessage(
+                "attendanceResult",
+                "Attendance is already marked for today ✅",
+                "info"
+            );
+
+        }
+
+        else {
+
+            showFaceMessage(
+                "attendanceResult",
+                "Attendance marked successfully ✅",
+                "success"
+            );
+
+        }
 
 
         stopAttendanceCamera();
+
 
         updateDashboard();
 
@@ -1518,11 +2379,19 @@ async function startFaceAttendance() {
 
     catch (error) {
 
-        console.error(error);
+        console.error(
+            "Attendance camera error:",
+            error
+        );
 
-        $("attendanceResult").textContent =
+
+        showFaceMessage(
+            "attendanceResult",
             "Camera error: " +
-            error.message;
+            error.message,
+            "error"
+        );
+
 
         stopAttendanceCamera();
 
@@ -1535,27 +2404,13 @@ async function startFaceAttendance() {
 // FIND MATCHING STUDENT
 // ============================================================
 
-function findMatchingStudent(descriptor) {
-
-    // If face-api.js is unavailable,
-    // use logged-in student for prototype mode.
-
-    if (
-        typeof faceapi ===
-        "undefined"
-    ) {
-
-        return registeredStudents.find(
-            s =>
-                s.id ===
-                currentUser.id
-        );
-
-    }
-
+function findMatchingStudent(
+    descriptor
+) {
 
     let bestStudent =
         null;
+
 
     let bestDistance =
         Infinity;
@@ -1570,33 +2425,58 @@ function findMatchingStudent(descriptor) {
                     student.faceDescriptor
                 )
             ) {
+
                 return;
+
             }
 
 
-            const stored =
-                new Float32Array(
-                    student.faceDescriptor
-                );
-
-
-            const distance =
-                faceapi.euclideanDistance(
-                    descriptor,
-                    stored
-                );
-
-
             if (
-                distance <
-                bestDistance
+                student.faceDescriptor.length !==
+                128
             ) {
 
-                bestDistance =
-                    distance;
+                return;
 
-                bestStudent =
-                    student;
+            }
+
+
+            try {
+
+                const stored =
+                    new Float32Array(
+                        student.faceDescriptor
+                    );
+
+
+                const distance =
+                    faceapi.euclideanDistance(
+                        descriptor,
+                        stored
+                    );
+
+
+                if (
+                    distance <
+                    bestDistance
+                ) {
+
+                    bestDistance =
+                        distance;
+
+                    bestStudent =
+                        student;
+
+                }
+
+            }
+
+            catch (error) {
+
+                console.error(
+                    "Face comparison error:",
+                    error
+                );
 
             }
 
@@ -1604,17 +2484,31 @@ function findMatchingStudent(descriptor) {
     );
 
 
-    // Face-api.js commonly uses
-    // around 0.6 as a starting threshold.
+    // --------------------------------------------------------
+    // 0.6 is a common starting threshold.
+    // Lower = stricter.
+    // --------------------------------------------------------
 
     if (
         bestStudent &&
         bestDistance < 0.6
     ) {
 
+        console.log(
+            "Best face distance:",
+            bestDistance
+        );
+
+
         return bestStudent;
 
     }
+
+
+    console.log(
+        "No face match. Distance:",
+        bestDistance
+    );
 
 
     return null;
@@ -1626,54 +2520,69 @@ function findMatchingStudent(descriptor) {
 // MARK ATTENDANCE
 // ============================================================
 
-function markAttendance(student) {
+function markAttendance(
+    student
+) {
 
     const today =
-        new Date()
-            .toISOString()
-            .slice(0, 10);
+        getTodayDate();
 
 
-    if (!attendanceData[student.id]) {
+    if (
+        !attendanceData[
+            student.id
+        ]
+    ) {
 
-        attendanceData[student.id] =
-            [];
+        attendanceData[
+            student.id
+        ] = [];
 
     }
+
+
+    const records =
+        attendanceData[
+            student.id
+        ];
 
 
     const alreadyMarked =
-        attendanceData[student.id]
-            .some(
-                record =>
-                    record.date ===
-                    today
-            );
-
-
-    if (alreadyMarked) {
-        return;
-    }
-
-
-    attendanceData[student.id]
-        .push(
-            {
-                date: today,
-
-                time:
-                    new Date()
-                        .toLocaleTimeString(
-                            "en-IN"
-                        ),
-
-                status:
-                    "Present"
-            }
+        records.some(
+            record =>
+                record.date ===
+                today
         );
 
 
+    if (alreadyMarked) {
+
+        return "already";
+
+    }
+
+
+    records.push({
+
+        date:
+            today,
+
+        time:
+            new Date()
+                .toLocaleTimeString(
+                    "en-IN"
+                ),
+
+        status:
+            "Present"
+
+    });
+
+
     saveAttendance();
+
+
+    return "marked";
 
 }
 
@@ -1693,6 +2602,7 @@ function stopAttendanceCamera() {
                     track.stop()
             );
 
+
         attendanceStream =
             null;
 
@@ -1702,14 +2612,19 @@ function stopAttendanceCamera() {
     const video =
         $("attendanceCamera");
 
+
     if (video) {
-        video.srcObject = null;
+
+        video.srcObject =
+            null;
+
     }
 
 
     if ($("attendanceStatus")) {
 
-        $("attendanceStatus").textContent =
+        $("attendanceStatus")
+            .textContent =
             "Camera is OFF";
 
     }
@@ -1726,13 +2641,14 @@ function displayStudents() {
     const container =
         $("studentList");
 
+
     if (!container) return;
 
 
     const search =
         (
-            $("searchStudent")?.value ||
-            ""
+            $("searchStudent")
+                ?.value || ""
         )
             .toLowerCase()
             .trim();
@@ -1742,18 +2658,23 @@ function displayStudents() {
         registeredStudents.filter(
             student => {
 
+                const name =
+                    String(
+                        student.name || ""
+                    )
+                        .toLowerCase();
+
+
+                const roll =
+                    String(
+                        student.roll || ""
+                    )
+                        .toLowerCase();
+
+
                 return (
-
-                    student.name
-                        .toLowerCase()
-                        .includes(search)
-
-                    ||
-
-                    (student.roll || "")
-                        .toLowerCase()
-                        .includes(search)
-
+                    name.includes(search) ||
+                    roll.includes(search)
                 );
 
             }
@@ -1766,6 +2687,7 @@ function displayStudents() {
             "<p>No registered students found.</p>";
 
         return;
+
     }
 
 
@@ -1797,7 +2719,7 @@ function displayStudents() {
 
                 </div>
 
-            `
+                `
             )
             .join("");
 
@@ -1805,12 +2727,19 @@ function displayStudents() {
 
 
 // ============================================================
-// REGISTERED STUDENTS MODAL
+// REGISTERED STUDENTS
 // ============================================================
 
 function showRegisteredStudents() {
 
-    $("studentsModal").style.display =
+    const modal =
+        $("studentsModal");
+
+
+    if (!modal) return;
+
+
+    modal.style.display =
         "flex";
 
 
@@ -1824,6 +2753,7 @@ function showRegisteredStudents() {
             "<p>No students registered yet.</p>";
 
         return;
+
     }
 
 
@@ -1850,9 +2780,25 @@ function showRegisteredStudents() {
                         🔢 ${escapeHTML(student.roll || "Not added")}
                     </p>
 
+                    <p>
+                        🏫 ${escapeHTML(student.college || "Not added")}
+                    </p>
+
+                    <p>
+                        🎓 ${escapeHTML(student.department || "Not added")}
+                    </p>
+
+                    <p>
+                        📸 ${
+                            student.faceDescriptor
+                                ? "Face Registered"
+                                : "Face Not Registered"
+                        }
+                    </p>
+
                 </div>
 
-            `
+                `
             )
             .join("");
 
@@ -1861,40 +2807,52 @@ function showRegisteredStudents() {
 
 function closeRegisteredStudents() {
 
-    $("studentsModal").style.display =
+    $("studentsModal")
+        .style.display =
         "none";
 
 }
 
 
 // ============================================================
-// ATTENDANCE MODAL
+// CHECK ATTENDANCE
 // ============================================================
 
 function showCheckAttendance() {
 
-    $("attendanceCheckModal").style.display =
+    $("attendanceCheckModal")
+        .style.display =
         "flex";
 
 
-    if (!currentUser) return;
+    if (!currentUser) {
+
+        return;
+
+    }
 
 
     const records =
-        attendanceData[currentUser.id] ||
-        [];
-
-
-    const totalDays =
-        records.length;
+        attendanceData[
+            currentUser.id
+        ] || [];
 
 
     const presentDays =
         records.filter(
-            r =>
-                r.status ===
+            record =>
+                record.status ===
                 "Present"
         ).length;
+
+
+    /*
+       Here "Total Days" means the number of
+       attendance records currently stored.
+    */
+
+    const totalDays =
+        records.length;
 
 
     const absentDays =
@@ -1929,6 +2887,7 @@ function showCheckAttendance() {
             "<p>No attendance records yet.</p>";
 
         return;
+
     }
 
 
@@ -1955,7 +2914,7 @@ function showCheckAttendance() {
 
                 </div>
 
-            `
+                `
             )
             .join("");
 
@@ -1964,7 +2923,8 @@ function showCheckAttendance() {
 
 function closeCheckAttendance() {
 
-    $("attendanceCheckModal").style.display =
+    $("attendanceCheckModal")
+        .style.display =
         "none";
 
 }
@@ -1978,6 +2938,7 @@ function toggleMenu() {
 
     const menu =
         $("mainMenu");
+
 
     if (!menu) return;
 
@@ -2012,23 +2973,29 @@ function openEditDetails() {
     $("editName").value =
         student.name || "";
 
+
     $("editRoll").value =
         student.roll || "";
+
 
     $("editCollege").value =
         student.college || "";
 
+
     $("editDepartment").value =
         student.department || "";
 
+
     $("editMobile").value =
         student.mobile || "";
+
 
     $("editEmail").value =
         student.email || "";
 
 
-    $("editDetailsModal").style.display =
+    $("editDetailsModal")
+        .style.display =
         "flex";
 
 }
@@ -2036,11 +3003,16 @@ function openEditDetails() {
 
 function closeEditDetails() {
 
-    $("editDetailsModal").style.display =
+    $("editDetailsModal")
+        .style.display =
         "none";
 
 }
 
+
+// ============================================================
+// SAVE EDITED DETAILS
+// ============================================================
 
 function saveEditedDetails() {
 
@@ -2059,39 +3031,60 @@ function saveEditedDetails() {
 
 
     const name =
-        $("editName").value.trim();
+        $("editName")
+            .value
+            .trim();
+
 
     const roll =
-        $("editRoll").value.trim();
+        $("editRoll")
+            .value
+            .trim();
+
 
     const college =
-        $("editCollege").value.trim();
+        $("editCollege")
+            .value
+            .trim();
+
 
     const department =
-        $("editDepartment").value.trim();
+        $("editDepartment")
+            .value
+            .trim();
+
 
     const mobile =
         cleanMobile(
             $("editMobile").value
         );
 
+
     const email =
-        $("editEmail").value.trim();
+        $("editEmail")
+            .value
+            .trim();
 
 
     if (!name) {
 
-        alert("Name is required.");
+        alert(
+            "Name is required."
+        );
 
         return;
+
     }
 
 
     if (!validMobile(mobile)) {
 
-        alert("Enter a valid mobile number.");
+        alert(
+            "Enter a valid mobile number."
+        );
 
         return;
+
     }
 
 
@@ -2100,26 +3093,58 @@ function saveEditedDetails() {
         !validEmail(email)
     ) {
 
-        alert("Enter a valid email.");
+        alert(
+            "Enter a valid email."
+        );
 
         return;
+
+    }
+
+
+    // --------------------------------------------------------
+    // CHECK DUPLICATE MOBILE
+    // --------------------------------------------------------
+
+    const duplicateMobile =
+        registeredStudents.find(
+            s =>
+                s.id !== student.id &&
+                cleanMobile(s.mobile) ===
+                mobile
+        );
+
+
+    if (duplicateMobile) {
+
+        alert(
+            "This mobile number is already used by another student."
+        );
+
+        return;
+
     }
 
 
     student.name =
         name;
 
+
     student.roll =
         roll;
+
 
     student.college =
         college;
 
+
     student.department =
         department;
 
+
     student.mobile =
         mobile;
+
 
     student.email =
         email;
@@ -2141,7 +3166,6 @@ function saveEditedDetails() {
 
 
     displayStudents();
-
 
     updateDashboard();
 
@@ -2177,7 +3201,8 @@ function openEmailUpdate() {
 
 function showAdminDetails() {
 
-    $("adminModal").style.display =
+    $("adminModal")
+        .style.display =
         "flex";
 
 }
@@ -2185,7 +3210,8 @@ function showAdminDetails() {
 
 function closeAdminDetails() {
 
-    $("adminModal").style.display =
+    $("adminModal")
+        .style.display =
         "none";
 
 }
@@ -2202,8 +3228,14 @@ function logoutUser() {
     stopAttendanceCamera();
 
 
+    cleanupCreateRecaptcha();
+
+    cleanupForgotRecaptcha();
+
+
     currentUser =
         null;
+
 
     window.currentStudentId =
         null;
@@ -2217,8 +3249,10 @@ function logoutUser() {
     $("loginName").value =
         "";
 
+
     $("loginMobile").value =
         "";
+
 
     $("loginPin").value =
         "";
@@ -2234,37 +3268,88 @@ function logoutUser() {
 
 
 // ============================================================
-// HTML ESCAPE
+// RECAPTCHA CLEANUP
 // ============================================================
 
-function escapeHTML(value) {
+function cleanupCreateRecaptcha() {
 
-    return String(value || "")
-        .replace(
-            /[&<>"']/g,
-            function (char) {
+    if (createRecaptchaVerifier) {
 
-                const map = {
+        try {
 
-                    "&": "&amp;",
-                    "<": "&lt;",
-                    ">": "&gt;",
-                    '"': "&quot;",
-                    "'": "&#039;"
+            createRecaptchaVerifier.clear();
 
-                };
+        }
 
-                return map[char];
+        catch (error) {
 
-            }
-        );
+            console.warn(
+                error
+            );
+
+        }
+
+        createRecaptchaVerifier =
+            null;
+
+    }
+
+
+    const container =
+        $("recaptcha-container");
+
+
+    if (container) {
+
+        container.innerHTML =
+            "";
+
+    }
+
+}
+
+
+function cleanupForgotRecaptcha() {
+
+    if (forgotRecaptchaVerifier) {
+
+        try {
+
+            forgotRecaptchaVerifier.clear();
+
+        }
+
+        catch (error) {
+
+            console.warn(
+                error
+            );
+
+        }
+
+        forgotRecaptchaVerifier =
+            null;
+
+    }
+
+
+    const container =
+        $("forgot-recaptcha-container");
+
+
+    if (container) {
+
+        container.innerHTML =
+            "";
+
+    }
 
 }
 
 
 // ============================================================
 // WINDOW FUNCTIONS
-// Needed because HTML uses onclick="..."
+// HTML onclick NEEDS THESE
 // ============================================================
 
 window.toggleMenu =
@@ -2317,15 +3402,17 @@ window.displayStudents =
 
 
 // ============================================================
-// BUTTON EVENT LISTENERS
+// DOM READY
 // ============================================================
 
 document.addEventListener(
     "DOMContentLoaded",
-    function () {
+    async () => {
 
 
+        // ----------------------------------------------------
         // LOGIN
+        // ----------------------------------------------------
 
         $("loginButton")
             ?.addEventListener(
@@ -2334,7 +3421,9 @@ document.addEventListener(
             );
 
 
+        // ----------------------------------------------------
         // CREATE ACCOUNT
+        // ----------------------------------------------------
 
         $("createAccountButton")
             ?.addEventListener(
@@ -2357,8 +3446,6 @@ document.addEventListener(
             );
 
 
-        // BACK LOGIN
-
         $("backToLoginButton")
             ?.addEventListener(
                 "click",
@@ -2366,7 +3453,9 @@ document.addEventListener(
             );
 
 
+        // ----------------------------------------------------
         // FORGOT PIN
+        // ----------------------------------------------------
 
         $("forgotPinButton")
             ?.addEventListener(
@@ -2396,46 +3485,81 @@ document.addEventListener(
             );
 
 
+        // ----------------------------------------------------
         // ENTER KEY LOGIN
+        // ----------------------------------------------------
 
         [
+
             "loginName",
             "loginMobile",
             "loginPin"
+
         ].forEach(
             id => {
 
-                $(id)?.addEventListener(
-                    "keydown",
-                    event => {
+                $(id)
+                    ?.addEventListener(
+                        "keydown",
+                        event => {
 
-                        if (
-                            event.key ===
-                            "Enter"
-                        ) {
+                            if (
+                                event.key ===
+                                "Enter"
+                            ) {
 
-                            loginUser();
+                                loginUser();
+
+                            }
 
                         }
-
-                    }
-                );
+                    );
 
             }
         );
 
 
-        // CURRENT DATE
+        // ----------------------------------------------------
+        // DATE
+        // ----------------------------------------------------
 
         updateDate();
 
-
-        // AUTO REFRESH DATE
 
         setInterval(
             updateDate,
             60000
         );
+
+
+        // ----------------------------------------------------
+        // PRELOAD FACE MODELS
+        // ----------------------------------------------------
+
+        console.log(
+            "Preparing face recognition..."
+        );
+
+
+        const loaded =
+            await loadFaceModels();
+
+
+        if (loaded) {
+
+            console.log(
+                "Face recognition ready ✅"
+            );
+
+        }
+
+        else {
+
+            console.warn(
+                "Face recognition models are not ready."
+            );
+
+        }
 
 
         console.log(
@@ -2450,22 +3574,26 @@ document.addEventListener(
 // FIREBASE AUTH STATE
 // ============================================================
 
-if (auth) {
+onAuthStateChanged(
+    auth,
+    user => {
 
-    onAuthStateChanged(
-        auth,
-        user => {
+        if (user) {
 
-            if (user) {
-
-                console.log(
-                    "Firebase user:",
-                    user.uid
-                );
-
-            }
+            console.log(
+                "Firebase authenticated user:",
+                user.uid
+            );
 
         }
-    );
 
-}
+        else {
+
+            console.log(
+                "No Firebase authenticated user."
+            );
+
+        }
+
+    }
+);
