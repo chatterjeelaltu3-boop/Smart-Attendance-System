@@ -1,16 +1,25 @@
 /* =====================================================
    SMART ATTENDANCE SYSTEM
-   STYLE CSS
-   ===================================================== */
+   COMPLETE STYLE.CSS
+===================================================== */
+
+
+/* =====================================================
+   GLOBAL
+===================================================== */
 
 * {
     box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
 }
 
 body {
-    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    font-family: Arial, Helvetica, sans-serif;
     background: #f1f5f9;
     color: #1e293b;
 }
@@ -19,71 +28,88 @@ body {
     width: 100%;
     max-width: 1100px;
     margin: auto;
-    padding: 20px;
 }
+
 
 /* =====================================================
    HEADER
-   ===================================================== */
+===================================================== */
 
 header {
-    text-align: center;
+    position: relative;
     background: white;
-    padding: 25px 20px;
+    padding: 35px 20px 25px;
     border-radius: 18px;
+    text-align: center;
     margin-bottom: 20px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
 }
 
 header h1 {
-    font-size: 30px;
-    margin-bottom: 8px;
+    margin: 0 0 8px;
+    font-size: 32px;
     color: #1d4ed8;
 }
 
 header p {
+    margin: 5px 0;
     color: #64748b;
 }
 
 
 /* =====================================================
-   THREE LINE MENU
-   LEFT SIDE
-   ===================================================== */
+   LEFT THREE LINE MENU
+===================================================== */
 
 .menu-container {
-    position: relative;
-    display: flex;
-    justify-content: flex-start;
-    margin-bottom: 15px;
+    position: absolute;
+    left: 20px;
+    top: 20px;
+    z-index: 3000;
 }
 
 .menu-button {
-    width: 60px;
+    width: 55px;
     height: 50px;
     font-size: 27px;
     border: none;
-    border-radius: 10px;
+    border-radius: 12px;
     background: #2563eb;
     color: white;
     cursor: pointer;
+    transition: 0.2s;
 }
 
 .menu-button:hover {
     background: #1d4ed8;
+    transform: scale(1.04);
 }
+
+
+/* =====================================================
+   MAIN MENU
+===================================================== */
 
 .main-menu {
     display: none;
+
     position: absolute;
-    top: 58px;
+
     left: 0;
-    z-index: 1000;
+    top: 60px;
+
     width: 290px;
+
     background: white;
+
     padding: 12px;
-    border-radius: 14px;
-    box-shadow: 0 10px 35px rgba(0,0,0,0.2);
+
+    border-radius: 15px;
+
+    box-shadow:
+        0 10px 35px rgba(0, 0, 0, 0.20);
+
+    z-index: 3000;
 }
 
 .main-menu.show {
@@ -92,15 +118,26 @@ header p {
 
 .main-menu button {
     width: 100%;
+
     margin: 5px 0;
-    padding: 13px;
+
+    padding: 14px;
+
     border: none;
+
     border-radius: 10px;
+
     background: #2563eb;
+
     color: white;
-    text-align: left;
+
     font-size: 15px;
+
+    text-align: left;
+
     cursor: pointer;
+
+    transition: 0.2s;
 }
 
 .main-menu button:hover {
@@ -110,242 +147,371 @@ header p {
 
 /* =====================================================
    DASHBOARD
-   ===================================================== */
+===================================================== */
 
 .dashboard {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+
+    grid-template-columns:
+        repeat(4, 1fr);
+
     gap: 15px;
-    margin-bottom: 25px;
+
+    margin-bottom: 20px;
 }
 
 .card {
     background: white;
-    padding: 20px;
+
+    padding: 22px;
+
+    border-radius: 16px;
+
     text-align: center;
-    border-radius: 15px;
-    box-shadow: 0 5px 18px rgba(0,0,0,0.07);
+
+    box-shadow:
+        0 5px 18px rgba(0, 0, 0, 0.07);
+
+    border: 1px solid #e2e8f0;
 }
 
 .card h3 {
-    font-size: 15px;
+    margin: 0 0 10px;
+
+    font-size: 16px;
+
     color: #64748b;
-    margin-bottom: 10px;
 }
 
 .card h2 {
-    font-size: 28px;
+    margin: 0;
+
+    font-size: 30px;
+
     color: #2563eb;
 }
 
 
 /* =====================================================
    SECTIONS
-   ===================================================== */
+===================================================== */
 
-section {
+.section {
     background: white;
+
     padding: 25px;
-    border-radius: 18px;
+
     margin-bottom: 20px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.07);
+
+    border-radius: 18px;
+
+    box-shadow:
+        0 5px 20px rgba(0, 0, 0, 0.07);
 }
 
-section h2 {
-    margin-bottom: 18px;
+.section h2 {
+    margin-top: 0;
+
+    margin-bottom: 20px;
+
     color: #1e40af;
 }
 
 
 /* =====================================================
    INPUTS
-   ===================================================== */
+===================================================== */
 
 input {
     width: 100%;
-    padding: 12px;
-    border: 1px solid #cbd5e1;
-    border-radius: 9px;
+
+    padding: 13px 15px;
+
     margin-bottom: 12px;
+
+    border: 1px solid #cbd5e1;
+
+    border-radius: 10px;
+
     font-size: 15px;
+
     outline: none;
+
+    background: white;
 }
 
 input:focus {
     border-color: #2563eb;
+
+    box-shadow:
+        0 0 0 3px rgba(37, 99, 235, 0.12);
 }
 
 
 /* =====================================================
-   BUTTONS
-   ===================================================== */
+   GENERAL BUTTON
+===================================================== */
 
 button {
-    padding: 11px 17px;
+    padding: 13px 18px;
+
     border: none;
-    border-radius: 9px;
+
+    border-radius: 10px;
+
+    background: #2563eb;
+
+    color: white;
+
+    font-size: 15px;
+
     cursor: pointer;
-    font-size: 14px;
+
+    transition: 0.2s;
+}
+
+button:hover {
+    background: #1d4ed8;
 }
 
 button:disabled {
     opacity: 0.6;
+
     cursor: not-allowed;
 }
 
 
 /* =====================================================
-   CAMERA AREA
-   ===================================================== */
+   CAMERA BOX
+===================================================== */
 
-.camera-container {
+.camera-box {
     width: 100%;
-    max-width: 650px;
+
+    max-width: 640px;
+
     margin: 20px auto;
+
     text-align: center;
 }
 
-.camera-container video {
+
+/* =====================================================
+   CAMERA VIDEO
+   SELFIE / MIRROR MODE
+===================================================== */
+
+.camera-box video {
     width: 100%;
+
     max-width: 640px;
-    height: auto;
+
     min-height: 300px;
+
+    border-radius: 16px;
+
+    background: #111827;
+
+    display: block;
+
+    margin: auto;
+
     object-fit: cover;
 
-    /* ================================================
-       MIRROR CAMERA
-       ================================================ */
+    /*
+       IMPORTANT:
+       This makes the camera look
+       like a phone selfie mirror.
+    */
 
     transform: scaleX(-1);
 
-    border-radius: 16px;
-    background: #111827;
-    border: 3px solid #2563eb;
-    display: block;
-    margin: auto;
+    /*
+       Prevent weird visual flicker
+    */
+
+    backface-visibility: hidden;
 }
 
 
 /* =====================================================
    CAMERA STATUS
-   ===================================================== */
+===================================================== */
 
-#registrationStatus,
-#attendanceStatus {
-    margin-top: 12px;
+.camera-status {
+    margin-top: 10px;
+
+    padding: 10px;
+
     font-weight: bold;
-    color: #2563eb;
-    text-align: center;
+
+    color: #475569;
 }
 
 
 /* =====================================================
-   FACE BUTTONS
-   ===================================================== */
+   FACE MESSAGE
+===================================================== */
 
-#registerFaceButton,
-#attendanceButton {
-    display: block;
+.face-message {
     width: 100%;
-    max-width: 350px;
-    margin: 15px auto;
-    padding: 14px;
-    background: #2563eb;
-    color: white;
-    font-size: 16px;
-    font-weight: bold;
-}
 
-#registerFaceButton:hover,
-#attendanceButton:hover {
-    background: #1d4ed8;
+    max-width: 640px;
+
+    margin: 15px auto;
+
+    text-align: center;
 }
 
 
 /* =====================================================
-   MESSAGE
-   ===================================================== */
+   SUCCESS MESSAGE
+===================================================== */
 
-#registrationMessage,
-#attendanceResult {
-    margin-top: 15px;
+.success-message {
+    padding: 22px;
+
+    margin-top: 20px;
+
+    border-radius: 16px;
+
+    background: #ecfdf5;
+
+    border: 2px solid #22c55e;
+
+    color: #166534;
+
     text-align: center;
+
+    box-shadow:
+        0 5px 20px rgba(34, 197, 94, 0.12);
+}
+
+.success-message .success-icon {
+    font-size: 50px;
+
+    margin-bottom: 10px;
 }
 
 
 /* =====================================================
    STUDENT LIST
-   ===================================================== */
+===================================================== */
+
+#studentList {
+    width: 100%;
+}
 
 .student-row {
     display: flex;
+
     justify-content: space-between;
-    gap: 15px;
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
+
+    align-items: center;
+
+    gap: 20px;
+
     padding: 18px;
-    border-radius: 13px;
+
     margin-bottom: 12px;
+
+    background: #f8fafc;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 14px;
 }
 
 .student-info {
-    line-height: 1.7;
     flex: 1;
+
+    line-height: 1.7;
 }
 
 .student-info strong {
     font-size: 18px;
+
     color: #1e40af;
 }
 
 .student-actions {
     display: flex;
-    flex-direction: column;
-    gap: 7px;
+
+    flex-wrap: wrap;
+
+    gap: 8px;
 }
+
+
+/* =====================================================
+   PRESENT / ABSENT / DELETE BUTTON
+===================================================== */
 
 .present-btn {
     background: #16a34a;
-    color: white;
+}
+
+.present-btn:hover {
+    background: #15803d;
 }
 
 .absent-btn {
-    background: #f59e0b;
-    color: white;
+    background: #dc2626;
+}
+
+.absent-btn:hover {
+    background: #b91c1c;
 }
 
 .delete-btn {
-    background: #dc2626;
-    color: white;
+    background: #64748b;
 }
 
+.delete-btn:hover {
+    background: #475569;
+}
+
+
+/* =====================================================
+   STATUS
+===================================================== */
+
 .status {
+    display: inline-block;
+
     margin-top: 8px;
+
+    padding: 5px 10px;
+
+    border-radius: 8px;
+
+    background: #e0f2fe;
+
+    color: #0369a1;
+
     font-weight: bold;
 }
 
 
 /* =====================================================
-   SEARCH
-   ===================================================== */
-
-#searchStudent {
-    margin-bottom: 18px;
-}
-
-
-/* =====================================================
    MODAL
-   ===================================================== */
+===================================================== */
 
 .modal {
     display: none;
+
     position: fixed;
+
     inset: 0;
-    background: rgba(0,0,0,0.55);
-    z-index: 2000;
+
+    background: rgba(0, 0, 0, 0.55);
+
+    z-index: 4000;
+
     align-items: center;
+
     justify-content: center;
+
     padding: 20px;
 }
 
@@ -353,113 +519,372 @@ button:disabled {
     display: flex;
 }
 
+
+/* =====================================================
+   MODAL CONTENT
+===================================================== */
+
 .modal-content {
     width: 100%;
-    max-width: 500px;
+
+    max-width: 520px;
+
     max-height: 85vh;
+
     overflow-y: auto;
+
     background: white;
+
     padding: 25px;
+
     border-radius: 18px;
+
     position: relative;
-    box-shadow: 0 15px 50px rgba(0,0,0,0.3);
+
+    box-shadow:
+        0 15px 50px rgba(0, 0, 0, 0.3);
 }
 
 .modal-content h2 {
+    margin-top: 0;
+
     margin-bottom: 20px;
+
+    color: #1e40af;
 }
 
 .modal-content input {
     width: 100%;
-}
 
-.close-modal {
-    position: absolute;
-    right: 15px;
-    top: 15px;
-    width: 40px;
-    height: 40px;
-    padding: 0;
-    background: #dc3545;
-    color: white;
-    border-radius: 50%;
-}
-
-.admin-info {
-    background: #eff6ff;
-    border: 1px solid #bfdbfe;
-    padding: 18px;
-    border-radius: 12px;
-    line-height: 1.8;
-}
-
-.registered-student {
-    background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    padding: 15px;
-    border-radius: 12px;
     margin-bottom: 12px;
 }
 
 
 /* =====================================================
-   DATE
-   ===================================================== */
+   CLOSE BUTTON
+===================================================== */
+
+.close-modal {
+    position: absolute;
+
+    right: 15px;
+
+    top: 15px;
+
+    width: 40px;
+
+    height: 40px;
+
+    padding: 0;
+
+    border: none;
+
+    background: #dc3545;
+
+    color: white;
+
+    border-radius: 50%;
+
+    cursor: pointer;
+
+    font-size: 18px;
+}
+
+.close-modal:hover {
+    background: #b91c1c;
+}
+
+
+/* =====================================================
+   ADMIN
+===================================================== */
+
+.admin-info {
+    background: #eff6ff;
+
+    border: 1px solid #bfdbfe;
+
+    padding: 18px;
+
+    border-radius: 12px;
+
+    line-height: 1.8;
+}
+
+
+/* =====================================================
+   REGISTERED STUDENT
+===================================================== */
+
+.registered-student {
+    background: #f8fafc;
+
+    border: 1px solid #e2e8f0;
+
+    padding: 15px;
+
+    border-radius: 12px;
+
+    margin-bottom: 12px;
+
+    line-height: 1.7;
+}
+
+
+/* =====================================================
+   ATTENDANCE SUMMARY
+===================================================== */
+
+.attendance-summary {
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, 1fr);
+
+    gap: 12px;
+
+    margin-bottom: 20px;
+}
+
+.attendance-summary-box {
+    padding: 18px;
+
+    border-radius: 14px;
+
+    text-align: center;
+
+    background: #f8fafc;
+
+    border: 1px solid #e2e8f0;
+}
+
+.attendance-summary-box h3 {
+    margin: 0 0 8px;
+}
+
+.attendance-summary-box h2 {
+    margin: 0;
+
+    font-size: 28px;
+}
+
+.present-summary {
+    border: 2px solid #22c55e;
+}
+
+.absent-summary {
+    border: 2px solid #ef4444;
+}
+
+.total-summary {
+    border: 2px solid #2563eb;
+}
+
+
+/* =====================================================
+   ATTENDANCE HISTORY
+===================================================== */
+
+#attendanceHistory {
+    margin-top: 15px;
+}
+
+.attendance-history-item {
+    background: #f8fafc;
+
+    border: 1px solid #e2e8f0;
+
+    padding: 15px;
+
+    margin-bottom: 10px;
+
+    border-radius: 12px;
+}
+
+
+/* =====================================================
+   ATTENDANCE RESULT
+===================================================== */
+
+#attendanceResult {
+    width: 100%;
+
+    max-width: 640px;
+
+    margin-left: auto;
+
+    margin-right: auto;
+}
+
+#attendanceResult p {
+    margin: 8px 0;
+
+    line-height: 1.5;
+}
+
+
+/* =====================================================
+   CURRENT DATE
+===================================================== */
 
 #currentDate {
-    text-align: center;
+    margin-top: 12px;
+
     font-weight: bold;
-    color: #475569;
-    margin: 10px 0 20px;
+
+    color: #2563eb;
+}
+
+
+/* =====================================================
+   SCROLLBAR
+===================================================== */
+
+.modal-content::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal-content::-webkit-scrollbar-track {
+    background: #f1f5f9;
+}
+
+.modal-content::-webkit-scrollbar-thumb {
+    background: #94a3b8;
+
+    border-radius: 10px;
 }
 
 
 /* =====================================================
    MOBILE
-   ===================================================== */
+===================================================== */
 
 @media (max-width: 800px) {
 
+    body {
+        padding: 10px;
+    }
+
+    header {
+        padding-top: 85px;
+    }
+
+    header h1 {
+        font-size: 25px;
+    }
+
     .dashboard {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns:
+            repeat(2, 1fr);
     }
 
     .student-row {
         flex-direction: column;
+
+        align-items: flex-start;
     }
 
     .student-actions {
-        flex-direction: row;
-        flex-wrap: wrap;
+        width: 100%;
     }
 
+    .student-actions button {
+        flex: 1;
+    }
 }
 
 
-@media (max-width: 500px) {
+/* =====================================================
+   SMALL MOBILE
+===================================================== */
 
-    .container {
-        padding: 10px;
+@media (max-width: 600px) {
+
+    .menu-container {
+        left: 10px;
+
+        top: 10px;
     }
 
-    header h1 {
+    .menu-button {
+        width: 50px;
+
+        height: 46px;
+
         font-size: 24px;
+    }
+
+    .main-menu {
+        width: 260px;
+
+        top: 55px;
     }
 
     .dashboard {
         grid-template-columns: 1fr 1fr;
+
+        gap: 10px;
     }
 
-    section {
+    .card {
         padding: 16px;
     }
 
-    .main-menu {
-        width: 270px;
+    .card h3 {
+        font-size: 14px;
     }
 
-    .camera-container video {
-        min-height: 220px;
+    .card h2 {
+        font-size: 25px;
     }
 
+    .section {
+        padding: 18px;
+    }
+
+    .attendance-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .camera-box video {
+        min-height: 250px;
+
+        border-radius: 14px;
+    }
+
+    .modal {
+        padding: 10px;
+    }
+
+    .modal-content {
+        padding: 20px;
+
+        max-height: 90vh;
+    }
+}
+
+
+/* =====================================================
+   VERY SMALL PHONE
+===================================================== */
+
+@media (max-width: 400px) {
+
+    .dashboard {
+        grid-template-columns: 1fr;
+    }
+
+    header h1 {
+        font-size: 22px;
+    }
+
+    .student-actions {
+        flex-direction: column;
+
+        width: 100%;
+    }
+
+    .student-actions button {
+        width: 100%;
+    }
 }
