@@ -1,21 +1,25 @@
+```html
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Smart Attendance System</title>
 
+    <!-- CSS -->
     <link rel="stylesheet" href="style.css">
 
+    <!-- Face API -->
     <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
 </head>
 
 <body>
 
-<!-- =====================================================
+<!-- =========================================================
      LOGIN PAGE
-===================================================== -->
+========================================================= -->
 
 <section id="loginPage" class="page login-page">
 
@@ -23,8 +27,9 @@
 
         <div class="college-logo-area">
 
+            <!-- HETC LOGO -->
             <img
-                src="logo.png"
+                src="Screenshot 2026-08-28 160906.png"
                 alt="Hooghly Engineering & Technology College Logo"
                 class="college-logo-img">
 
@@ -36,31 +41,40 @@
 
         </div>
 
+
         <h2>Welcome Back 👋</h2>
 
         <p class="login-subtitle">
             Login to your attendance dashboard
         </p>
 
+
         <div class="input-group">
+
             <label>Full Name</label>
 
             <input
                 type="text"
                 id="loginName"
                 placeholder="Enter your name">
+
         </div>
 
+
         <div class="input-group">
+
             <label>Mobile Number or Email</label>
 
             <input
                 type="text"
                 id="loginIdentity"
                 placeholder="Mobile number or email">
+
         </div>
 
+
         <div class="input-group">
+
             <label>4 Digit PIN</label>
 
             <input
@@ -69,25 +83,36 @@
                 maxlength="4"
                 inputmode="numeric"
                 placeholder="Enter 4 digit PIN">
+
         </div>
+
 
         <button
             id="loginButton"
             class="primary-button">
+
             🔐 Login
+
         </button>
+
 
         <button
             id="createAccountButton"
             class="secondary-button">
+
             ✨ Create Account
+
         </button>
+
 
         <button
             id="forgotPinButton"
             class="text-button">
+
             Forgot PIN?
+
         </button>
+
 
         <div
             id="loginMessage"
@@ -99,9 +124,10 @@
 </section>
 
 
-<!-- =====================================================
+
+<!-- =========================================================
      CREATE ACCOUNT PAGE
-===================================================== -->
+========================================================= -->
 
 <section
     id="createAccountPage"
@@ -110,12 +136,16 @@
 
     <div class="form-card">
 
+
         <div class="page-header">
 
+
+            <!-- SAME HETC LOGO -->
             <img
-                src="logo.png"
-                alt="HETC Logo"
-                class="college-logo-img small-logo">
+                src="Screenshot 2026-08-28 160906.png"
+                alt="Hooghly Engineering & Technology College Logo"
+                class="college-logo-img small-logo-img">
+
 
             <div>
 
@@ -130,6 +160,7 @@
         </div>
 
 
+
         <div class="input-group">
 
             <label>Full Name *</label>
@@ -140,6 +171,7 @@
                 placeholder="Enter your full name">
 
         </div>
+
 
 
         <div class="input-group">
@@ -156,6 +188,7 @@
         </div>
 
 
+
         <div class="input-group">
 
             <label>Email Address</label>
@@ -166,6 +199,7 @@
                 placeholder="Enter email address">
 
         </div>
+
 
 
         <div class="input-group">
@@ -182,6 +216,7 @@
         </div>
 
 
+
         <div class="input-group">
 
             <label>Confirm 4 Digit PIN *</label>
@@ -194,6 +229,7 @@
                 placeholder="Confirm PIN">
 
         </div>
+
 
 
         <div class="input-group">
@@ -209,6 +245,7 @@
         </div>
 
 
+
         <div class="input-group">
 
             <label>Department / Branch *</label>
@@ -219,6 +256,7 @@
                 placeholder="Example: CSE">
 
         </div>
+
 
 
         <div class="input-group">
@@ -233,6 +271,7 @@
         </div>
 
 
+
         <button
             id="createAccountSubmit"
             class="primary-button">
@@ -242,6 +281,7 @@
         </button>
 
 
+
         <button
             id="backToLoginButton"
             class="text-button">
@@ -249,6 +289,7 @@
             ← Back to Login
 
         </button>
+
 
 
         <div
@@ -261,9 +302,10 @@
 </section>
 
 
-<!-- =====================================================
+
+<!-- =========================================================
      FORGOT PIN PAGE
-===================================================== -->
+========================================================= -->
 
 <section
     id="forgotPinPage"
@@ -272,16 +314,23 @@
 
     <div class="form-card">
 
-        <img
-            src="logo.png"
-            alt="HETC Logo"
-            class="college-logo-img small-logo">
 
-        <h1>Reset PIN</h1>
+        <div class="college-logo-area">
 
-        <p>
-            Enter your registered mobile or email
-        </p>
+            <!-- SAME HETC LOGO -->
+            <img
+                src="Screenshot 2026-08-28 160906.png"
+                alt="HETC Logo"
+                class="college-logo-img">
+
+            <h1>Reset PIN</h1>
+
+            <p>
+                Hooghly Engineering & Technology College
+            </p>
+
+        </div>
+
 
 
         <div class="input-group">
@@ -296,6 +345,7 @@
         </div>
 
 
+
         <div class="input-group">
 
             <label>Mobile Number or Email</label>
@@ -306,6 +356,7 @@
                 placeholder="Mobile or email">
 
         </div>
+
 
 
         <div class="input-group">
@@ -322,6 +373,7 @@
         </div>
 
 
+
         <div class="input-group">
 
             <label>Confirm New PIN</label>
@@ -336,6 +388,7 @@
         </div>
 
 
+
         <button
             id="resetPinButton"
             class="primary-button">
@@ -345,6 +398,7 @@
         </button>
 
 
+
         <button
             id="forgotBackButton"
             class="text-button">
@@ -352,6 +406,7 @@
             ← Back to Login
 
         </button>
+
 
 
         <div
@@ -364,9 +419,10 @@
 </section>
 
 
-<!-- =====================================================
+
+<!-- =========================================================
      DASHBOARD
-===================================================== -->
+========================================================= -->
 
 <section
     id="dashboardPage"
@@ -374,20 +430,27 @@
     style="display:none;">
 
 
-    <!-- SIDEBAR -->
+    <!-- =====================================================
+         SIDEBAR
+    ===================================================== -->
 
     <aside class="sidebar">
 
+
         <div class="sidebar-logo">
 
+
+            <!-- SAME HETC LOGO -->
             <img
-                src="logo.png"
-                alt="HETC Logo"
-                class="college-logo-img">
+                src="Screenshot 2026-08-28 160906.png"
+                alt="Hooghly Engineering & Technology College Logo"
+                class="college-logo-img dashboard-logo">
+
 
             <h2>
                 Smart Attendance
             </h2>
+
 
             <p>
                 Hooghly Engineering & Technology College
@@ -396,7 +459,11 @@
         </div>
 
 
+
+        <!-- SIDE MENU -->
+
         <nav class="side-menu">
+
 
             <button
                 class="menu-item active"
@@ -405,6 +472,7 @@
                 🏠 Dashboard
 
             </button>
+
 
 
             <button
@@ -416,6 +484,7 @@
             </button>
 
 
+
             <button
                 class="menu-item"
                 id="attendanceMenuButton">
@@ -423,6 +492,7 @@
                 📸 Mark Attendance
 
             </button>
+
 
 
             <button
@@ -434,6 +504,7 @@
             </button>
 
 
+
             <button
                 class="menu-item"
                 id="checkAttendanceMenuButton">
@@ -441,6 +512,7 @@
                 📊 My Attendance
 
             </button>
+
 
 
             <button
@@ -451,7 +523,9 @@
 
             </button>
 
+
         </nav>
+
 
 
         <button
@@ -462,10 +536,14 @@
 
         </button>
 
+
     </aside>
 
 
-    <!-- MAIN CONTENT -->
+
+    <!-- =====================================================
+         MAIN CONTENT
+    ===================================================== -->
 
     <main class="main-content">
 
@@ -473,6 +551,7 @@
         <!-- TOP BAR -->
 
         <header class="topbar">
+
 
             <div>
 
@@ -487,11 +566,14 @@
             </div>
 
 
+
             <div class="profile-area">
+
 
                 <div class="profile-icon">
                     👤
                 </div>
+
 
                 <div>
 
@@ -505,21 +587,27 @@
 
                 </div>
 
+
             </div>
+
 
         </header>
 
 
-        <!-- DASHBOARD HOME -->
+
+        <!-- =================================================
+             DASHBOARD HOME
+        ================================================= -->
 
         <section
             id="dashboardHome"
             class="dashboard-section">
 
 
-            <!-- WELCOME -->
+            <!-- WELCOME CARD -->
 
             <div class="welcome-card">
+
 
                 <div>
 
@@ -527,9 +615,11 @@
                         Welcome back 👋
                     </span>
 
+
                     <h2 id="welcomeName">
                         Student
                     </h2>
+
 
                     <p>
                         Hooghly Engineering & Technology College
@@ -542,12 +632,15 @@
                     📚
                 </div>
 
+
             </div>
+
 
 
             <!-- STAT CARDS -->
 
             <div class="stats-grid">
+
 
                 <div class="stat-card blue">
 
@@ -568,6 +661,7 @@
                     </div>
 
                 </div>
+
 
 
                 <div class="stat-card green">
@@ -591,6 +685,7 @@
                 </div>
 
 
+
                 <div class="stat-card red">
 
                     <div class="stat-icon">
@@ -610,6 +705,7 @@
                     </div>
 
                 </div>
+
 
 
                 <div class="stat-card purple">
@@ -632,7 +728,9 @@
 
                 </div>
 
+
             </div>
+
 
 
             <!-- QUICK ACTIONS -->
@@ -646,7 +744,9 @@
             </div>
 
 
+
             <div class="quick-actions">
+
 
                 <button
                     id="quickFaceRegistration"
@@ -665,6 +765,7 @@
                     </small>
 
                 </button>
+
 
 
                 <button
@@ -686,6 +787,7 @@
                 </button>
 
 
+
                 <button
                     id="quickCheckAttendance"
                     class="action-card">
@@ -704,9 +806,12 @@
 
                 </button>
 
+
             </div>
 
+
         </section>
+
 
 
         <!-- =================================================
@@ -717,6 +822,7 @@
             id="faceRegistrationSection"
             class="dashboard-section"
             style="display:none;">
+
 
             <div class="section-header">
 
@@ -735,21 +841,26 @@
             </div>
 
 
+
             <div class="face-layout">
 
 
-                <!-- STUDENT DETAILS -->
+                <!-- DETAILS -->
 
                 <div class="details-card">
+
 
                     <h3>
                         Student Details
                     </h3>
 
 
+
                     <div class="input-group">
 
-                        <label>Name</label>
+                        <label>
+                            Name
+                        </label>
 
                         <input
                             type="text"
@@ -758,9 +869,12 @@
                     </div>
 
 
+
                     <div class="input-group">
 
-                        <label>Roll Number</label>
+                        <label>
+                            Roll Number
+                        </label>
 
                         <input
                             type="text"
@@ -769,9 +883,12 @@
                     </div>
 
 
+
                     <div class="input-group">
 
-                        <label>College Name</label>
+                        <label>
+                            College Name
+                        </label>
 
                         <input
                             type="text"
@@ -782,9 +899,12 @@
                     </div>
 
 
+
                     <div class="input-group">
 
-                        <label>Department</label>
+                        <label>
+                            Department
+                        </label>
 
                         <input
                             type="text"
@@ -793,9 +913,12 @@
                     </div>
 
 
+
                     <div class="input-group">
 
-                        <label>Mobile</label>
+                        <label>
+                            Mobile
+                        </label>
 
                         <input
                             type="text"
@@ -804,15 +927,19 @@
                     </div>
 
 
+
                     <div class="input-group">
 
-                        <label>Email</label>
+                        <label>
+                            Email
+                        </label>
 
                         <input
                             type="email"
                             id="faceEmail">
 
                     </div>
+
 
 
                     <button
@@ -824,23 +951,28 @@
                     </button>
 
 
+
                     <div
                         id="registrationMessage"
                         class="auth-message">
                     </div>
 
+
                 </div>
+
 
 
                 <!-- CAMERA -->
 
                 <div class="camera-card">
 
+
                     <div class="camera-title">
 
                         <h3>
                             Face Camera
                         </h3>
+
 
                         <span id="registrationStatus">
                             Camera is OFF
@@ -849,7 +981,9 @@
                     </div>
 
 
+
                     <div class="camera-wrapper">
+
 
                         <video
                             id="registrationCamera"
@@ -858,11 +992,14 @@
                             playsinline>
                         </video>
 
+
                         <div class="face-guide">
                             <span></span>
                         </div>
 
+
                     </div>
+
 
 
                     <p>
@@ -870,11 +1007,15 @@
                         Your face will be captured automatically.
                     </p>
 
+
                 </div>
+
 
             </div>
 
+
         </section>
+
 
 
         <!-- =================================================
@@ -885,6 +1026,7 @@
             id="attendanceSection"
             class="dashboard-section"
             style="display:none;">
+
 
             <div class="section-header">
 
@@ -904,13 +1046,16 @@
             </div>
 
 
+
             <div class="attendance-camera-card">
+
 
                 <div class="camera-title">
 
                     <h3>
                         📸 Attendance Camera
                     </h3>
+
 
                     <span id="attendanceStatus">
                         Camera is OFF
@@ -919,7 +1064,9 @@
                 </div>
 
 
+
                 <div class="camera-wrapper large-camera">
+
 
                     <video
                         id="attendanceCamera"
@@ -928,11 +1075,14 @@
                         playsinline>
                     </video>
 
+
                     <div class="face-guide">
                         <span></span>
                     </div>
 
+
                 </div>
+
 
 
                 <button
@@ -944,14 +1094,18 @@
                 </button>
 
 
+
                 <div
                     id="attendanceResult"
                     class="attendance-result">
                 </div>
 
+
             </div>
 
+
         </section>
+
 
 
         <!-- =================================================
@@ -962,6 +1116,7 @@
             id="studentsSection"
             class="dashboard-section"
             style="display:none;">
+
 
             <div class="section-header">
 
@@ -980,6 +1135,7 @@
             </div>
 
 
+
             <div class="search-box">
 
                 <input
@@ -990,28 +1146,35 @@
             </div>
 
 
+
             <div
                 id="studentList"
                 class="student-list">
             </div>
 
+
         </section>
 
+
     </main>
+
 
 </section>
 
 
-<!-- =====================================================
-     ATTENDANCE POPUP
-===================================================== -->
+
+<!-- =========================================================
+     ATTENDANCE SUCCESS POPUP
+========================================================= -->
 
 <div
     id="attendancePopup"
     class="popup-overlay"
     style="display:none;">
 
+
     <div class="popup-card">
+
 
         <div
             id="popupIcon"
@@ -1021,13 +1184,16 @@
 
         </div>
 
+
         <h2 id="popupTitle">
             Attendance Marked!
         </h2>
 
+
         <p id="popupMessage">
             Your attendance has been successfully saved.
         </p>
+
 
         <button
             id="closeAttendancePopup"
@@ -1037,21 +1203,26 @@
 
         </button>
 
+
     </div>
+
 
 </div>
 
 
-<!-- =====================================================
+
+<!-- =========================================================
      REGISTERED STUDENTS MODAL
-===================================================== -->
+========================================================= -->
 
 <div
     id="studentsModal"
     class="popup-overlay"
     style="display:none;">
 
+
     <div class="modal-card">
+
 
         <button
             id="closeStudentsModal"
@@ -1061,27 +1232,36 @@
 
         </button>
 
+
         <h2>
             👥 Registered Students
         </h2>
 
-        <div id="registeredStudentsList"></div>
+
+        <div
+            id="registeredStudentsList">
+        </div>
+
 
     </div>
+
 
 </div>
 
 
-<!-- =====================================================
+
+<!-- =========================================================
      MY ATTENDANCE MODAL
-===================================================== -->
+========================================================= -->
 
 <div
     id="attendanceCheckModal"
     class="popup-overlay"
     style="display:none;">
 
+
     <div class="modal-card">
+
 
         <button
             id="closeCheckAttendanceModal"
@@ -1091,12 +1271,15 @@
 
         </button>
 
+
         <h2>
             📊 My Attendance
         </h2>
 
 
+
         <div class="attendance-summary">
+
 
             <div>
 
@@ -1109,6 +1292,7 @@
                 </span>
 
             </div>
+
 
 
             <div>
@@ -1124,6 +1308,7 @@
             </div>
 
 
+
             <div>
 
                 <strong id="attendanceAbsentDays">
@@ -1136,7 +1321,9 @@
 
             </div>
 
+
         </div>
+
 
 
         <h3>
@@ -1144,25 +1331,31 @@
         </h3>
 
 
+
         <div
             id="attendanceHistory">
         </div>
 
+
     </div>
+
 
 </div>
 
 
-<!-- =====================================================
+
+<!-- =========================================================
      EDIT DETAILS MODAL
-===================================================== -->
+========================================================= -->
 
 <div
     id="editDetailsModal"
     class="popup-overlay"
     style="display:none;">
 
+
     <div class="modal-card">
+
 
         <button
             id="closeEditDetailsModal"
@@ -1178,9 +1371,12 @@
         </h2>
 
 
+
         <div class="input-group">
 
-            <label>Name</label>
+            <label>
+                Name
+            </label>
 
             <input
                 type="text"
@@ -1189,9 +1385,12 @@
         </div>
 
 
+
         <div class="input-group">
 
-            <label>Roll</label>
+            <label>
+                Roll
+            </label>
 
             <input
                 type="text"
@@ -1200,9 +1399,12 @@
         </div>
 
 
+
         <div class="input-group">
 
-            <label>College</label>
+            <label>
+                College
+            </label>
 
             <input
                 type="text"
@@ -1213,9 +1415,12 @@
         </div>
 
 
+
         <div class="input-group">
 
-            <label>Department</label>
+            <label>
+                Department
+            </label>
 
             <input
                 type="text"
@@ -1224,9 +1429,12 @@
         </div>
 
 
+
         <div class="input-group">
 
-            <label>Mobile</label>
+            <label>
+                Mobile
+            </label>
 
             <input
                 type="text"
@@ -1235,15 +1443,19 @@
         </div>
 
 
+
         <div class="input-group">
 
-            <label>Email</label>
+            <label>
+                Email
+            </label>
 
             <input
                 type="email"
                 id="editEmail">
 
         </div>
+
 
 
         <button
@@ -1254,16 +1466,21 @@
 
         </button>
 
+
     </div>
+
 
 </div>
 
 
-<!-- =====================================================
+
+<!-- =========================================================
      JAVASCRIPT
-===================================================== -->
+========================================================= -->
 
 <script src="script.js"></script>
 
 </body>
+
 </html>
+```
