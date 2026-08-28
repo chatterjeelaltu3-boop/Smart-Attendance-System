@@ -3,11 +3,6 @@
    COMPLETE STYLE.CSS
 ===================================================== */
 
-
-/* =====================================================
-   GLOBAL
-===================================================== */
-
 * {
     box-sizing: border-box;
 }
@@ -42,7 +37,7 @@ header {
     border-radius: 18px;
     text-align: center;
     margin-bottom: 20px;
-    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.08);
 }
 
 header h1 {
@@ -77,24 +72,16 @@ header p {
     background: #2563eb;
     color: white;
     cursor: pointer;
-    transition: 0.2s;
 }
 
 .menu-button:hover {
     background: #1d4ed8;
-    transform: scale(1.04);
 }
-
-
-/* =====================================================
-   MAIN MENU
-===================================================== */
 
 .main-menu {
     display: none;
 
     position: absolute;
-
     left: 0;
     top: 60px;
 
@@ -107,7 +94,7 @@ header p {
     border-radius: 15px;
 
     box-shadow:
-        0 10px 35px rgba(0, 0, 0, 0.20);
+        0 10px 35px rgba(0,0,0,0.20);
 
     z-index: 3000;
 }
@@ -136,8 +123,6 @@ header p {
     text-align: left;
 
     cursor: pointer;
-
-    transition: 0.2s;
 }
 
 .main-menu button:hover {
@@ -170,7 +155,7 @@ header p {
     text-align: center;
 
     box-shadow:
-        0 5px 18px rgba(0, 0, 0, 0.07);
+        0 5px 18px rgba(0,0,0,0.07);
 
     border: 1px solid #e2e8f0;
 }
@@ -193,7 +178,7 @@ header p {
 
 
 /* =====================================================
-   SECTIONS
+   SECTION
 ===================================================== */
 
 .section {
@@ -206,7 +191,7 @@ header p {
     border-radius: 18px;
 
     box-shadow:
-        0 5px 20px rgba(0, 0, 0, 0.07);
+        0 5px 20px rgba(0,0,0,0.07);
 }
 
 .section h2 {
@@ -219,7 +204,7 @@ header p {
 
 
 /* =====================================================
-   INPUTS
+   INPUT
 ===================================================== */
 
 input {
@@ -236,20 +221,18 @@ input {
     font-size: 15px;
 
     outline: none;
-
-    background: white;
 }
 
 input:focus {
     border-color: #2563eb;
 
     box-shadow:
-        0 0 0 3px rgba(37, 99, 235, 0.12);
+        0 0 0 3px rgba(37,99,235,0.12);
 }
 
 
 /* =====================================================
-   GENERAL BUTTON
+   BUTTON
 ===================================================== */
 
 button {
@@ -266,8 +249,6 @@ button {
     font-size: 15px;
 
     cursor: pointer;
-
-    transition: 0.2s;
 }
 
 button:hover {
@@ -276,13 +257,12 @@ button:hover {
 
 button:disabled {
     opacity: 0.6;
-
     cursor: not-allowed;
 }
 
 
 /* =====================================================
-   CAMERA BOX
+   CAMERA
 ===================================================== */
 
 .camera-box {
@@ -294,12 +274,6 @@ button:disabled {
 
     text-align: center;
 }
-
-
-/* =====================================================
-   CAMERA VIDEO
-   SELFIE / MIRROR MODE
-===================================================== */
 
 .camera-box video {
     width: 100%;
@@ -319,24 +293,18 @@ button:disabled {
     object-fit: cover;
 
     /*
-       IMPORTANT:
-       This makes the camera look
-       like a phone selfie mirror.
+       IMPORTANT
+
+       No scaleX(-1).
+
+       This prevents the movement
+       from appearing reversed.
     */
 
-    transform: scaleX(-1);
+    transform: none;
 
-    /*
-       Prevent weird visual flicker
-    */
-
-    backface-visibility: hidden;
+    backface-visibility: visible;
 }
-
-
-/* =====================================================
-   CAMERA STATUS
-===================================================== */
 
 .camera-status {
     margin-top: 10px;
@@ -384,7 +352,7 @@ button:disabled {
     text-align: center;
 
     box-shadow:
-        0 5px 20px rgba(34, 197, 94, 0.12);
+        0 5px 20px rgba(34,197,94,0.12);
 }
 
 .success-message .success-icon {
@@ -397,10 +365,6 @@ button:disabled {
 /* =====================================================
    STUDENT LIST
 ===================================================== */
-
-#studentList {
-    width: 100%;
-}
 
 .student-row {
     display: flex;
@@ -444,7 +408,7 @@ button:disabled {
 
 
 /* =====================================================
-   PRESENT / ABSENT / DELETE BUTTON
+   STUDENT BUTTONS
 ===================================================== */
 
 .present-btn {
@@ -504,7 +468,7 @@ button:disabled {
 
     inset: 0;
 
-    background: rgba(0, 0, 0, 0.55);
+    background: rgba(0,0,0,0.55);
 
     z-index: 4000;
 
@@ -518,11 +482,6 @@ button:disabled {
 .modal.show {
     display: flex;
 }
-
-
-/* =====================================================
-   MODAL CONTENT
-===================================================== */
 
 .modal-content {
     width: 100%;
@@ -542,7 +501,7 @@ button:disabled {
     position: relative;
 
     box-shadow:
-        0 15px 50px rgba(0, 0, 0, 0.3);
+        0 15px 50px rgba(0,0,0,0.3);
 }
 
 .modal-content h2 {
@@ -555,13 +514,11 @@ button:disabled {
 
 .modal-content input {
     width: 100%;
-
-    margin-bottom: 12px;
 }
 
 
 /* =====================================================
-   CLOSE BUTTON
+   CLOSE MODAL
 ===================================================== */
 
 .close-modal {
@@ -596,23 +553,6 @@ button:disabled {
 
 
 /* =====================================================
-   ADMIN
-===================================================== */
-
-.admin-info {
-    background: #eff6ff;
-
-    border: 1px solid #bfdbfe;
-
-    padding: 18px;
-
-    border-radius: 12px;
-
-    line-height: 1.8;
-}
-
-
-/* =====================================================
    REGISTERED STUDENT
 ===================================================== */
 
@@ -632,6 +572,23 @@ button:disabled {
 
 
 /* =====================================================
+   ADMIN
+===================================================== */
+
+.admin-info {
+    background: #eff6ff;
+
+    border: 1px solid #bfdbfe;
+
+    padding: 18px;
+
+    border-radius: 12px;
+
+    line-height: 1.8;
+}
+
+
+/* =====================================================
    ATTENDANCE SUMMARY
 ===================================================== */
 
@@ -639,7 +596,7 @@ button:disabled {
     display: grid;
 
     grid-template-columns:
-        repeat(3, 1fr);
+        repeat(3,1fr);
 
     gap: 12px;
 
@@ -685,10 +642,6 @@ button:disabled {
    ATTENDANCE HISTORY
 ===================================================== */
 
-#attendanceHistory {
-    margin-top: 15px;
-}
-
 .attendance-history-item {
     background: #f8fafc;
 
@@ -699,6 +652,21 @@ button:disabled {
     margin-bottom: 10px;
 
     border-radius: 12px;
+
+    line-height: 1.7;
+}
+
+
+/* =====================================================
+   CURRENT DATE
+===================================================== */
+
+#currentDate {
+    margin-top: 12px;
+
+    font-weight: bold;
+
+    color: #2563eb;
 }
 
 
@@ -724,42 +692,10 @@ button:disabled {
 
 
 /* =====================================================
-   CURRENT DATE
-===================================================== */
-
-#currentDate {
-    margin-top: 12px;
-
-    font-weight: bold;
-
-    color: #2563eb;
-}
-
-
-/* =====================================================
-   SCROLLBAR
-===================================================== */
-
-.modal-content::-webkit-scrollbar {
-    width: 8px;
-}
-
-.modal-content::-webkit-scrollbar-track {
-    background: #f1f5f9;
-}
-
-.modal-content::-webkit-scrollbar-thumb {
-    background: #94a3b8;
-
-    border-radius: 10px;
-}
-
-
-/* =====================================================
    MOBILE
 ===================================================== */
 
-@media (max-width: 800px) {
+@media (max-width:800px) {
 
     body {
         padding: 10px;
@@ -775,7 +711,7 @@ button:disabled {
 
     .dashboard {
         grid-template-columns:
-            repeat(2, 1fr);
+            repeat(2,1fr);
     }
 
     .student-row {
@@ -798,30 +734,27 @@ button:disabled {
    SMALL MOBILE
 ===================================================== */
 
-@media (max-width: 600px) {
+@media (max-width:600px) {
 
     .menu-container {
         left: 10px;
-
         top: 10px;
     }
 
     .menu-button {
         width: 50px;
-
         height: 46px;
-
         font-size: 24px;
     }
 
     .main-menu {
         width: 260px;
-
         top: 55px;
     }
 
     .dashboard {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns:
+            repeat(2,1fr);
 
         gap: 10px;
     }
@@ -848,8 +781,6 @@ button:disabled {
 
     .camera-box video {
         min-height: 250px;
-
-        border-radius: 14px;
     }
 
     .modal {
@@ -858,7 +789,6 @@ button:disabled {
 
     .modal-content {
         padding: 20px;
-
         max-height: 90vh;
     }
 }
@@ -868,7 +798,7 @@ button:disabled {
    VERY SMALL PHONE
 ===================================================== */
 
-@media (max-width: 400px) {
+@media (max-width:400px) {
 
     .dashboard {
         grid-template-columns: 1fr;
