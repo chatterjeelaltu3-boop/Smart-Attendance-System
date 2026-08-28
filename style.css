@@ -1,1119 +1,1623 @@
-```css
 /* ============================================================
-   SMART ATTENDANCE SYSTEM
-   style.css
+SMART ATTENDANCE SYSTEM
+style.css
 ============================================================ */
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-}
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  }
 
 :root {
-    --primary: #6c5ce7;
-    --primary-dark: #4834d4;
-    --secondary: #00b894;
-    --blue: #0984e3;
-    --pink: #e84393;
-    --orange: #fd9644;
-    --red: #d63031;
-    --purple: #8e44ad;
-    --dark: #2d3436;
-    --gray: #636e72;
-    --light: #f5f7fb;
-    --white: #ffffff;
-    --border: #e6e9f0;
-    --shadow: 0 15px 40px rgba(45,52,54,.12);
+--primary: #6c5ce7;
+--primary-dark: #4834d4;
+--secondary: #00b894;
+--blue: #0984e3;
+--pink: #e84393;
+--red: #d63031;
+--purple: #8e44ad;
+--dark: #2d3436;
+--gray: #636e72;
+--light: #f5f7fb;
+--white: #ffffff;
+--border: #e6e9f0;
+--shadow: 0 15px 40px rgba(45,52,54,.12);
+}
+
+html,
+body {
+width: 100%;
+min-height: 100%;
 }
 
 body {
-    font-family: Arial, Helvetica, sans-serif;
-    background: linear-gradient(135deg,#eef2ff,#f8f9ff);
-    color: var(--dark);
-    min-height: 100vh;
+font-family: Arial, Helvetica, sans-serif;
+background: linear-gradient(135deg,#eef2ff,#f8f9ff);
+color: var(--dark);
 }
 
 button,
 input {
-    font-family: inherit;
+font-family: inherit;
 }
 
 button {
-    cursor: pointer;
-    border: none;
+cursor: pointer;
+border: none;
 }
 
 input {
-    width: 100%;
-    padding: 14px 16px;
-    border: 2px solid var(--border);
-    border-radius: 12px;
-    outline: none;
-    background: #fff;
-    font-size: 15px;
-    transition: .25s;
+width: 100%;
+padding: 14px 16px;
+border: 2px solid var(--border);
+border-radius: 12px;
+outline: none;
+background: #fff;
+font-size: 15px;
+transition: .25s;
 }
 
 input:focus {
-    border-color: var(--primary);
-    box-shadow: 0 0 0 4px rgba(108,92,231,.10);
+border-color: var(--primary);
+box-shadow: 0 0 0 4px rgba(108,92,231,.10);
 }
 
 .input-group {
-    margin-bottom: 18px;
+margin-bottom: 18px;
 }
 
 .input-group label {
-    display: block;
-    margin-bottom: 7px;
-    font-size: 14px;
-    font-weight: 700;
-    color: #444;
+display: block;
+margin-bottom: 7px;
+font-size: 14px;
+font-weight: 700;
+color: #444;
 }
 
 /* ============================================================
-   COMMON PAGE
+COMMON PAGE
 ============================================================ */
 
 .page {
-    min-height: 100vh;
+min-height: 100vh;
 }
 
 /* ============================================================
-   LOGIN
+LOGIN
 ============================================================ */
 
 .login-page {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 30px 15px;
+display: flex;
+align-items: center;
+justify-content: center;
+padding: 30px 15px;
 
-    background:
-        radial-gradient(circle at top left,rgba(108,92,231,.25),transparent 35%),
-        radial-gradient(circle at bottom right,rgba(0,184,148,.20),transparent 35%),
-        linear-gradient(135deg,#f4f1ff,#eefbff);
+```
+background:
+    radial-gradient(circle at top left,
+    rgba(108,92,231,.25),
+    transparent 35%),
+    radial-gradient(circle at bottom right,
+    rgba(0,184,148,.20),
+    transparent 35%),
+    linear-gradient(135deg,#f4f1ff,#eefbff);
+```
+
 }
 
 .login-card {
-    width: 100%;
-    max-width: 460px;
-    background: rgba(255,255,255,.98);
-    padding: 38px;
-    border-radius: 28px;
-    box-shadow: var(--shadow);
-    text-align: center;
+width: 100%;
+max-width: 460px;
+background: rgba(255,255,255,.97);
+padding: 38px;
+border-radius: 28px;
+box-shadow: var(--shadow);
+text-align: center;
 }
 
-/* ============================================================
-   HETC LOGO
-============================================================ */
-
 .college-logo-area {
-    margin-bottom: 22px;
+margin-bottom: 25px;
 }
 
 .college-logo-img {
-    width: 72px !important;
-    height: 72px !important;
-    max-width: 72px !important;
-    max-height: 72px !important;
-    object-fit: contain !important;
-    display: block;
-    margin: 0 auto 12px;
+width: 70px;
+height: 70px;
+
+```
+max-width: 70px;
+max-height: 70px;
+
+object-fit: contain;
+
+display: block;
+
+margin: 0 auto 12px;
+```
+
 }
 
-/* Login logo */
 .login-card .college-logo-img {
-    width: 75px !important;
-    height: 75px !important;
-    max-width: 75px !important;
-    max-height: 75px !important;
+width: 75px;
+height: 75px;
+max-width: 75px;
+max-height: 75px;
 }
-
-/* Create Account logo */
-.page-header .college-logo {
-    width: 62px;
-    height: 62px;
-    min-width: 62px;
-    border-radius: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #fff;
-    overflow: hidden;
-}
-
-.page-header .college-logo img {
-    width: 52px !important;
-    height: 52px !important;
-    max-width: 52px !important;
-    max-height: 52px !important;
-    object-fit: contain !important;
-}
-
-/* Dashboard logo */
-.sidebar-logo .college-logo {
-    width: 62px;
-    height: 62px;
-    margin: 0 auto 10px;
-    border-radius: 16px;
-    background: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-}
-
-.sidebar-logo .college-logo img {
-    width: 52px !important;
-    height: 52px !important;
-    max-width: 52px !important;
-    max-height: 52px !important;
-    object-fit: contain !important;
-}
-
-/* ============================================================
-   COLLEGE NAME
-============================================================ */
 
 .college-logo-area h1 {
-    font-size: 30px;
-    margin-bottom: 7px;
+font-size: 30px;
+margin-bottom: 6px;
 }
 
 .college-name {
-    color: var(--primary);
-    font-weight: 700;
-    line-height: 1.4;
+color: var(--primary);
+font-weight: 700;
 }
 
 .login-card h2 {
-    margin-top: 20px;
-    font-size: 25px;
+margin-top: 20px;
+font-size: 25px;
 }
 
 .login-subtitle {
-    color: var(--gray);
-    margin: 8px 0 25px;
+color: var(--gray);
+margin: 8px 0 25px;
 }
 
 /* ============================================================
-   BUTTONS
+BUTTONS
 ============================================================ */
 
 .primary-button {
-    width: 100%;
-    padding: 14px 18px;
-    border-radius: 12px;
-    color: white;
-    font-size: 15px;
-    font-weight: 700;
+width: 100%;
+padding: 14px 18px;
+border-radius: 12px;
 
-    background: linear-gradient(
-        135deg,
-        var(--primary),
-        var(--primary-dark)
-    );
+```
+color: white;
+font-size: 15px;
+font-weight: 700;
 
-    box-shadow: 0 8px 18px rgba(108,92,231,.25);
-    transition: .25s;
+background: linear-gradient(
+    135deg,
+    var(--primary),
+    var(--primary-dark)
+);
+
+box-shadow: 0 8px 18px rgba(108,92,231,.25);
+transition: .25s;
+```
+
 }
 
 .primary-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 24px rgba(108,92,231,.32);
+transform: translateY(-2px);
 }
 
 .secondary-button {
-    width: 100%;
-    padding: 14px 18px;
-    margin-top: 12px;
-    border-radius: 12px;
+width: 100%;
+padding: 14px 18px;
+margin-top: 12px;
 
-    background: linear-gradient(
-        135deg,
-        #00b894,
-        #00cec9
-    );
+```
+border-radius: 12px;
 
-    color: white;
-    font-size: 15px;
-    font-weight: 700;
-    transition: .25s;
+background: linear-gradient(
+    135deg,
+    #00b894,
+    #00cec9
+);
+
+color: white;
+font-size: 15px;
+font-weight: 700;
+
+transition: .25s;
+```
+
 }
 
 .secondary-button:hover {
-    transform: translateY(-2px);
+transform: translateY(-2px);
 }
 
 .text-button {
-    background: transparent;
-    color: var(--primary);
-    margin-top: 18px;
-    font-weight: 700;
-    font-size: 14px;
+background: transparent;
+color: var(--primary);
+
+```
+margin-top: 18px;
+
+font-weight: 700;
+font-size: 14px;
+```
+
 }
 
 .text-button:hover {
-    text-decoration: underline;
+text-decoration: underline;
 }
 
 /* ============================================================
-   MESSAGES
+MESSAGES
 ============================================================ */
 
 .auth-message {
-    margin-top: 15px;
-    min-height: 22px;
-    font-size: 14px;
-    font-weight: 600;
+margin-top: 15px;
+min-height: 22px;
+
+```
+font-size: 14px;
+font-weight: 600;
+```
+
 }
 
 .auth-message.success {
-    color: #008f72;
+color: #008f72;
 }
 
 .auth-message.error {
-    color: var(--red);
+color: var(--red);
 }
 
 .auth-message.info {
-    color: var(--blue);
+color: var(--blue);
 }
 
 /* ============================================================
-   CREATE ACCOUNT / FORGOT
+CREATE / FORGOT
 ============================================================ */
 
-.create-page,
-#forgotPinPage {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 35px 15px;
+.create-page {
+display: flex;
+align-items: center;
+justify-content: center;
 
-    background:
-        radial-gradient(circle at top right,rgba(232,67,147,.16),transparent 35%),
-        radial-gradient(circle at bottom left,rgba(9,132,227,.15),transparent 35%),
-        #f7f8ff;
+```
+padding: 35px 15px;
+
+background:
+    radial-gradient(circle at top right,
+    rgba(232,67,147,.16),
+    transparent 35%),
+    radial-gradient(circle at bottom left,
+    rgba(9,132,227,.15),
+    transparent 35%),
+    #f7f8ff;
+```
+
 }
 
 .form-card {
-    width: 100%;
-    max-width: 620px;
-    background: white;
-    padding: 35px;
-    border-radius: 25px;
-    box-shadow: var(--shadow);
+width: 100%;
+max-width: 620px;
+
+```
+background: white;
+
+padding: 35px;
+
+border-radius: 25px;
+
+box-shadow: var(--shadow);
+```
+
 }
 
 .page-header {
-    display: flex;
-    align-items: center;
-    gap: 18px;
-    margin-bottom: 28px;
+display: flex;
+align-items: center;
+
+```
+gap: 18px;
+
+margin-bottom: 28px;
+```
+
+}
+
+.page-header .small-logo {
+width: 60px;
+height: 60px;
+
+```
+max-width: 60px;
+max-height: 60px;
+
+margin: 0;
+```
+
 }
 
 .page-header h1 {
-    font-size: 28px;
+font-size: 28px;
 }
 
 .page-header p {
-    color: var(--gray);
-    margin-top: 5px;
+color: var(--gray);
+margin-top: 5px;
 }
 
 /* ============================================================
-   DASHBOARD
+DASHBOARD
 ============================================================ */
 
 .dashboard-page {
-    min-height: 100vh;
-    display: flex;
-    background: #f5f7fb;
+min-height: 100vh;
+
+```
+display: flex;
+
+background: #f5f7fb;
+```
+
 }
 
 /* ============================================================
-   SIDEBAR
+HAMBURGER BUTTON
+============================================================ */
+
+.menu-toggle {
+position: fixed;
+
+```
+left: 20px;
+top: 20px;
+
+width: 48px;
+height: 48px;
+
+border-radius: 14px;
+
+background: white;
+
+color: var(--primary);
+
+font-size: 25px;
+
+display: flex;
+align-items: center;
+justify-content: center;
+
+box-shadow: 0 7px 25px rgba(0,0,0,.12);
+
+z-index: 3000;
+
+transition: .25s;
+```
+
+}
+
+.menu-toggle:hover {
+transform: scale(1.05);
+background: var(--primary);
+color: white;
+}
+
+/* ============================================================
+SIDEBAR
 ============================================================ */
 
 .sidebar {
-    width: 255px;
-    min-height: 100vh;
-    padding: 25px 18px;
+position: fixed;
 
-    background: linear-gradient(
+```
+left: 0;
+top: 0;
+bottom: 0;
+
+width: 280px;
+
+padding: 25px 18px;
+
+background:
+    linear-gradient(
         180deg,
         #302b63,
         #24243e
     );
 
-    color: white;
+color: white;
 
-    position: fixed;
-    left: 0;
-    top: 0;
-    bottom: 0;
+z-index: 2500;
 
-    display: flex;
-    flex-direction: column;
+overflow-y: auto;
+
+transform: translateX(-100%);
+
+transition: transform .3s ease;
+
+box-shadow: 15px 0 40px rgba(0,0,0,.15);
+```
+
 }
 
+/* sidebar open */
+
+.sidebar.open {
+transform: translateX(0);
+}
+
+/* sidebar logo */
+
 .sidebar-logo {
-    text-align: center;
-    padding-bottom: 22px;
-    border-bottom: 1px solid rgba(255,255,255,.12);
+text-align: center;
+
+```
+padding: 55px 8px 22px;
+
+border-bottom:
+    1px solid rgba(255,255,255,.12);
+```
+
+}
+
+.sidebar-logo .college-logo-img {
+width: 60px;
+height: 60px;
+
+```
+max-width: 60px;
+max-height: 60px;
+
+margin: 0 auto 10px;
+```
+
 }
 
 .sidebar-logo h2 {
-    font-size: 20px;
+font-size: 20px;
 }
 
 .sidebar-logo p {
-    color: #c9c8df;
-    margin-top: 6px;
-    font-size: 12px;
-    line-height: 1.4;
+color: #c9c8df;
+
+```
+margin-top: 5px;
+
+font-size: 12px;
+
+line-height: 1.4;
+```
+
 }
 
 /* ============================================================
-   SIDEBAR MENU
+MENU
 ============================================================ */
 
 .side-menu {
-    margin-top: 25px;
+margin-top: 22px;
+
+```
+display: flex;
+flex-direction: column;
+
+gap: 7px;
+```
+
 }
 
 .menu-item {
-    width: 100%;
-    padding: 13px 15px;
-    margin-bottom: 8px;
+width: 100%;
 
-    border-radius: 12px;
+```
+padding: 13px 15px;
 
-    background: transparent;
-    color: #dcdbea;
+border-radius: 12px;
 
-    text-align: left;
-    font-size: 14px;
-    font-weight: 600;
+background: transparent;
 
-    transition: .25s;
+color: #dcdbea;
+
+text-align: left;
+
+font-size: 14px;
+
+font-weight: 600;
+
+transition: .25s;
+```
+
 }
 
 .menu-item:hover,
 .menu-item.active {
-    background: linear-gradient(
-        135deg,
-        rgba(108,92,231,.95),
-        rgba(232,67,147,.85)
-    );
+background:
+linear-gradient(
+135deg,
+rgba(108,92,231,.95),
+rgba(232,67,147,.85)
+);
 
-    color: white;
-}
+```
+color: white;
 
-.logout-button {
-    margin-top: auto;
-    padding: 13px;
-    border-radius: 12px;
+transform: translateX(3px);
+```
 
-    background: rgba(214,48,49,.18);
-    color: #ff7675;
-
-    font-weight: 700;
-    transition: .25s;
-}
-
-.logout-button:hover {
-    background: var(--red);
-    color: white;
 }
 
 /* ============================================================
-   MAIN CONTENT
+LOGOUT
+============================================================ */
+
+.logout-button {
+width: 100%;
+
+```
+margin-top: 20px;
+
+padding: 13px;
+
+border-radius: 12px;
+
+background: rgba(214,48,49,.18);
+
+color: #ff7675;
+
+font-weight: 700;
+
+transition: .25s;
+```
+
+}
+
+.logout-button:hover {
+background: var(--red);
+color: white;
+}
+
+/* ============================================================
+MAIN CONTENT
 ============================================================ */
 
 .main-content {
-    margin-left: 255px;
-    width: calc(100% - 255px);
-    padding: 25px 35px;
+width: 100%;
+
+```
+min-height: 100vh;
+
+padding: 85px 35px 35px;
+
+transition: .3s;
+```
+
 }
 
+/* ============================================================
+TOPBAR
+============================================================ */
+
 .topbar {
-    background: white;
-    border-radius: 18px;
-    padding: 18px 22px;
-    margin-bottom: 25px;
+background: white;
 
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+```
+border-radius: 18px;
 
-    box-shadow: 0 5px 20px rgba(0,0,0,.05);
+padding: 18px 22px;
+
+margin-bottom: 25px;
+
+display: flex;
+
+align-items: center;
+
+justify-content: space-between;
+
+box-shadow:
+    0 5px 20px rgba(0,0,0,.05);
+```
+
 }
 
 .topbar h1 {
-    font-size: 26px;
+font-size: 26px;
 }
 
 .topbar p {
-    color: var(--gray);
-    font-size: 14px;
-    margin-top: 4px;
+color: var(--gray);
+
+```
+font-size: 14px;
+
+margin-top: 4px;
+```
+
 }
 
 .profile-area {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+display: flex;
+
+```
+align-items: center;
+
+gap: 10px;
+```
+
 }
 
 .profile-icon {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
+width: 45px;
+height: 45px;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+```
+border-radius: 50%;
 
-    background: linear-gradient(
+display: flex;
+
+align-items: center;
+justify-content: center;
+
+background:
+    linear-gradient(
         135deg,
         var(--primary),
         var(--pink)
     );
 
-    color: white;
+color: white;
+```
+
 }
 
 .profile-area strong {
-    display: block;
+display: block;
 }
 
 .profile-area small {
-    color: var(--gray);
+color: var(--gray);
 }
 
 /* ============================================================
-   WELCOME
+WELCOME
 ============================================================ */
 
 .welcome-card {
-    background: linear-gradient(
-        135deg,
-        #6c5ce7,
-        #8e44ad,
-        #e84393
-    );
+background:
+linear-gradient(
+135deg,
+#6c5ce7,
+#8e44ad,
+#e84393
+);
 
-    color: white;
-    border-radius: 22px;
-    padding: 28px;
+```
+color: white;
 
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+border-radius: 22px;
 
-    box-shadow: 0 12px 30px rgba(108,92,231,.25);
+padding: 28px;
+
+display: flex;
+
+align-items: center;
+
+justify-content: space-between;
+
+box-shadow:
+    0 12px 30px rgba(108,92,231,.25);
+```
+
 }
 
 .welcome-card span {
-    opacity: .85;
-    font-size: 14px;
+opacity: .85;
+
+```
+font-size: 14px;
+```
+
 }
 
 .welcome-card h2 {
-    font-size: 29px;
-    margin: 6px 0;
+font-size: 29px;
+
+```
+margin: 6px 0;
+```
+
 }
 
 .welcome-card p {
-    opacity: .9;
+opacity: .9;
 }
 
 .welcome-icon {
-    font-size: 65px;
+font-size: 65px;
 }
 
 /* ============================================================
-   STATS
+STATISTICS
 ============================================================ */
 
 .stats-grid {
-    display: grid;
-    grid-template-columns: repeat(4,1fr);
-    gap: 18px;
-    margin: 25px 0;
+display: grid;
+
+```
+grid-template-columns:
+    repeat(4,1fr);
+
+gap: 18px;
+
+margin: 25px 0;
+```
+
 }
 
 .stat-card {
-    background: white;
-    border-radius: 18px;
-    padding: 20px;
+background: white;
 
-    display: flex;
-    align-items: center;
-    gap: 15px;
+```
+border-radius: 18px;
 
-    box-shadow: 0 7px 20px rgba(0,0,0,.06);
-    transition: .25s;
+padding: 20px;
+
+display: flex;
+
+align-items: center;
+
+gap: 15px;
+
+box-shadow:
+    0 7px 20px rgba(0,0,0,.06);
+
+transition: .25s;
+```
+
 }
 
 .stat-card:hover {
-    transform: translateY(-4px);
+transform: translateY(-4px);
 }
 
 .stat-icon {
-    width: 52px;
-    height: 52px;
-    border-radius: 15px;
+width: 52px;
+height: 52px;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+```
+border-radius: 15px;
 
-    font-size: 23px;
+display: flex;
+
+align-items: center;
+justify-content: center;
+
+font-size: 23px;
+```
+
 }
 
 .stat-card.blue .stat-icon {
-    background: #e7f1ff;
+background: #e7f1ff;
 }
 
 .stat-card.green .stat-icon {
-    background: #e4fff7;
+background: #e4fff7;
 }
 
 .stat-card.red .stat-icon {
-    background: #ffe9e9;
+background: #ffe9e9;
 }
 
 .stat-card.purple .stat-icon {
-    background: #f1e9ff;
+background: #f1e9ff;
 }
 
 .stat-card p {
-    color: var(--gray);
-    font-size: 13px;
+color: var(--gray);
+
+```
+font-size: 13px;
+```
+
 }
 
 .stat-card h2 {
-    font-size: 27px;
-    margin-top: 3px;
+font-size: 27px;
+
+```
+margin-top: 3px;
+```
+
 }
 
 /* ============================================================
-   SECTIONS
+SECTIONS
 ============================================================ */
 
 .section-title {
-    margin: 25px 0 15px;
+margin: 25px 0 15px;
 }
 
 .section-title h2 {
-    font-size: 21px;
+font-size: 21px;
 }
 
 .dashboard-section {
-    margin-bottom: 25px;
+margin-bottom: 25px;
 }
 
 .section-header {
-    background: white;
-    padding: 22px;
-    border-radius: 18px;
-    margin-bottom: 20px;
+background: white;
+
+```
+padding: 22px;
+
+border-radius: 18px;
+
+margin-bottom: 20px;
+```
+
 }
 
 .section-header h2 {
-    font-size: 23px;
+font-size: 23px;
 }
 
 .section-header p {
-    color: var(--gray);
-    margin-top: 5px;
+color: var(--gray);
+
+```
+margin-top: 5px;
+```
+
 }
 
 /* ============================================================
-   QUICK ACTIONS
+QUICK ACTIONS
 ============================================================ */
 
 .quick-actions {
-    display: grid;
-    grid-template-columns: repeat(3,1fr);
-    gap: 18px;
+display: grid;
+
+```
+grid-template-columns:
+    repeat(3,1fr);
+
+gap: 18px;
+```
+
 }
 
 .action-card {
-    background: white;
-    border-radius: 18px;
-    padding: 25px;
-    text-align: left;
+background: white;
 
-    box-shadow: 0 7px 20px rgba(0,0,0,.06);
-    transition: .25s;
+```
+border-radius: 18px;
+
+padding: 25px;
+
+text-align: left;
+
+box-shadow:
+    0 7px 20px rgba(0,0,0,.06);
+
+transition: .25s;
+```
+
 }
 
 .action-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 14px 30px rgba(0,0,0,.10);
+transform: translateY(-5px);
+
+```
+box-shadow:
+    0 14px 30px rgba(0,0,0,.10);
+```
+
 }
 
 .action-icon {
-    display: block;
-    font-size: 35px;
-    margin-bottom: 14px;
+display: block;
+
+```
+font-size: 35px;
+
+margin-bottom: 14px;
+```
+
 }
 
 .action-card strong {
-    display: block;
-    font-size: 17px;
+display: block;
+
+```
+font-size: 17px;
+```
+
 }
 
 .action-card small {
-    display: block;
-    margin-top: 6px;
-    color: var(--gray);
+display: block;
+
+```
+margin-top: 6px;
+
+color: var(--gray);
+```
+
 }
 
 /* ============================================================
-   FACE REGISTRATION
+DETAILS / CAMERA
 ============================================================ */
 
 .face-layout {
-    display: grid;
-    grid-template-columns: 1fr 1.2fr;
-    gap: 22px;
+display: grid;
+
+```
+grid-template-columns:
+    1fr 1.2fr;
+
+gap: 22px;
+```
+
 }
 
 .details-card,
 .camera-card,
 .attendance-camera-card {
-    background: white;
-    border-radius: 20px;
-    padding: 24px;
-    box-shadow: 0 7px 20px rgba(0,0,0,.06);
+background: white;
+
+```
+border-radius: 20px;
+
+padding: 24px;
+
+box-shadow:
+    0 7px 20px rgba(0,0,0,.06);
+```
+
 }
 
 .details-card h3,
 .camera-card h3 {
-    margin-bottom: 20px;
+margin-bottom: 20px;
 }
 
+.personal-details-card p {
+padding: 13px 0;
+
+```
+border-bottom:
+    1px solid #eee;
+
+line-height: 1.5;
+```
+
+}
+
+.personal-details-card p:last-child {
+border-bottom: none;
+}
+
+/* ============================================================
+CAMERA TITLE
+============================================================ */
+
 .camera-title {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 15px;
+display: flex;
+
+```
+align-items: center;
+
+justify-content: space-between;
+
+margin-bottom: 15px;
+```
+
 }
 
 .camera-title span {
-    background: #e9fff8;
-    color: #008f72;
-    padding: 7px 10px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 700;
+background: #e9fff8;
+
+```
+color: #008f72;
+
+padding: 7px 10px;
+
+border-radius: 20px;
+
+font-size: 12px;
+
+font-weight: 700;
+```
+
 }
 
+/* ============================================================
+SQUARE CAMERA
+============================================================ */
+
 .camera-wrapper {
-    position: relative;
-    overflow: hidden;
-    border-radius: 18px;
-    background: #151525;
-    min-height: 300px;
+position: relative;
+
+```
+overflow: hidden;
+
+border-radius: 18px;
+
+background: #151525;
+
+width: 100%;
+
+aspect-ratio: 1 / 1;
+
+max-width: 520px;
+
+margin: 0 auto;
+```
+
 }
 
 .camera-wrapper video {
-    width: 100%;
-    height: 100%;
-    min-height: 300px;
-    object-fit: cover;
-    display: block;
+width: 100%;
+height: 100%;
 
-    /* Mirror camera like selfie */
-    transform: scaleX(-1);
+```
+object-fit: cover;
+
+display: block;
+
+/* selfie mirror */
+
+transform: scaleX(-1);
+```
+
 }
 
+/* ============================================================
+FACE GUIDE
+============================================================ */
+
 .face-guide {
-    position: absolute;
-    inset: 12% 20%;
-    border: 3px solid rgba(255,255,255,.75);
-    border-radius: 48%;
-    pointer-events: none;
+position: absolute;
+
+```
+inset: 12% 20%;
+
+border:
+    3px solid rgba(255,255,255,.75);
+
+border-radius: 48%;
+
+pointer-events: none;
+
+box-shadow:
+    0 0 25px rgba(255,255,255,.08);
+```
+
 }
 
 .face-guide span {
-    position: absolute;
-    width: 14px;
-    height: 14px;
-    border-radius: 50%;
-    background: #00ffb3;
-    top: 10px;
-    right: 10px;
-    box-shadow: 0 0 15px #00ffb3;
+position: absolute;
+
+```
+width: 14px;
+height: 14px;
+
+border-radius: 50%;
+
+background: #00ffb3;
+
+top: 10px;
+right: 10px;
+
+box-shadow:
+    0 0 15px #00ffb3;
+```
+
 }
 
 .camera-card > p {
-    color: var(--gray);
-    font-size: 13px;
-    margin-top: 14px;
-    line-height: 1.5;
+color: var(--gray);
+
+```
+font-size: 13px;
+
+margin-top: 14px;
+
+line-height: 1.5;
+```
+
 }
 
 /* ============================================================
-   ATTENDANCE
+ATTENDANCE CAMERA
 ============================================================ */
 
 .attendance-camera-card {
-    max-width: 850px;
-    margin: auto;
-}
+max-width: 650px;
 
-.large-camera {
-    min-height: 430px;
-}
+```
+margin: auto;
+```
 
-.large-camera video {
-    min-height: 430px;
-    transform: scaleX(-1);
 }
 
 .attendance-button {
-    margin-top: 20px;
+margin-top: 20px;
 }
 
 .attendance-result {
-    text-align: center;
-    margin-top: 15px;
-    padding: 13px;
-    border-radius: 12px;
-    background: #f3f4ff;
-    color: var(--primary);
-    font-weight: 700;
+text-align: center;
+
+```
+margin-top: 15px;
+
+padding: 13px;
+
+border-radius: 12px;
+
+background: #f3f4ff;
+
+color: var(--primary);
+
+font-weight: 700;
+```
+
 }
 
 /* ============================================================
-   STUDENTS
+STUDENTS
 ============================================================ */
 
 .search-box {
-    background: white;
-    padding: 15px;
-    border-radius: 15px;
-    margin-bottom: 18px;
+background: white;
+
+```
+padding: 15px;
+
+border-radius: 15px;
+
+margin-bottom: 18px;
+```
+
 }
 
 .student-list {
-    display: grid;
-    grid-template-columns: repeat(2,1fr);
-    gap: 15px;
+display: grid;
+
+```
+grid-template-columns:
+    repeat(2,1fr);
+
+gap: 15px;
+```
+
 }
 
 .student-item {
-    background: white;
-    padding: 20px;
-    border-radius: 17px;
-    border-left: 5px solid var(--primary);
-    box-shadow: 0 6px 18px rgba(0,0,0,.05);
+background: white;
+
+```
+padding: 20px;
+
+border-radius: 17px;
+
+border-left:
+    5px solid var(--primary);
+
+box-shadow:
+    0 6px 18px rgba(0,0,0,.05);
+```
+
 }
 
 .student-item h3 {
-    margin-bottom: 10px;
+margin-bottom: 10px;
 }
 
 .student-item p {
-    margin-top: 7px;
-    color: var(--gray);
-    font-size: 14px;
+margin-top: 7px;
+
+```
+color: var(--gray);
+
+font-size: 14px;
+```
+
 }
 
 /* ============================================================
-   POPUP
+POPUPS
 ============================================================ */
 
 .popup-overlay {
-    position: fixed;
-    inset: 0;
+position: fixed;
 
-    background: rgba(20,20,40,.60);
-    backdrop-filter: blur(5px);
+```
+inset: 0;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+background:
+    rgba(20,20,40,.60);
 
-    padding: 20px;
-    z-index: 9999;
+backdrop-filter: blur(5px);
+
+display: flex;
+
+align-items: center;
+
+justify-content: center;
+
+padding: 20px;
+
+z-index: 9999;
+```
+
 }
 
 .popup-card {
-    width: 100%;
-    max-width: 420px;
-    background: white;
-    border-radius: 24px;
-    padding: 35px;
-    text-align: center;
+width: 100%;
 
-    box-shadow: 0 25px 70px rgba(0,0,0,.25);
+```
+max-width: 420px;
 
-    animation: popup .25s ease;
+background: white;
+
+border-radius: 24px;
+
+padding: 35px;
+
+text-align: center;
+
+box-shadow:
+    0 25px 70px rgba(0,0,0,.25);
+
+animation:
+    popup .25s ease;
+```
+
 }
 
 @keyframes popup {
-    from {
-        opacity: 0;
-        transform: scale(.85);
-    }
 
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
+```
+from {
+    opacity: 0;
+    transform: scale(.85);
+}
+
+to {
+    opacity: 1;
+    transform: scale(1);
+}
+```
+
 }
 
 .popup-icon {
-    width: 75px;
-    height: 75px;
-    margin: 0 auto 15px;
+width: 75px;
+height: 75px;
 
-    border-radius: 50%;
+```
+margin: 0 auto 15px;
 
-    display: flex;
-    align-items: center;
-    justify-content: center;
+border-radius: 50%;
 
-    background: #e7fff7;
-    font-size: 38px;
+display: flex;
+
+align-items: center;
+justify-content: center;
+
+background: #e7fff7;
+
+font-size: 38px;
+```
+
 }
 
 .popup-card h2 {
-    margin-bottom: 10px;
+margin-bottom: 10px;
 }
 
 .popup-card p {
-    color: var(--gray);
-    line-height: 1.5;
-    margin-bottom: 20px;
+color: var(--gray);
+
+```
+line-height: 1.5;
+
+margin-bottom: 20px;
+```
+
 }
 
 /* ============================================================
-   MODALS
+MODAL
 ============================================================ */
 
 .modal-card {
-    width: 100%;
-    max-width: 650px;
-    max-height: 85vh;
-    overflow-y: auto;
+width: 100%;
 
-    background: white;
-    border-radius: 22px;
-    padding: 28px;
+```
+max-width: 750px;
 
-    position: relative;
+max-height: 85vh;
 
-    box-shadow: 0 25px 70px rgba(0,0,0,.25);
+overflow-y: auto;
+
+background: white;
+
+border-radius: 22px;
+
+padding: 28px;
+
+position: relative;
+
+box-shadow:
+    0 25px 70px rgba(0,0,0,.25);
+```
+
 }
 
 .close-button {
-    position: absolute;
-    right: 18px;
-    top: 18px;
+position: absolute;
 
-    width: 35px;
-    height: 35px;
+```
+right: 18px;
+top: 18px;
 
-    border-radius: 50%;
-    background: #f1f2f6;
-    color: #555;
+width: 35px;
+height: 35px;
 
-    font-size: 16px;
+border-radius: 50%;
+
+background: #f1f2f6;
+
+color: #555;
+
+font-size: 16px;
+```
+
 }
 
 .close-button:hover {
-    background: var(--red);
-    color: white;
+background: var(--red);
+
+```
+color: white;
+```
+
 }
 
 /* ============================================================
-   ATTENDANCE SUMMARY
+ATTENDANCE SUMMARY
 ============================================================ */
 
 .attendance-summary {
-    display: grid;
-    grid-template-columns: repeat(3,1fr);
-    gap: 12px;
-    margin: 20px 0;
+display: grid;
+
+```
+grid-template-columns:
+    repeat(3,1fr);
+
+gap: 12px;
+
+margin: 20px 0;
+```
+
 }
 
 .attendance-summary > div {
-    background: #f6f7fb;
-    border-radius: 14px;
-    padding: 18px;
-    text-align: center;
+background: #f6f7fb;
+
+```
+border-radius: 14px;
+
+padding: 18px;
+
+text-align: center;
+```
+
 }
 
 .attendance-summary strong {
-    display: block;
-    font-size: 27px;
-    color: var(--primary);
+display: block;
+
+```
+font-size: 27px;
+
+color: var(--primary);
+```
+
 }
 
 .attendance-summary span {
-    color: var(--gray);
-    font-size: 12px;
-}
+color: var(--gray);
 
-.attendance-history-item {
-    padding: 14px;
-    border-radius: 12px;
-    background: #f7f8fc;
-    margin-top: 10px;
+```
+font-size: 12px;
+```
 
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 10px;
-}
-
-.attendance-history-item span {
-    color: var(--gray);
-    font-size: 13px;
-}
-
-.attendance-history-item b {
-    color: #00a884;
-    font-size: 13px;
 }
 
 /* ============================================================
-   RESPONSIVE
+ATTENDANCE HISTORY
 ============================================================ */
 
-@media (max-width:1000px) {
+.attendance-history-item {
+padding: 14px;
 
-    .stats-grid {
-        grid-template-columns: repeat(2,1fr);
-    }
+```
+border-radius: 12px;
 
-    .quick-actions {
-        grid-template-columns: 1fr;
-    }
+background: #f7f8fc;
 
-    .face-layout {
-        grid-template-columns: 1fr;
-    }
+margin-top: 10px;
 
-    .student-list {
-        grid-template-columns: 1fr;
-    }
+display: flex;
+
+align-items: center;
+
+justify-content: space-between;
+
+gap: 10px;
+```
+
 }
 
-@media (max-width:750px) {
+.attendance-history-item span {
+color: var(--gray);
 
-    .sidebar {
-        width: 210px;
-    }
+```
+font-size: 13px;
+```
 
-    .main-content {
-        margin-left: 210px;
-        width: calc(100% - 210px);
-        padding: 18px;
-    }
-
-    .topbar {
-        padding: 15px;
-    }
-
-    .welcome-card {
-        padding: 22px;
-    }
-
-    .welcome-icon {
-        display: none;
-    }
 }
 
-@media (max-width:600px) {
+.attendance-history-item b {
+color: #00a884;
 
-    .login-card,
-    .form-card {
-        padding: 25px 20px;
-    }
+```
+font-size: 13px;
+```
 
-    .sidebar {
-        position: relative;
-        width: 100%;
-        min-height: auto;
-    }
-
-    .dashboard-page {
-        display: block;
-    }
-
-    .main-content {
-        margin-left: 0;
-        width: 100%;
-    }
-
-    .sidebar-logo {
-        padding-bottom: 15px;
-    }
-
-    .side-menu {
-        display: grid;
-        grid-template-columns: repeat(2,1fr);
-        gap: 7px;
-    }
-
-    .menu-item {
-        margin: 0;
-    }
-
-    .logout-button {
-        margin-top: 15px;
-    }
-
-    .stats-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .topbar {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 15px;
-    }
-
-    .attendance-summary {
-        grid-template-columns: 1fr;
-    }
-
-    .large-camera,
-    .large-camera video {
-        min-height: 300px;
-    }
 }
 
-@media (max-width:400px) {
+/* ============================================================
+SCROLLBAR
+============================================================ */
 
-    .login-card,
-    .form-card {
-        padding: 20px 15px;
-        border-radius: 18px;
-    }
+::-webkit-scrollbar {
+width: 8px;
+}
 
-    .college-logo-area h1 {
-        font-size: 25px;
-    }
+::-webkit-scrollbar-track {
+background: #f1f2f6;
+}
 
-    .page-header {
-        align-items: flex-start;
-    }
+::-webkit-scrollbar-thumb {
+background: #b2bec3;
 
-    .page-header h1 {
-        font-size: 23px;
-    }
+```
+border-radius: 10px;
+```
+
+}
+
+::-webkit-scrollbar-thumb:hover {
+background: var(--primary);
+}
+
+/* ============================================================
+RESPONSIVE
+============================================================ */
+
+@media (max-width: 1000px) {
+
+```
+.stats-grid {
+    grid-template-columns:
+        repeat(2,1fr);
+}
+
+.quick-actions {
+    grid-template-columns: 1fr;
+}
+
+.face-layout {
+    grid-template-columns: 1fr;
+}
+
+.student-list {
+    grid-template-columns: 1fr;
 }
 ```
+
+}
+
+@media (max-width: 700px) {
+
+```
+.main-content {
+    padding: 80px 18px 25px;
+}
+
+.topbar {
+    padding: 15px;
+
+    gap: 15px;
+}
+
+.welcome-card {
+    padding: 22px;
+}
+
+.welcome-icon {
+    display: none;
+}
+
+.sidebar {
+    width: 285px;
+}
+```
+
+}
+
+@media (max-width: 600px) {
+
+```
+.login-card,
+.form-card {
+    padding: 25px 20px;
+}
+
+.stats-grid {
+    grid-template-columns: 1fr;
+}
+
+.topbar {
+    flex-direction: column;
+
+    align-items: flex-start;
+}
+
+.profile-area {
+    width: 100%;
+}
+
+.attendance-summary {
+    grid-template-columns: 1fr;
+}
+
+.camera-wrapper {
+    max-width: 100%;
+}
+
+.page-header {
+    align-items: flex-start;
+}
+```
+
+}
+
+@media (max-width: 400px) {
+
+```
+.login-card,
+.form-card {
+    padding: 20px 15px;
+
+    border-radius: 18px;
+}
+
+.college-logo-area h1 {
+    font-size: 25px;
+}
+
+.page-header h1 {
+    font-size: 23px;
+}
+
+.menu-toggle {
+    left: 12px;
+    top: 12px;
+
+    width: 44px;
+    height: 44px;
+}
+```
+
+}
