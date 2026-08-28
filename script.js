@@ -1,28 +1,40 @@
 // =====================================================
 // SMART ATTENDANCE SYSTEM
+// COMPLETE SCRIPT.JS
 // =====================================================
 
+
 // =====================================================
-// STUDENTS DATA
+// STUDENTS
 // =====================================================
 
-let students = JSON.parse(
-    localStorage.getItem("students")
-) || [];
+let students =
+    JSON.parse(
+        localStorage.getItem("students")
+    ) || [];
+
+
+// =====================================================
+// ATTENDANCE HISTORY
+// =====================================================
+
+let attendanceHistory =
+    JSON.parse(
+        localStorage.getItem("attendanceHistory")
+    ) || [];
+
+
+// =====================================================
+// CAMERA VARIABLES
+// =====================================================
 
 let registrationStream = null;
 let attendanceStream = null;
 
 let faceModelLoaded = false;
+
 let registrationRunning = false;
 let attendanceRunning = false;
-
-
-// =====================================================
-// ADMIN
-// =====================================================
-
-const ADMIN_NAME = "Ayush Chatterjee";
 
 
 // =====================================================
@@ -39,6 +51,19 @@ function saveStudents() {
 
 
 // =====================================================
+// SAVE ATTENDANCE HISTORY
+// =====================================================
+
+function saveAttendanceHistory() {
+
+    localStorage.setItem(
+        "attendanceHistory",
+        JSON.stringify(attendanceHistory)
+    );
+}
+
+
+// =====================================================
 // DATE + DAY + TIME
 // =====================================================
 
@@ -48,37 +73,54 @@ function getAttendanceDateTime() {
 
     return {
 
-        date: now.toLocaleDateString("en-IN", {
-            day: "numeric",
-            month: "long",
-            year: "numeric"
-        }),
+        date:
+            now.toLocaleDateString(
+                "en-IN",
+                {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric"
+                }
+            ),
 
-        day: now.toLocaleDateString("en-IN", {
-            weekday: "long"
-        }),
+        day:
+            now.toLocaleDateString(
+                "en-IN",
+                {
+                    weekday: "long"
+                }
+            ),
 
-        time: now.toLocaleTimeString("en-IN", {
-            hour: "numeric",
-            minute: "2-digit",
-            second: "2-digit",
-            hour12: true
-        }),
+        time:
+            now.toLocaleTimeString(
+                "en-IN",
+                {
+                    hour: "numeric",
+                    minute: "2-digit",
+                    second: "2-digit",
+                    hour12: true
+                }
+            ),
 
-        dateKey: now.toLocaleDateString("en-IN")
+        dateKey:
+            now.toLocaleDateString(
+                "en-CA"
+            )
 
     };
 }
 
 
 // =====================================================
-// TODAY DATE
+// CURRENT DATE
 // =====================================================
 
 function showCurrentDate() {
 
     const element =
-        document.getElementById("currentDate");
+        document.getElementById(
+            "currentDate"
+        );
 
     if (!element) return;
 
@@ -86,87 +128,15 @@ function showCurrentDate() {
 
     element.innerText =
         "📅 " +
-        now.toLocaleDateString("en-IN", {
-            weekday: "long",
-            day: "numeric",
-            month: "long",
-            year: "numeric"
-        });
-}
-
-
-// =====================================================
-// ENSURE ATTENDANCE HISTORY
-// =====================================================
-
-function ensureAttendanceHistory(student) {
-
-    if (!Array.isArray(student.attendanceHistory)) {
-
-        student.attendanceHistory = [];
-
-    }
-
-    return student.attendanceHistory;
-}
-
-
-// =====================================================
-// ADD / UPDATE DAILY ATTENDANCE
-// =====================================================
-
-function saveDailyAttendance(
-    student,
-    status,
-    attendance
-) {
-
-    const history =
-        ensureAttendanceHistory(student);
-
-    const existing =
-        history.find(
-            item => item.dateKey === attendance.dateKey
+        now.toLocaleDateString(
+            "en-IN",
+            {
+                weekday: "long",
+                day: "numeric",
+                month: "long",
+                year: "numeric"
+            }
         );
-
-
-    if (existing) {
-
-        existing.status = status;
-        existing.date = attendance.date;
-        existing.day = attendance.day;
-        existing.time = attendance.time;
-
-    } else {
-
-        history.push({
-
-            dateKey: attendance.dateKey,
-            date: attendance.date,
-            day: attendance.day,
-            time: attendance.time,
-            status: status
-
-        });
-
-    }
-
-
-    // Latest attendance information
-
-    student.status = status;
-
-    student.attendanceDate =
-        attendance.date;
-
-    student.attendanceDay =
-        attendance.day;
-
-    student.attendanceTime =
-        attendance.time;
-
-
-    saveStudents();
 }
 
 
@@ -179,27 +149,27 @@ function addStudent() {
     const name =
         document.getElementById(
             "studentName"
-        ).value.trim();
+        )?.value.trim();
 
     const roll =
         document.getElementById(
             "studentRoll"
-        ).value.trim();
+        )?.value.trim();
 
     const college =
         document.getElementById(
             "studentCollege"
-        ).value.trim();
+        )?.value.trim();
 
     const department =
         document.getElementById(
             "studentDepartment"
-        ).value.trim();
+        )?.value.trim();
 
     const mobile =
         document.getElementById(
             "studentMobile"
-        ).value.trim();
+        )?.value.trim();
 
 
     if (
@@ -211,23 +181,7 @@ function addStudent() {
     ) {
 
         alert(
-            "Please fill Name, Roll, College, Department and Mobile Number."
-        );
-
-        return;
-    }
-
-
-    const existing =
-        students.find(
-            student => student.roll === roll
-        );
-
-
-    if (existing) {
-
-        alert(
-            "This Roll Number is already registered."
+            "Please fill all student details."
         );
 
         return;
@@ -236,56 +190,26 @@ function addStudent() {
 
     students.push({
 
-        name: name,
-        roll: roll,
-        college: college,
-        department: department,
-        mobile: mobile,
-
-        descriptor: null,
+        name,
+        roll,
+        college,
+        department,
+        mobile,
 
         status: "Not Marked",
 
         attendanceDate: "",
         attendanceDay: "",
-        attendanceTime: "",
-
-        attendanceHistory: []
+        attendanceTime: ""
 
     });
 
 
     saveStudents();
 
-
-    document.getElementById(
-        "studentName"
-    ).value = "";
-
-    document.getElementById(
-        "studentRoll"
-    ).value = "";
-
-    document.getElementById(
-        "studentCollege"
-    ).value = "";
-
-    document.getElementById(
-        "studentDepartment"
-    ).value = "";
-
-    document.getElementById(
-        "studentMobile"
-    ).value = "";
-
-
     displayStudents();
+
     updateDashboard();
-
-
-    alert(
-        "✅ Student added successfully!"
-    );
 }
 
 
@@ -300,39 +224,33 @@ function displayStudents() {
             "studentList"
         );
 
-    const searchElement =
-        document.getElementById(
-            "searchStudent"
-        );
-
-
     if (!list) return;
 
 
     const search =
-        searchElement
-            ? searchElement.value
-                .toLowerCase()
-                .trim()
-            : "";
+        document.getElementById(
+            "searchStudent"
+        )?.value
+            .toLowerCase()
+            .trim() || "";
 
 
     list.innerHTML = "";
 
 
     const filtered =
-        students.filter(student =>
+        students.filter(
+            student =>
 
-            (student.name || "")
-                .toLowerCase()
-                .includes(search)
+                student.name
+                    .toLowerCase()
+                    .includes(search)
 
-            ||
+                ||
 
-            (student.roll || "")
-                .toLowerCase()
-                .includes(search)
-
+                student.roll
+                    .toLowerCase()
+                    .includes(search)
         );
 
 
@@ -345,210 +263,220 @@ function displayStudents() {
     }
 
 
-    filtered.forEach(student => {
+    filtered.forEach(
+        student => {
 
-        const index =
-            students.indexOf(student);
-
-
-        const row =
-            document.createElement("div");
-
-
-        row.className =
-            "student-row";
+            const index =
+                students.indexOf(
+                    student
+                );
 
 
-        let attendanceInfo = "";
+            const row =
+                document.createElement(
+                    "div"
+                );
+
+            row.className =
+                "student-row";
 
 
-        if (student.attendanceDate) {
-
-            attendanceInfo = `
-
-                <br>
-
-                📅 Date:
-                ${student.attendanceDate}
-
-                <br>
-
-                📆 Day:
-                ${student.attendanceDay}
-
-                <br>
-
-                🕐 Time:
-                ${student.attendanceTime}
-
-            `;
-        }
+            let attendanceInfo = "";
 
 
-        row.innerHTML = `
+            if (
+                student.attendanceDate
+            ) {
 
-            <div class="student-info">
+                attendanceInfo = `
 
-                <strong>
-                    ${student.name}
-                </strong>
+                    <br>
+                    📅 Date:
+                    ${student.attendanceDate}
 
-                <br>
+                    <br>
+                    📆 Day:
+                    ${student.attendanceDay}
 
-                Roll:
-                ${student.roll}
+                    <br>
+                    🕐 Time:
+                    ${student.attendanceTime}
 
-                <br>
+                `;
+            }
 
-                College:
-                ${student.college}
 
-                <br>
+            row.innerHTML = `
 
-                Department:
-                ${student.department}
+                <div class="student-info">
 
-                <br>
+                    <strong>
+                        ${student.name}
+                    </strong>
 
-                📱 Mobile:
-                ${student.mobile || "Not added"}
+                    <br>
 
-                ${attendanceInfo}
+                    🔢 Roll:
+                    ${student.roll}
 
-                <div class="status">
+                    <br>
 
-                    Status:
-                    ${student.status || "Not Marked"}
+                    🏫 College:
+                    ${student.college}
+
+                    <br>
+
+                    🎓 Department:
+                    ${student.department}
+
+                    <br>
+
+                    📱 Mobile:
+                    ${student.mobile || "Not added"}
+
+                    ${attendanceInfo}
+
+                    <div class="status">
+
+                        Status:
+                        ${student.status}
+
+                    </div>
 
                 </div>
 
-            </div>
+
+                <div class="student-actions">
+
+                    <button
+                        class="present-btn"
+                        onclick="markPresent(${index})"
+                    >
+                        Present
+                    </button>
 
 
-            <div class="student-actions">
-
-                <button
-                    class="present-btn"
-                    onclick="markPresent(${index})"
-                >
-                    Present
-                </button>
+                    <button
+                        class="absent-btn"
+                        onclick="markAbsent(${index})"
+                    >
+                        Absent
+                    </button>
 
 
-                <button
-                    class="absent-btn"
-                    onclick="markAbsent(${index})"
-                >
-                    Absent
-                </button>
+                    <button
+                        class="delete-btn"
+                        onclick="deleteStudent(${index})"
+                    >
+                        Delete
+                    </button>
+
+                </div>
+
+            `;
 
 
-                <button
-                    class="delete-btn"
-                    onclick="deleteStudent(${index})"
-                >
-                    Delete
-                </button>
+            list.appendChild(row);
 
-            </div>
-
-        `;
-
-
-        list.appendChild(row);
-
-    });
+        }
+    );
 }
 
 
 // =====================================================
-// PRESENT
+// MARK PRESENT MANUALLY
 // =====================================================
 
 function markPresent(index) {
 
-    if (!students[index]) return;
-
-
     const attendance =
         getAttendanceDateTime();
 
 
-    saveDailyAttendance(
+    students[index].status =
+        "Present";
+
+    students[index].attendanceDate =
+        attendance.date;
+
+    students[index].attendanceDay =
+        attendance.day;
+
+    students[index].attendanceTime =
+        attendance.time;
+
+
+    saveStudents();
+
+
+    addAttendanceHistory(
         students[index],
-        "Present",
-        attendance
+        attendance,
+        "Present"
     );
 
 
     displayStudents();
+
     updateDashboard();
-
-
-    alert(
-        "✅ Attendance marked Present!\n\n" +
-        "📅 " + attendance.date +
-        "\n📆 " + attendance.day +
-        "\n🕐 " + attendance.time
-    );
 }
 
 
 // =====================================================
-// ABSENT
+// MARK ABSENT
 // =====================================================
 
 function markAbsent(index) {
 
-    if (!students[index]) return;
-
-
     const attendance =
         getAttendanceDateTime();
 
 
-    saveDailyAttendance(
+    students[index].status =
+        "Absent";
+
+
+    saveStudents();
+
+
+    addAttendanceHistory(
         students[index],
-        "Absent",
-        attendance
+        attendance,
+        "Absent"
     );
 
 
     displayStudents();
+
     updateDashboard();
-
-
-    alert(
-        "❌ Attendance marked Absent!\n\n" +
-        "📅 " + attendance.date
-    );
 }
 
 
 // =====================================================
-// DELETE STUDENT
+// DELETE
 // =====================================================
 
 function deleteStudent(index) {
-
-    if (!students[index]) return;
-
 
     if (
         !confirm(
             "Delete this student?"
         )
     ) {
-
         return;
     }
 
 
-    students.splice(index, 1);
+    students.splice(
+        index,
+        1
+    );
+
 
     saveStudents();
 
     displayStudents();
+
     updateDashboard();
 }
 
@@ -565,15 +493,15 @@ function updateDashboard() {
 
     const present =
         students.filter(
-            student =>
-                student.status === "Present"
+            s =>
+                s.status === "Present"
         ).length;
 
 
     const absent =
         students.filter(
-            student =>
-                student.status === "Absent"
+            s =>
+                s.status === "Absent"
         ).length;
 
 
@@ -607,15 +535,18 @@ function updateDashboard() {
 
 
     if (totalElement)
-        totalElement.innerText = total;
+        totalElement.innerText =
+            total;
 
 
     if (presentElement)
-        presentElement.innerText = present;
+        presentElement.innerText =
+            present;
 
 
     if (absentElement)
-        absentElement.innerText = absent;
+        absentElement.innerText =
+            absent;
 
 
     if (percentageElement)
@@ -625,7 +556,83 @@ function updateDashboard() {
 
 
 // =====================================================
-// FACE API
+// ATTENDANCE HISTORY
+// =====================================================
+
+function addAttendanceHistory(
+    student,
+    attendance,
+    status
+) {
+
+    const alreadyExists =
+        attendanceHistory.find(
+            record =>
+
+                record.roll ===
+                    student.roll
+
+                &&
+
+                record.dateKey ===
+                    attendance.dateKey
+        );
+
+
+    if (alreadyExists) {
+
+        alreadyExists.status =
+            status;
+
+        alreadyExists.date =
+            attendance.date;
+
+        alreadyExists.day =
+            attendance.day;
+
+        alreadyExists.time =
+            attendance.time;
+
+    } else {
+
+        attendanceHistory.push({
+
+            name: student.name,
+
+            roll: student.roll,
+
+            college: student.college,
+
+            department:
+                student.department,
+
+            mobile:
+                student.mobile || "",
+
+            status,
+
+            date:
+                attendance.date,
+
+            day:
+                attendance.day,
+
+            time:
+                attendance.time,
+
+            dateKey:
+                attendance.dateKey
+
+        });
+    }
+
+
+    saveAttendanceHistory();
+}
+
+
+// =====================================================
+// FACE API MODEL
 // =====================================================
 
 const MODEL_URL =
@@ -639,7 +646,6 @@ const MODEL_URL =
 async function loadFaceModels() {
 
     if (faceModelLoaded) {
-
         return true;
     }
 
@@ -647,18 +653,30 @@ async function loadFaceModels() {
     try {
 
         await faceapi.nets.tinyFaceDetector
-            .loadFromUri(MODEL_URL);
+            .loadFromUri(
+                MODEL_URL
+            );
 
 
         await faceapi.nets.faceLandmark68Net
-            .loadFromUri(MODEL_URL);
+            .loadFromUri(
+                MODEL_URL
+            );
 
 
         await faceapi.nets.faceRecognitionNet
-            .loadFromUri(MODEL_URL);
+            .loadFromUri(
+                MODEL_URL
+            );
 
 
-        faceModelLoaded = true;
+        faceModelLoaded =
+            true;
+
+
+        console.log(
+            "Face models loaded successfully."
+        );
 
 
         return true;
@@ -677,7 +695,7 @@ async function loadFaceModels() {
 
 
 // =====================================================
-// CAMERA
+// START CAMERA
 // =====================================================
 
 async function startCameraForVideo(
@@ -698,6 +716,11 @@ async function startCameraForVideo(
 
     if (!video) {
 
+        console.error(
+            "Video element not found:",
+            videoId
+        );
+
         return null;
     }
 
@@ -705,12 +728,14 @@ async function startCameraForVideo(
     try {
 
         const stream =
-            await navigator.mediaDevices
+            await navigator
+                .mediaDevices
                 .getUserMedia({
 
                     video: {
 
-                        facingMode: "user",
+                        facingMode:
+                            "user",
 
                         width: {
                             ideal: 640
@@ -734,26 +759,45 @@ async function startCameraForVideo(
         await video.play();
 
 
+        /*
+           IMPORTANT:
+
+           Do NOT flip the video.
+
+           This keeps movement natural.
+        */
+
+        video.style.transform =
+            "none";
+
+
         if (status) {
 
             status.innerText =
-                "📷 Camera ON — Face the camera";
+                "Camera ON ✅";
         }
 
 
         return stream;
 
-
     } catch (error) {
 
-        console.error(error);
+        console.error(
+            "Camera error:",
+            error
+        );
 
 
         if (status) {
 
             status.innerText =
-                "❌ Camera permission denied.";
+                "Camera permission denied ❌";
         }
+
+
+        alert(
+            "Camera could not start. Please allow camera permission."
+        );
 
 
         return null;
@@ -768,7 +812,6 @@ async function startCameraForVideo(
 async function startRegistrationCamera() {
 
     if (registrationStream) {
-
         return;
     }
 
@@ -788,7 +831,6 @@ async function startRegistrationCamera() {
 async function startAttendanceCamera() {
 
     if (attendanceStream) {
-
         return;
     }
 
@@ -810,37 +852,42 @@ async function startAutomaticFaceRegistration() {
     const name =
         document.getElementById(
             "faceName"
-        ).value.trim();
+        )?.value.trim();
 
     const roll =
         document.getElementById(
             "faceRoll"
-        ).value.trim();
+        )?.value.trim();
 
     const college =
         document.getElementById(
             "collegeName"
-        ).value.trim();
+        )?.value.trim();
 
     const department =
         document.getElementById(
             "departmentName"
-        ).value.trim();
+        )?.value.trim();
 
     const mobile =
         document.getElementById(
             "faceMobile"
-        ).value.trim();
+        )?.value.trim();
 
+
+    const message =
+        document.getElementById(
+            "registrationMessage"
+        );
 
     const status =
         document.getElementById(
             "registrationStatus"
         );
 
-    const message =
+    const button =
         document.getElementById(
-            "registrationMessage"
+            "registerFaceButton"
         );
 
 
@@ -858,20 +905,18 @@ async function startAutomaticFaceRegistration() {
                 "❌ Please fill all student details.";
         }
 
-
         return;
     }
 
 
-    const button =
-        document.getElementById(
-            "registerFaceButton"
-        );
-
-
     if (button) {
-
         button.disabled = true;
+    }
+
+
+    if (message) {
+        message.innerText =
+            "⏳ Loading face recognition...";
     }
 
 
@@ -884,26 +929,20 @@ async function startAutomaticFaceRegistration() {
         if (message) {
 
             message.innerText =
-                "❌ Face detection model could not load.";
+                "❌ Face recognition model could not load.";
         }
 
 
-        buttonEnable(
-            "registerFaceButton"
-        );
+        if (button) {
+            button.disabled = false;
+        }
 
 
         return;
     }
 
 
-    const video =
-        document.getElementById(
-            "registrationCamera"
-        );
-
-
-    if (!video.srcObject) {
+    if (!registrationStream) {
 
         registrationStream =
             await startCameraForVideo(
@@ -914,27 +953,26 @@ async function startAutomaticFaceRegistration() {
 
         if (!registrationStream) {
 
-            buttonEnable(
-                "registerFaceButton"
-            );
-
+            if (button) {
+                button.disabled = false;
+            }
 
             return;
         }
     }
 
 
-    if (status) {
-
-        status.innerText =
-            "📷 Camera ON — Looking for your face...";
-    }
-
-
     if (message) {
 
         message.innerText =
-            "Please look at the camera. Face will be captured automatically.";
+            "📸 Camera ON — please look at the camera...";
+    }
+
+
+    if (status) {
+
+        status.innerText =
+            "Looking for your face...";
     }
 
 
@@ -965,7 +1003,6 @@ async function detectRegistrationFace(
 ) {
 
     if (!registrationRunning) {
-
         return;
     }
 
@@ -1004,7 +1041,7 @@ async function detectRegistrationFace(
             if (status) {
 
                 status.innerText =
-                    "✅ Face detected — Capturing...";
+                    "Face detected ✅ Registering...";
             }
 
 
@@ -1014,66 +1051,74 @@ async function detectRegistrationFace(
                 );
 
 
-            let student =
+            localStorage.setItem(
+                "registeredFaceStudent",
+                JSON.stringify({
+
+                    name,
+
+                    roll,
+
+                    college,
+
+                    department,
+
+                    mobile,
+
+                    descriptor
+
+                })
+            );
+
+
+            const existing =
                 students.find(
-                    s => s.roll === roll
+                    s =>
+                        s.roll === roll
                 );
 
 
-            if (student) {
+            if (existing) {
 
-                student.name =
+                existing.name =
                     name;
 
-                student.college =
+                existing.college =
                     college;
 
-                student.department =
+                existing.department =
                     department;
 
-                student.mobile =
+                existing.mobile =
                     mobile;
-
-                student.descriptor =
-                    descriptor;
-
-
-                ensureAttendanceHistory(
-                    student
-                );
 
             } else {
 
-                student = {
+                students.push({
 
-                    name: name,
+                    name,
 
-                    roll: roll,
+                    roll,
 
-                    college: college,
+                    college,
 
-                    department: department,
+                    department,
 
-                    mobile: mobile,
+                    mobile,
 
-                    descriptor: descriptor,
+                    status:
+                        "Not Marked",
 
-                    status: "Not Marked",
+                    attendanceDate:
+                        "",
 
-                    attendanceDate: "",
+                    attendanceDay:
+                        "",
 
-                    attendanceDay: "",
+                    attendanceTime:
+                        ""
 
-                    attendanceTime: "",
-
-                    attendanceHistory: []
-
-                };
-
-
-                students.push(
-                    student
-                );
+                });
             }
 
 
@@ -1081,13 +1126,11 @@ async function detectRegistrationFace(
 
 
             displayStudents();
+
             updateDashboard();
 
 
-            registrationSuccessful(
-                name,
-                roll
-            );
+            registrationSuccessful();
 
 
             return;
@@ -1097,7 +1140,7 @@ async function detectRegistrationFace(
         if (status) {
 
             status.innerText =
-                "📷 Looking for your face...";
+                "Looking for your face...";
         }
 
 
@@ -1116,10 +1159,12 @@ async function detectRegistrationFace(
             300
         );
 
-
     } catch (error) {
 
-        console.error(error);
+        console.error(
+            "Registration detection error:",
+            error
+        );
 
 
         registrationRunning =
@@ -1129,7 +1174,7 @@ async function detectRegistrationFace(
         if (status) {
 
             status.innerText =
-                "❌ Face detection error.";
+                "Face detection error ❌";
         }
 
 
@@ -1144,10 +1189,7 @@ async function detectRegistrationFace(
 // REGISTRATION SUCCESS
 // =====================================================
 
-function registrationSuccessful(
-    name,
-    roll
-) {
+function registrationSuccessful() {
 
     registrationRunning =
         false;
@@ -1175,33 +1217,19 @@ function registrationSuccessful(
 
         message.innerHTML = `
 
-            <div
-                style="
-                    margin-top:15px;
-                    padding:18px;
-                    border-radius:14px;
-                    background:#ecfdf5;
-                    border:2px solid #22c55e;
-                    color:#166534;
-                    font-size:18px;
-                    font-weight:bold;
-                    text-align:center;
-                "
-            >
+            <div class="success-message">
 
-                ✅ Face Captured Successfully!
+                <div class="success-icon">
+                    ✅
+                </div>
 
-                <br><br>
+                <h3>
+                    Face Captured Successfully!
+                </h3>
 
-                🎉 Face Registration Completed
-
-                <br>
-
-                👤 ${name}
-
-                <br>
-
-                🔢 Roll: ${roll}
+                <p>
+                    🎉 Face Registration Completed
+                </p>
 
             </div>
 
@@ -1211,9 +1239,7 @@ function registrationSuccessful(
 
     alert(
         "✅ Face Captured Successfully!\n\n" +
-        "🎉 Face Registration Completed\n\n" +
-        "👤 " + name +
-        "\n🔢 Roll: " + roll
+        "🎉 Face Registration Completed"
     );
 
 
@@ -1237,9 +1263,9 @@ function stopRegistrationCamera() {
         registrationStream
             .getTracks()
             .forEach(
-                track => track.stop()
+                track =>
+                    track.stop()
             );
-
 
         registrationStream =
             null;
@@ -1294,44 +1320,35 @@ async function startFaceAttendance() {
             "attendanceStatus"
         );
 
+    const button =
+        document.getElementById(
+            "attendanceButton"
+        );
+
     const result =
         document.getElementById(
             "attendanceResult"
         );
 
 
-    if (!video) return;
-
-
-    const registeredStudents =
-        students.filter(
-            student =>
-                Array.isArray(
-                    student.descriptor
-                ) &&
-                student.descriptor.length > 0
+    const savedData =
+        localStorage.getItem(
+            "registeredFaceStudent"
         );
 
 
-    if (registeredStudents.length === 0) {
+    if (!savedData) {
 
         if (result) {
 
             result.innerHTML = `
 
-                <div
-                    style="
-                        padding:18px;
-                        margin-top:15px;
-                        border-radius:14px;
-                        background:#fff7ed;
-                        border:2px solid #f97316;
-                        color:#9a3412;
-                        text-align:center;
-                    "
-                >
+                <div class="success-message"
+                     style="background:#fef2f2;
+                            border-color:#ef4444;
+                            color:#991b1b;">
 
-                    ❌ No registered face found.
+                    ❌ No face registered.
 
                     <br><br>
 
@@ -1347,11 +1364,26 @@ async function startFaceAttendance() {
     }
 
 
+    const registeredStudent =
+        JSON.parse(
+            savedData
+        );
+
+
+    if (button) {
+        button.disabled = true;
+    }
+
+
     const modelsReady =
         await loadFaceModels();
 
 
     if (!modelsReady) {
+
+        if (button) {
+            button.disabled = false;
+        }
 
         return;
     }
@@ -1368,46 +1400,26 @@ async function startFaceAttendance() {
 
         if (!attendanceStream) {
 
+            if (button) {
+                button.disabled = false;
+            }
+
             return;
         }
+    }
+
+
+    if (result) {
+
+        result.innerHTML =
+            "📸 Camera ON — looking for your face...";
     }
 
 
     if (status) {
 
         status.innerText =
-            "📷 Camera ON — Looking for your face...";
-    }
-
-
-    if (result) {
-
-        result.innerHTML = `
-
-            <div
-                style="
-                    padding:15px;
-                    margin-top:15px;
-                    border-radius:12px;
-                    background:#eff6ff;
-                    border:1px solid #bfdbfe;
-                    text-align:center;
-                "
-            >
-
-                📷 Capture Face is active.
-
-                <br>
-
-                Please look at the camera.
-
-                <br>
-
-                Attendance will be marked automatically.
-
-            </div>
-
-        `;
+            "Looking for your face...";
     }
 
 
@@ -1416,21 +1428,20 @@ async function startFaceAttendance() {
 
 
     detectAttendanceFace(
-        registeredStudents
+        registeredStudent
     );
 }
 
 
 // =====================================================
-// AUTOMATIC ATTENDANCE DETECTION
+// DETECT ATTENDANCE FACE
 // =====================================================
 
 async function detectAttendanceFace(
-    registeredStudents
+    registeredStudent
 ) {
 
     if (!attendanceRunning) {
-
         return;
     }
 
@@ -1469,7 +1480,7 @@ async function detectAttendanceFace(
             if (status) {
 
                 status.innerText =
-                    "📷 Looking for your face...";
+                    "Looking for your face...";
             }
 
 
@@ -1477,7 +1488,7 @@ async function detectAttendanceFace(
                 () => {
 
                     detectAttendanceFace(
-                        registeredStudents
+                        registeredStudent
                     );
 
                 },
@@ -1492,117 +1503,91 @@ async function detectAttendanceFace(
         if (status) {
 
             status.innerText =
-                "🔍 Face detected — Checking identity...";
+                "Face detected ✅ Checking identity...";
         }
 
 
-        let matchedStudent =
-            null;
-
-        let bestDistance =
-            Infinity;
-
-
-        for (
-            const student
-            of registeredStudents
-        ) {
-
-            const registeredDescriptor =
-                new Float32Array(
-                    student.descriptor
-                );
+        const registeredDescriptor =
+            new Float32Array(
+                registeredStudent.descriptor
+            );
 
 
-            const distance =
-                faceapi.euclideanDistance(
-                    detection.descriptor,
-                    registeredDescriptor
-                );
+        const distance =
+            faceapi.euclideanDistance(
+                detection.descriptor,
+                registeredDescriptor
+            );
 
 
-            if (
-                distance < bestDistance
-            ) {
-
-                bestDistance =
-                    distance;
-
-                matchedStudent =
-                    student;
-            }
-        }
+        console.log(
+            "Face distance:",
+            distance
+        );
 
 
-        // Face match
-
-        if (
-            matchedStudent &&
-            bestDistance < 0.55
-        ) {
+        if (distance < 0.55) {
 
             showAttendanceSuccess(
-                matchedStudent
+                registeredStudent
             );
 
+        } else {
 
-            return;
-        }
-
-
-        // No match
-
-        if (status) {
-
-            status.innerText =
-                "❌ Face does not match any registered student.";
-        }
+            attendanceRunning =
+                false;
 
 
-        const result =
-            document.getElementById(
-                "attendanceResult"
+            if (status) {
+
+                status.innerText =
+                    "Face does not match ❌";
+            }
+
+
+            const result =
+                document.getElementById(
+                    "attendanceResult"
+                );
+
+
+            if (result) {
+
+                result.innerHTML = `
+
+                    <div class="success-message"
+                         style="
+                            background:#fef2f2;
+                            border-color:#ef4444;
+                            color:#991b1b;
+                         ">
+
+                        ❌ Face does not match.
+
+                        <br>
+
+                        Please try again.
+
+                    </div>
+
+                `;
+            }
+
+
+            stopAttendanceCamera();
+
+
+            buttonEnable(
+                "attendanceButton"
             );
-
-
-        if (result) {
-
-            result.innerHTML = `
-
-                <div
-                    style="
-                        padding:18px;
-                        margin-top:15px;
-                        border-radius:14px;
-                        background:#fef2f2;
-                        border:2px solid #ef4444;
-                        color:#991b1b;
-                        text-align:center;
-                    "
-                >
-
-                    ❌ Face Not Recognized
-
-                    <br><br>
-
-                    Please use a registered face.
-
-                </div>
-
-            `;
         }
-
-
-        attendanceRunning =
-            false;
-
-
-        stopAttendanceCamera();
-
 
     } catch (error) {
 
-        console.error(error);
+        console.error(
+            "Attendance detection error:",
+            error
+        );
 
 
         attendanceRunning =
@@ -1612,11 +1597,13 @@ async function detectAttendanceFace(
         if (status) {
 
             status.innerText =
-                "❌ Face detection error.";
+                "Face detection error ❌";
         }
 
 
-        stopAttendanceCamera();
+        buttonEnable(
+            "attendanceButton"
+        );
     }
 }
 
@@ -1643,166 +1630,121 @@ function showAttendanceSuccess(
         );
 
 
-    // Find student
-
-    const index =
+    let index =
         students.findIndex(
-            s => s.roll === student.roll
+            s =>
+                s.roll ===
+                student.roll
         );
 
 
-    if (index === -1) {
+    if (index !== -1) {
 
-        return;
+        students[index].status =
+            "Present";
+
+        students[index].attendanceDate =
+            attendance.date;
+
+        students[index].attendanceDay =
+            attendance.day;
+
+        students[index].attendanceTime =
+            attendance.time;
+
+        students[index].mobile =
+            student.mobile ||
+            students[index].mobile ||
+            "";
+
+    } else {
+
+        students.push({
+
+            name:
+                student.name,
+
+            roll:
+                student.roll,
+
+            college:
+                student.college,
+
+            department:
+                student.department,
+
+            mobile:
+                student.mobile || "",
+
+            status:
+                "Present",
+
+            attendanceDate:
+                attendance.date,
+
+            attendanceDay:
+                attendance.day,
+
+            attendanceTime:
+                attendance.time
+
+        });
+
+
+        index =
+            students.length - 1;
     }
 
 
-    // Check today's attendance
-
-    const history =
-        ensureAttendanceHistory(
-            students[index]
-        );
+    saveStudents();
 
 
-    const alreadyPresentToday =
-        history.find(
-            item =>
-                item.dateKey ===
-                attendance.dateKey &&
-                item.status === "Present"
-        );
+    /*
+       SAVE DAILY ATTENDANCE
+    */
 
-
-    if (alreadyPresentToday) {
-
-        if (result) {
-
-            result.innerHTML = `
-
-                <div
-                    style="
-                        padding:22px;
-                        margin-top:20px;
-                        border-radius:16px;
-                        background:#fff7ed;
-                        border:2px solid #f59e0b;
-                        color:#92400e;
-                        text-align:center;
-                    "
-                >
-
-                    <div
-                        style="
-                            font-size:45px;
-                        "
-                    >
-                        ⚠️
-                    </div>
-
-                    <h3>
-                        Attendance Already Marked
-                    </h3>
-
-                    <p>
-                        👤 ${student.name}
-                    </p>
-
-                    <p>
-                        📅 ${attendance.date}
-                    </p>
-
-                    <p>
-                        📆 ${attendance.day}
-                    </p>
-
-                </div>
-
-            `;
-        }
-
-
-        stopAttendanceCamera();
-
-
-        return;
-    }
-
-
-    // SAVE TODAY PRESENT
-
-    saveDailyAttendance(
+    addAttendanceHistory(
         students[index],
-        "Present",
-        attendance
+        attendance,
+        "Present"
     );
 
 
-    // SUCCESS MESSAGE
+    /*
+       SUCCESS MESSAGE
+    */
 
     if (result) {
 
         result.innerHTML = `
 
-            <div
-                style="
-                    padding:22px;
-                    margin-top:20px;
-                    border-radius:16px;
-                    background:#ecfdf5;
-                    border:2px solid #22c55e;
-                    color:#166534;
-                    text-align:center;
-                "
-            >
+            <div class="success-message">
 
-                <div
-                    style="
-                        font-size:55px;
-                        margin-bottom:10px;
-                    "
-                >
+                <div class="success-icon">
                     ✅
                 </div>
 
-                <h3
-                    style="
-                        font-size:24px;
-                        margin-bottom:15px;
-                    "
-                >
-                    Attendance Successfully Marked!
+                <h3 style="font-size:24px;">
+                    Attendance Successfully
                 </h3>
 
                 <p>
-                    <strong>
-                        👤 Name:
-                    </strong>
-
+                    <strong>👤 Name:</strong>
                     ${student.name}
                 </p>
 
                 <p>
-                    <strong>
-                        🔢 Roll:
-                    </strong>
-
+                    <strong>🔢 Roll:</strong>
                     ${student.roll}
                 </p>
 
                 <p>
-                    <strong>
-                        🏫 College:
-                    </strong>
-
+                    <strong>🏫 College:</strong>
                     ${student.college}
                 </p>
 
                 <p>
-                    <strong>
-                        🎓 Department:
-                    </strong>
-
+                    <strong>🎓 Department:</strong>
                     ${student.department}
                 </p>
 
@@ -1810,39 +1752,35 @@ function showAttendanceSuccess(
                     style="
                         margin:15px 0;
                         border:none;
-                        border-top:1px solid #bbf7d0;
+                        border-top:
+                        1px solid #bbf7d0;
                     "
                 >
 
                 <p>
-                    <strong>
-                        📅 Date:
-                    </strong>
-
+                    <strong>📅 Date:</strong>
                     ${attendance.date}
                 </p>
 
                 <p>
-                    <strong>
-                        📆 Day:
-                    </strong>
-
+                    <strong>📆 Day:</strong>
                     ${attendance.day}
                 </p>
 
                 <p>
-                    <strong>
-                        🕐 Time:
-                    </strong>
-
+                    <strong>🕐 Time:</strong>
                     ${attendance.time}
                 </p>
 
-                <br>
+                <p style="
+                    margin-top:15px;
+                    font-size:17px;
+                ">
 
-                <strong>
-                    🎉 Your attendance has been saved!
-                </strong>
+                    🎉 Your attendance has been
+                    successfully marked!
+
+                </p>
 
             </div>
 
@@ -1859,25 +1797,47 @@ function showAttendanceSuccess(
     if (status) {
 
         status.innerText =
-            "✅ Attendance marked successfully!";
+            "Attendance marked successfully ✅";
     }
 
 
     displayStudents();
+
     updateDashboard();
 
 
-    alert(
-        "✅ Attendance Successfully Marked!\n\n" +
-        "👤 " + student.name +
-        "\n🔢 Roll: " + student.roll +
-        "\n📅 " + attendance.date +
-        "\n📆 " + attendance.day +
-        "\n🕐 " + attendance.time
+    stopAttendanceCamera();
+
+
+    buttonEnable(
+        "attendanceButton"
     );
 
 
-    stopAttendanceCamera();
+    /*
+       POPUP
+    */
+
+    alert(
+
+        "✅ Attendance Successfully\n\n" +
+
+        "👤 Name: " +
+        student.name +
+
+        "\n🔢 Roll: " +
+        student.roll +
+
+        "\n📅 Date: " +
+        attendance.date +
+
+        "\n📆 Day: " +
+        attendance.day +
+
+        "\n🕐 Time: " +
+        attendance.time
+
+    );
 }
 
 
@@ -1892,9 +1852,9 @@ function stopAttendanceCamera() {
         attendanceStream
             .getTracks()
             .forEach(
-                track => track.stop()
+                track =>
+                    track.stop()
             );
-
 
         attendanceStream =
             null;
@@ -1937,7 +1897,7 @@ function toggleMenu() {
 
 
 // =====================================================
-// EDIT MY DETAILS
+// EDIT DETAILS
 // =====================================================
 
 function openEditDetails() {
@@ -1957,80 +1917,59 @@ function openEditDetails() {
         );
 
 
-    // Find current registered face
-
-    let student = null;
-
-
     if (saved) {
 
-        student =
+        const student =
             JSON.parse(saved);
 
-    } else {
 
-        student =
-            students[0] || null;
-    }
+        const fields = {
+
+            editName:
+                student.name,
+
+            editRoll:
+                student.roll,
+
+            editCollege:
+                student.college,
+
+            editDepartment:
+                student.department,
+
+            editMobile:
+                student.mobile
+
+        };
 
 
-    if (student) {
+        Object.keys(fields)
+            .forEach(
+                id => {
 
-        const name =
-            document.getElementById(
-                "editName"
+                    const element =
+                        document.getElementById(
+                            id
+                        );
+
+
+                    if (element) {
+
+                        element.value =
+                            fields[id] || "";
+                    }
+
+                }
             );
-
-        const roll =
-            document.getElementById(
-                "editRoll"
-            );
-
-        const college =
-            document.getElementById(
-                "editCollege"
-            );
-
-        const department =
-            document.getElementById(
-                "editDepartment"
-            );
-
-        const mobile =
-            document.getElementById(
-                "editMobile"
-            );
-
-
-        if (name)
-            name.value =
-                student.name || "";
-
-
-        if (roll)
-            roll.value =
-                student.roll || "";
-
-
-        if (college)
-            college.value =
-                student.college || "";
-
-
-        if (department)
-            department.value =
-                student.department || "";
-
-
-        if (mobile)
-            mobile.value =
-                student.mobile || "";
     }
 
 
     modal.classList.add(
         "show"
     );
+
+
+    closeMenu();
 }
 
 
@@ -2064,27 +2003,27 @@ function saveEditedDetails() {
     const name =
         document.getElementById(
             "editName"
-        ).value.trim();
+        )?.value.trim();
 
     const roll =
         document.getElementById(
             "editRoll"
-        ).value.trim();
+        )?.value.trim();
 
     const college =
         document.getElementById(
             "editCollege"
-        ).value.trim();
+        )?.value.trim();
 
     const department =
         document.getElementById(
             "editDepartment"
-        ).value.trim();
+        )?.value.trim();
 
     const mobile =
         document.getElementById(
             "editMobile"
-        ).value.trim();
+        )?.value.trim();
 
 
     if (
@@ -2105,7 +2044,8 @@ function saveEditedDetails() {
 
     const index =
         students.findIndex(
-            s => s.roll === roll
+            s =>
+                s.roll === roll
         );
 
 
@@ -2128,6 +2068,41 @@ function saveEditedDetails() {
     }
 
 
+    const saved =
+        localStorage.getItem(
+            "registeredFaceStudent"
+        );
+
+
+    if (saved) {
+
+        const student =
+            JSON.parse(saved);
+
+
+        student.name =
+            name;
+
+        student.roll =
+            roll;
+
+        student.college =
+            college;
+
+        student.department =
+            department;
+
+        student.mobile =
+            mobile;
+
+
+        localStorage.setItem(
+            "registeredFaceStudent",
+            JSON.stringify(student)
+        );
+    }
+
+
     displayStudents();
 
     updateDashboard();
@@ -2142,10 +2117,26 @@ function saveEditedDetails() {
 
 
 // =====================================================
-// ADD / UPDATE MOBILE
+// MOBILE UPDATE
 // =====================================================
 
 function openMobileUpdate() {
+
+    const saved =
+        localStorage.getItem(
+            "registeredFaceStudent"
+        );
+
+
+    if (!saved) {
+
+        alert(
+            "Please register your face first."
+        );
+
+        return;
+    }
+
 
     const mobile =
         prompt(
@@ -2156,44 +2147,25 @@ function openMobileUpdate() {
     if (!mobile) return;
 
 
-    const saved =
-        localStorage.getItem(
-            "registeredFaceStudent"
-        );
-
-
-    let student = null;
-
-
-    if (saved) {
-
-        student =
-            JSON.parse(saved);
-
-    } else {
-
-        student =
-            students[0] || null;
-    }
-
-
-    if (!student) {
-
-        alert(
-            "Please register your face first."
-        );
-
-        return;
-    }
+    const student =
+        JSON.parse(saved);
 
 
     student.mobile =
         mobile.trim();
 
 
+    localStorage.setItem(
+        "registeredFaceStudent",
+        JSON.stringify(student)
+    );
+
+
     const index =
         students.findIndex(
-            s => s.roll === student.roll
+            s =>
+                s.roll ===
+                student.roll
         );
 
 
@@ -2202,10 +2174,8 @@ function openMobileUpdate() {
         students[index].mobile =
             mobile.trim();
 
+        saveStudents();
     }
-
-
-    saveStudents();
 
 
     displayStudents();
@@ -2214,6 +2184,9 @@ function openMobileUpdate() {
     alert(
         "📱 Mobile number updated successfully!"
     );
+
+
+    closeMenu();
 }
 
 
@@ -2240,75 +2213,76 @@ function showRegisteredStudents() {
     list.innerHTML = "";
 
 
-    if (students.length === 0) {
+    if (
+        students.length === 0
+    ) {
 
         list.innerHTML =
             "<p>No students registered yet.</p>";
 
-        modal.classList.add(
-            "show"
+    } else {
+
+        students.forEach(
+            (student, index) => {
+
+                const div =
+                    document.createElement(
+                        "div"
+                    );
+
+
+                div.className =
+                    "registered-student";
+
+
+                div.innerHTML = `
+
+                    <strong>
+                        ${index + 1}.
+                        ${student.name}
+                    </strong>
+
+                    <br>
+
+                    🔢 Roll:
+                    ${student.roll}
+
+                    <br>
+
+                    🏫 College:
+                    ${student.college}
+
+                    <br>
+
+                    🎓 Department:
+                    ${student.department}
+
+                    <br>
+
+                    📱 Mobile:
+                    ${student.mobile || "Not added"}
+
+                    <br>
+
+                    📌 Status:
+                    ${student.status}
+
+                `;
+
+
+                list.appendChild(div);
+
+            }
         );
-
-        return;
     }
-
-
-    students.forEach(
-        (student, index) => {
-
-            const div =
-                document.createElement(
-                    "div"
-                );
-
-
-            div.className =
-                "registered-student";
-
-
-            div.innerHTML = `
-
-                <strong>
-                    ${index + 1}. ${student.name}
-                </strong>
-
-                <br>
-
-                🔢 Roll:
-                ${student.roll}
-
-                <br>
-
-                🏫 College:
-                ${student.college}
-
-                <br>
-
-                🎓 Department:
-                ${student.department}
-
-                <br>
-
-                📱 Mobile:
-                ${student.mobile || "Not added"}
-
-                <br>
-
-                📌 Status:
-                ${student.status || "Not Marked"}
-
-            `;
-
-
-            list.appendChild(div);
-
-        }
-    );
 
 
     modal.classList.add(
         "show"
     );
+
+
+    closeMenu();
 }
 
 
@@ -2341,270 +2315,25 @@ function showCheckAttendance() {
 
     const modal =
         document.getElementById(
-            "attendanceHistoryModal"
+            "attendanceCheckModal"
         );
 
 
-    const list =
-        document.getElementById(
-            "attendanceHistoryList"
-        );
+    if (!modal) return;
 
 
-    if (!modal || !list) {
+    calculateAttendanceSummary();
 
-        // If HTML doesn't have the modal,
-        // show a simple alert summary.
 
-        let totalPresent = 0;
-        let totalAbsent = 0;
-
-
-        students.forEach(
-            student => {
-
-                const history =
-                    ensureAttendanceHistory(
-                        student
-                    );
-
-
-                history.forEach(
-                    item => {
-
-                        if (
-                            item.status ===
-                            "Present"
-                        ) {
-
-                            totalPresent++;
-
-                        }
-
-
-                        if (
-                            item.status ===
-                            "Absent"
-                        ) {
-
-                            totalAbsent++;
-
-                        }
-
-                    }
-                );
-
-            }
-        );
-
-
-        alert(
-            "📊 ATTENDANCE SUMMARY\n\n" +
-            "✅ Present: " +
-            totalPresent +
-            "\n\n" +
-            "❌ Absent: " +
-            totalAbsent
-        );
-
-
-        return;
-    }
-
-
-    list.innerHTML = "";
-
-
-    let totalPresent = 0;
-    let totalAbsent = 0;
-
-
-    students.forEach(
-        student => {
-
-            const history =
-                ensureAttendanceHistory(
-                    student
-                );
-
-
-            history.forEach(
-                item => {
-
-                    if (
-                        item.status ===
-                        "Present"
-                    ) {
-
-                        totalPresent++;
-
-                    }
-
-
-                    if (
-                        item.status ===
-                        "Absent"
-                    ) {
-
-                        totalAbsent++;
-
-                    }
-
-                }
-            );
-
-        }
-    );
-
-
-    const summary =
-        document.createElement(
-            "div"
-        );
-
-
-    summary.style.padding =
-        "15px";
-
-    summary.style.marginBottom =
-        "15px";
-
-    summary.style.borderRadius =
-        "12px";
-
-    summary.style.background =
-        "#eff6ff";
-
-
-    summary.innerHTML = `
-
-        <strong>
-            📊 Attendance Summary
-        </strong>
-
-        <br><br>
-
-        ✅ Total Present:
-        ${totalPresent}
-
-        <br>
-
-        ❌ Total Absent:
-        ${totalAbsent}
-
-    `;
-
-
-    list.appendChild(
-        summary
-    );
-
-
-    students.forEach(
-        student => {
-
-            const history =
-                ensureAttendanceHistory(
-                    student
-                );
-
-
-            if (
-                history.length === 0
-            ) {
-
-                return;
-            }
-
-
-            const studentBox =
-                document.createElement(
-                    "div"
-                );
-
-
-            studentBox.style.padding =
-                "15px";
-
-            studentBox.style.marginBottom =
-                "12px";
-
-            studentBox.style.borderRadius =
-                "12px";
-
-            studentBox.style.background =
-                "#f8fafc";
-
-            studentBox.style.border =
-                "1px solid #e2e8f0";
-
-
-            let html = `
-
-                <strong>
-                    👤 ${student.name}
-                </strong>
-
-                <br>
-
-                🔢 Roll:
-                ${student.roll}
-
-                <hr>
-
-            `;
-
-
-            history.forEach(
-                record => {
-
-                    const icon =
-                        record.status ===
-                        "Present"
-                            ? "✅"
-                            : "❌";
-
-
-                    html += `
-
-                        ${icon}
-                        ${record.status}
-
-                        <br>
-
-                        📅 ${record.date}
-
-                        <br>
-
-                        📆 ${record.day}
-
-                        <br>
-
-                        🕐 ${record.time}
-
-                        <br><br>
-
-                    `;
-
-                }
-            );
-
-
-            studentBox.innerHTML =
-                html;
-
-
-            list.appendChild(
-                studentBox
-            );
-
-        }
-    );
+    displayAttendanceHistory();
 
 
     modal.classList.add(
         "show"
     );
+
+
+    closeMenu();
 }
 
 
@@ -2612,11 +2341,11 @@ function showCheckAttendance() {
 // CLOSE CHECK ATTENDANCE
 // =====================================================
 
-function closeAttendanceHistory() {
+function closeCheckAttendance() {
 
     const modal =
         document.getElementById(
-            "attendanceHistoryModal"
+            "attendanceCheckModal"
         );
 
 
@@ -2626,6 +2355,183 @@ function closeAttendanceHistory() {
             "show"
         );
     }
+}
+
+
+// =====================================================
+// ATTENDANCE SUMMARY
+// =====================================================
+
+function calculateAttendanceSummary() {
+
+    const totalDays =
+        new Set(
+            attendanceHistory.map(
+                record =>
+                    record.dateKey
+            )
+        ).size;
+
+
+    const presentDays =
+        attendanceHistory.filter(
+            record =>
+                record.status ===
+                "Present"
+        ).length;
+
+
+    const absentDays =
+        attendanceHistory.filter(
+            record =>
+                record.status ===
+                "Absent"
+        ).length;
+
+
+    const totalElement =
+        document.getElementById(
+            "attendanceTotalDays"
+        );
+
+    const presentElement =
+        document.getElementById(
+            "attendancePresentDays"
+        );
+
+    const absentElement =
+        document.getElementById(
+            "attendanceAbsentDays"
+        );
+
+
+    if (totalElement) {
+
+        totalElement.innerText =
+            totalDays;
+    }
+
+
+    if (presentElement) {
+
+        presentElement.innerText =
+            presentDays;
+    }
+
+
+    if (absentElement) {
+
+        absentElement.innerText =
+            absentDays;
+    }
+}
+
+
+// =====================================================
+// ATTENDANCE HISTORY DISPLAY
+// =====================================================
+
+function displayAttendanceHistory() {
+
+    const historyElement =
+        document.getElementById(
+            "attendanceHistory"
+        );
+
+
+    if (!historyElement) return;
+
+
+    historyElement.innerHTML = "";
+
+
+    if (
+        attendanceHistory.length === 0
+    ) {
+
+        historyElement.innerHTML = `
+
+            <p>
+                No attendance history yet.
+            </p>
+
+        `;
+
+        return;
+    }
+
+
+    const sorted =
+        [...attendanceHistory]
+            .reverse();
+
+
+    sorted.forEach(
+        record => {
+
+            const div =
+                document.createElement(
+                    "div"
+                );
+
+
+            div.className =
+                "attendance-history-item";
+
+
+            const statusColor =
+                record.status ===
+                "Present"
+                    ? "#16a34a"
+                    : "#dc2626";
+
+
+            div.innerHTML = `
+
+                <strong>
+                    👤 ${record.name}
+                </strong>
+
+                <br>
+
+                🔢 Roll:
+                ${record.roll}
+
+                <br>
+
+                📅 Date:
+                ${record.date}
+
+                <br>
+
+                📆 Day:
+                ${record.day}
+
+                <br>
+
+                🕐 Time:
+                ${record.time}
+
+                <br>
+
+                <strong
+                    style="color:${statusColor};"
+                >
+
+                    📌 Status:
+                    ${record.status}
+
+                </strong>
+
+            `;
+
+
+            historyElement.appendChild(
+                div
+            );
+
+        }
+    );
 }
 
 
@@ -2649,36 +2555,12 @@ function showAdminDetails() {
     );
 
 
-    const menu =
-        document.getElementById(
-            "mainMenu"
-        );
-
-
-    if (menu) {
-
-        menu.classList.remove(
-            "show"
-        );
-    }
-
-
-    const adminName =
-        document.getElementById(
-            "adminName"
-        );
-
-
-    if (adminName) {
-
-        adminName.innerText =
-            ADMIN_NAME;
-    }
+    closeMenu();
 }
 
 
 // =====================================================
-// CLOSE ADMIN DETAILS
+// CLOSE ADMIN
 // =====================================================
 
 function closeAdminDetails() {
@@ -2699,6 +2581,27 @@ function closeAdminDetails() {
 
 
 // =====================================================
+// CLOSE MENU
+// =====================================================
+
+function closeMenu() {
+
+    const menu =
+        document.getElementById(
+            "mainMenu"
+        );
+
+
+    if (menu) {
+
+        menu.classList.remove(
+            "show"
+        );
+    }
+}
+
+
+// =====================================================
 // PAGE LOAD
 // =====================================================
 
@@ -2712,24 +2615,11 @@ window.addEventListener(
 
         showCurrentDate();
 
-
-        // Fix old student data
-
-        students.forEach(
-            student => {
-
-                ensureAttendanceHistory(
-                    student
-                );
-
-            }
-        );
-
-
-        saveStudents();
-
-
-        // Load face models
+        /*
+           Load models in background.
+           Camera will still start when
+           user presses Capture Face.
+        */
 
         await loadFaceModels();
 
