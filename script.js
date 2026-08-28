@@ -1368,3 +1368,30 @@ window.addEventListener(
 
     }
 );
+// =====================================================
+// SHOW TODAY'S DATE AND DAY
+// =====================================================
+
+function showCurrentDate() {
+
+    const dateElement =
+        document.getElementById("currentDate");
+
+    if (!dateElement) return;
+
+    const today = new Date();
+
+    const options = {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+    };
+
+    dateElement.innerText =
+        "📅 " + today.toLocaleDateString("en-IN", options);
+}
+
+
+// Run when website opens
+showCurrentDate();
