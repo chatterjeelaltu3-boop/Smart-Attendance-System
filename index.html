@@ -10,20 +10,21 @@
 
     <!-- ================= AUTH AREA ================= -->
     <div id="authSection" class="auth-container">
-        <!-- লোগো শুধুমাত্র লগইন পেজে থাকবে -->
+        <!-- কলেজ লোগো -->
         <img src="Screenshot 2026-08-28 160906.png" alt="College Logo" class="login-logo">
         <div class="auth-header">
             <h1>Smart Attendance System</h1>
             <h3>Hooghly Engineering & Technology College</h3>
         </div>
 
+        <!-- স্টুডেন্ট এবং অ্যাডমিন ট্যাব -->
         <div class="auth-tabs">
             <button id="tabStudent" class="tab-btn active" onclick="switchTab('student')">Student Login</button>
             <button id="tabAdmin" class="tab-btn" onclick="switchTab('admin')">Admin Login</button>
         </div>
 
         <!-- Student Form -->
-        <form id="studentLoginForm">
+        <form id="studentLoginForm" onsubmit="event.preventDefault();">
             <div class="form-group">
                 <label>Mobile No or Email ID</label>
                 <input type="text" id="stuUser" class="form-control" placeholder="Enter Mobile or Email" required>
@@ -39,8 +40,8 @@
             </div>
         </form>
 
-        <!-- Admin Form (No default PIN printed placeholder) -->
-        <form id="adminLoginForm" class="hidden">
+        <!-- Admin Form -->
+        <form id="adminLoginForm" class="hidden" onsubmit="event.preventDefault();">
             <div class="form-group">
                 <label>Admin Username</label>
                 <input type="text" class="form-control" value="Pradyut Chatterjee" readonly>
@@ -56,22 +57,22 @@
         </form>
 
         <!-- Register Form -->
-        <form id="registerForm" class="hidden">
-            <div class="form-group"><label>Full Name</label><input type="text" id="regName" class="form-control" required></div>
-            <div class="form-group"><label>Mobile No</label><input type="tel" id="regMob" class="form-control" required></div>
-            <div class="form-group"><label>Email ID</label><input type="email" id="regEmail" class="form-control" required></div>
+        <form id="registerForm" class="hidden" onsubmit="event.preventDefault();">
+            <div class="form-group"><label>Full Name</label><input type="text" id="regName" class="form-control" placeholder="Enter Full Name" required></div>
+            <div class="form-group"><label>Mobile No</label><input type="tel" id="regMob" class="form-control" placeholder="Enter Mobile No" required></div>
+            <div class="form-group"><label>Email ID</label><input type="email" id="regEmail" class="form-control" placeholder="Enter Email ID" required></div>
             <div class="form-group"><label>College Name</label><input type="text" class="form-control" value="Hooghly Engineering & Technology College" readonly></div>
-            <div class="form-group"><label>Department</label><input type="text" class="form-control" placeholder="e.g. CSE" required></div>
-            <div class="form-group"><label>Set 4-Digit PIN</label><input type="password" id="regPin" class="form-control" maxlength="4" required></div>
-            <button type="button" class="btn-submit" onclick="processRegistration()">Register Now</button>
+            <div class="form-group"><label>Department</label><input type="text" id="regDept" class="form-control" placeholder="e.g. CSE" required></div>
+            <div class="form-group"><label>Set 4-Digit PIN</label><input type="password" id="regPin" class="form-control" maxlength="4" placeholder="••••" required></div>
+            <button type="button" class="btn-submit" onclick="processRegistration()">Register & Sign In</button>
             <div class="form-links"><a href="#" onclick="showForm('studentLoginForm')">Back to Login</a></div>
         </form>
 
         <!-- Forgot Form -->
-        <form id="forgotPinForm" class="hidden">
-            <div class="form-group"><label>Enter Mobile or Email</label><input type="text" class="form-control" required></div>
+        <form id="forgotPinForm" class="hidden" onsubmit="event.preventDefault();">
+            <div class="form-group"><label>Enter Mobile or Email</label><input type="text" class="form-control" placeholder="Enter Mobile or Email" required></div>
             <div class="form-group"><label>Confirm New PIN</label><input type="password" class="form-control" maxlength="4" placeholder="••••" required></div>
-            <button type="button" class="btn-submit" onclick="showForm('studentLoginForm')">Set & Reset PIN</button>
+            <button type="button" class="btn-submit" onclick="alert('PIN reset successful! Please log in.'); showForm('studentLoginForm');">Set & Reset PIN</button>
             <div class="form-links"><a href="#" onclick="showForm('studentLoginForm')">Back to Login</a></div>
         </form>
     </div>
@@ -88,8 +89,8 @@
             
             <div class="menu-items">
                 <p>Personal Settings</p>
-                <a href="#" class="active">✏️ Edit Personal Details</a>
-                <a href="#">📞 Edit Mobile & Email</a>
+                <a href="#" class="active" onclick="alert('Edit details opened')">✏️ Edit Personal Details</a>
+                <a href="#" onclick="alert('Edit contact details opened')">📞 Edit Mobile & Email</a>
                 
                 <p>Monitoring</p>
                 <a href="#" onclick="triggerFaceAttendance()">📷 Face Attendance</a>
@@ -101,7 +102,7 @@
             </div>
         </div>
 
-        <!-- Main Panel (No College Logo Here) -->
+        <!-- Main Panel -->
         <div class="main-content">
             <div class="dashboard-header">
                 <div class="welcome-msg" id="welcomeMsg">Welcome, User!</div>
@@ -125,16 +126,15 @@
                         <h2>👤 Face Register & Details</h2>
                         <p style="font-size: 13px; color: #4b5563; margin-bottom: 15px;">Fill your profile metadata to activate the live auto capture sequence.</p>
                         <div class="form-group"><label>Student Identity Name</label><input type="text" id="dashStuName" class="form-control" readonly></div>
-                        <div class="form-group"><label>Assigned Department</label><input type="text" value="Computer Science & Engineering" class="form-control" readonly></div>
+                        <div class="form-group"><label>Assigned Department</label><input type="text" id="dashStuDept" value="Computer Science & Engineering" class="form-control" readonly></div>
                         <button class="btn-submit" onclick="triggerAutomaticCapture()">Start Automatic Capture</button>
                     </div>
 
-                    <!-- Admin Monitoring Full Database View (Hidden for Students) -->
+                    <!-- Admin Monitoring Full Database View -->
                     <div id="adminViewContainer" class="hidden">
                         <h2>👥 Master Registry Profile Logs</h2>
                         <table class="data-table">
                             <thead>
-                                border-bottom
                                 <tr>
                                     <th>Image</th>
                                     <th>Name</th>
@@ -153,33 +153,29 @@
         </div>
     </div>
 
-    <!-- Alert Frame Grid -->
+    <!-- Alert Pop-up -->
     <div id="popupAlert" class="popup-success hidden"></div>
 
-    <!-- Logic Engine -->
+    <!-- Core Javascript Engine -->
     <script>
-        // Local state control variables
+        // Local State Management
         let currentUser = { name: "Student User", role: "student", contact: "" };
         let registeredDatabase = [
             { name: "Arijit Das", contact: "9876543210", dept: "CSE", img: "https://unsplash.com" },
             { name: "Sneha Paul", contact: "sneha@gmail.com", dept: "ECE", img: "https://unsplash.com" }
         ];
 
+        // ১. স্টুডেন্ট এবং অ্যাডমিন ট্যাব সুইচিং ফিক্সড
         function switchTab(type) {
             document.getElementById('tabStudent').classList.remove('active');
             document.getElementById('tabAdmin').classList.remove('active');
-            document.getElementById('studentLoginForm').classList.add('hidden');
-            document.getElementById('adminLoginForm').classList.add('hidden');
-            showForm(type === 'student' ? 'studentLoginForm' : 'adminLoginForm');
-            document.getElementById(type === 'student' ? 'tabStudent' : 'tabAdmin').classList.add('active');
+            
+            if(type === 'student') {
+                document.getElementById('tabStudent').classList.add('active');
+                showForm('studentLoginForm');
+            } else {
+                document.getElementById('tabAdmin').classList.add('active');
+                showForm('adminLoginForm');
+            }
         }
 
-        function showForm(id) {
-            ['studentLoginForm', 'adminLoginForm', 'registerForm', 'forgotPinForm'].forEach(f => {
-                document.getElementById(f).classList.add('hidden');
-            });
-            document.getElementById(id).classList.remove('hidden');
-        }
-
-        function processRegistration() {
-            const name = document.getElementById('regName').value || "New Student";
