@@ -1373,7 +1373,36 @@ window.addEventListener(
 // =====================================================
 
 function showCurrentDate() {
+// =====================================================
+// ATTENDANCE DATE + DAY + TIME
+// =====================================================
 
+function getAttendanceDateTime() {
+
+    const now = new Date();
+
+    const date = now.toLocaleDateString("en-IN", {
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+    });
+
+    const day = now.toLocaleDateString("en-IN", {
+        weekday: "long"
+    });
+
+    const time = now.toLocaleTimeString("en-IN", {
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true
+    });
+
+    return {
+        date: date,
+        day: day,
+        time: time
+    };
+}
     const dateElement =
         document.getElementById("currentDate");
 
