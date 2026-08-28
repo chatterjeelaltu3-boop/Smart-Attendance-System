@@ -1,1215 +1,669 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Smart Attendance System</title>
-
-    <link rel="stylesheet" href="style.css">
-
-    <!-- FACE API -->
-    <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
-
-    <style>
-
-        /* =====================================================
-           LOGIN SCREEN
-        ===================================================== */
-
-        #loginScreen {
-            position: fixed;
-            inset: 0;
-            z-index: 10000;
-            background: linear-gradient(135deg, #2563eb, #7c3aed);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .login-box {
-            width: 100%;
-            max-width: 430px;
-            background: white;
-            padding: 30px;
-            border-radius: 22px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.25);
-            text-align: center;
-        }
-
-        .login-box h1 {
-            margin-bottom: 8px;
-            color: #1e3a8a;
-        }
-
-        .login-box p {
-            color: #64748b;
-            margin-bottom: 22px;
-        }
-
-        .login-box input {
-            width: 100%;
-            box-sizing: border-box;
-            padding: 14px;
-            margin-bottom: 12px;
-            border: 1px solid #cbd5e1;
-            border-radius: 10px;
-            font-size: 16px;
-        }
-
-        .login-btn {
-            width: 100%;
-            padding: 14px;
-            border: none;
-            border-radius: 10px;
-            background: #2563eb;
-            color: white;
-            font-size: 17px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        .login-btn:hover {
-            opacity: 0.9;
-        }
-
-        .forgot-btn {
-            margin-top: 15px;
-            border: none;
-            background: none;
-            color: #2563eb;
-            cursor: pointer;
-            font-size: 15px;
-        }
-
-        .auth-message {
-            margin-top: 15px;
-            font-weight: bold;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-
-        /* =====================================================
-           LEFT MENU
-        ===================================================== */
-
-        .menu-container {
-            position: absolute;
-            left: 20px;
-            top: 20px;
-            z-index: 3000;
-        }
-
-        .menu-button {
-            width: 55px;
-            height: 50px;
-            font-size: 27px;
-            border: none;
-            border-radius: 12px;
-            background: #2563eb;
-            color: white;
-            cursor: pointer;
-        }
-
-        .main-menu {
-            display: none;
-            position: absolute;
-            left: 0;
-            top: 60px;
-            width: 290px;
-            background: white;
-            padding: 12px;
-            border-radius: 15px;
-            box-shadow: 0 10px 35px rgba(0,0,0,0.20);
-        }
-
-        .main-menu.show {
-            display: block;
-        }
-
-        .main-menu button {
-            width: 100%;
-            margin: 5px 0;
-            padding: 14px;
-            border: none;
-            border-radius: 10px;
-            background: #2563eb;
-            color: white;
-            font-size: 15px;
-            text-align: left;
-            cursor: pointer;
-        }
-
-        .main-menu button:hover {
-            opacity: 0.88;
-        }
-
-
-        /* =====================================================
-           MODAL
-        ===================================================== */
-
-        .modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.55);
-            z-index: 4000;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .modal.show {
-            display: flex;
-        }
-
-        .modal-content {
-            width: 100%;
-            max-width: 520px;
-            max-height: 85vh;
-            overflow-y: auto;
-            background: white;
-            padding: 25px;
-            border-radius: 18px;
-            position: relative;
-            box-shadow: 0 15px 50px rgba(0,0,0,0.3);
-        }
-
-        .modal-content h2 {
-            margin-bottom: 20px;
-        }
-
-        .modal-content input {
-            width: 100%;
-            margin-bottom: 12px;
-            box-sizing: border-box;
-            padding: 13px;
-            border: 1px solid #cbd5e1;
-            border-radius: 10px;
-        }
-
-        .close-modal {
-            position: absolute;
-            right: 15px;
-            top: 15px;
-            width: 40px;
-            height: 40px;
-            padding: 0;
-            border: none;
-            background: #dc3545;
-            color: white;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 18px;
-        }
-
-
-        /* =====================================================
-           CAMERA
-        ===================================================== */
-
-        .camera-box {
-            width: 100%;
-            max-width: 640px;
-            margin: 20px auto;
-            text-align: center;
-        }
-
-        .camera-box video {
-            width: 100%;
-            max-width: 640px;
-            border-radius: 16px;
-            background: #111827;
-            display: block;
-            margin: auto;
-
-            /* MIRROR LIKE PHONE SELFIE CAMERA */
-            transform: scaleX(-1);
-        }
-
-        .camera-status {
-            margin-top: 10px;
-            font-weight: bold;
-        }
-
-        .face-message {
-            margin-top: 15px;
-        }
-
-
-        /* =====================================================
-           SUCCESS MESSAGE
-        ===================================================== */
-
-        .success-message {
-            padding: 22px;
-            margin-top: 20px;
-            border-radius: 16px;
-            background: #ecfdf5;
-            border: 2px solid #22c55e;
-            color: #166534;
-            text-align: center;
-        }
-
-        .success-message .success-icon {
-            font-size: 50px;
-            margin-bottom: 10px;
-        }
-
-
-        /* =====================================================
-           ATTENDANCE SUMMARY
-        ===================================================== */
-
-        .attendance-summary {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .attendance-summary-box {
-            padding: 18px;
-            border-radius: 14px;
-            text-align: center;
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-        }
-
-        .attendance-summary-box h3 {
-            margin: 0 0 8px 0;
-        }
-
-        .attendance-summary-box h2 {
-            margin: 0;
-        }
-
-        .present-summary {
-            border: 2px solid #22c55e;
-        }
-
-        .absent-summary {
-            border: 2px solid #ef4444;
-        }
-
-        .total-summary {
-            border: 2px solid #2563eb;
-        }
-
-
-        /* =====================================================
-           REGISTERED STUDENT
-        ===================================================== */
-
-        .registered-student {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 12px;
-        }
-
-
-        /* =====================================================
-           ADMIN
-        ===================================================== */
-
-        .admin-info {
-            background: #eff6ff;
-            border: 1px solid #bfdbfe;
-            padding: 18px;
-            border-radius: 12px;
-            line-height: 1.8;
-        }
-
-
-        /* =====================================================
-           EMAIL OPTION
-        ===================================================== */
-
-        .optional-label {
-            text-align: left;
-            display: block;
-            margin: 5px 0;
-            font-weight: bold;
-            color: #475569;
-        }
-
-        .email-option {
-            margin-top: 10px;
-        }
-
-
-        /* =====================================================
-           MOBILE
-        ===================================================== */
-
-        @media (max-width: 600px) {
-
-            .menu-container {
-                left: 10px;
-                top: 10px;
-            }
-
-            .attendance-summary {
-                grid-template-columns: 1fr;
-            }
-
-            .main-menu {
-                width: 260px;
-            }
-
-            .login-box {
-                padding: 22px;
-            }
-        }
-
-    </style>
-
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Smart Attendance System</title>
+
+<link rel="stylesheet" href="style.css">
+
+<script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+
+<style>
+.login-page {
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    background:#eef4ff;
+    padding:20px;
+}
+
+.login-box {
+    width:100%;
+    max-width:420px;
+    background:white;
+    padding:30px;
+    border-radius:20px;
+    box-shadow:0 10px 40px rgba(0,0,0,.15);
+    text-align:center;
+}
+
+.login-box h1 {
+    margin-bottom:8px;
+}
+
+.login-box input {
+    width:100%;
+    box-sizing:border-box;
+    padding:13px;
+    margin:8px 0;
+    border:1px solid #d1d5db;
+    border-radius:10px;
+    font-size:16px;
+}
+
+.login-box button {
+    width:100%;
+    padding:13px;
+    margin-top:10px;
+    border:none;
+    border-radius:10px;
+    background:#2563eb;
+    color:white;
+    font-size:16px;
+    cursor:pointer;
+}
+
+.login-box button:hover {
+    opacity:.9;
+}
+
+.login-links {
+    margin-top:18px;
+}
+
+.login-links button {
+    background:none;
+    color:#2563eb;
+    padding:5px;
+    width:auto;
+}
+
+#dashboardPage {
+    display:none;
+}
+
+.modal {
+    display:none;
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.55);
+    z-index:5000;
+    align-items:center;
+    justify-content:center;
+    padding:20px;
+}
+
+.modal.show {
+    display:flex;
+}
+
+.modal-content {
+    width:100%;
+    max-width:500px;
+    max-height:85vh;
+    overflow-y:auto;
+    background:white;
+    padding:25px;
+    border-radius:18px;
+    position:relative;
+}
+
+.modal-content input {
+    width:100%;
+    box-sizing:border-box;
+    padding:12px;
+    margin:7px 0;
+}
+
+.close-modal {
+    position:absolute;
+    right:12px;
+    top:12px;
+    border:none;
+    background:#dc3545;
+    color:white;
+    border-radius:50%;
+    width:35px;
+    height:35px;
+    cursor:pointer;
+}
+
+.camera-box {
+    width:100%;
+    max-width:640px;
+    margin:20px auto;
+    text-align:center;
+}
+
+.camera-box video {
+    width:100%;
+    border-radius:16px;
+    background:#111827;
+    display:block;
+    transform:scaleX(-1);
+}
+
+.camera-status {
+    margin-top:10px;
+    font-weight:bold;
+}
+
+.success-message {
+    padding:20px;
+    margin-top:15px;
+    border-radius:15px;
+    background:#ecfdf5;
+    border:2px solid #22c55e;
+    color:#166534;
+    text-align:center;
+}
+
+.attendance-summary {
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
+}
+
+.attendance-summary-box {
+    padding:15px;
+    text-align:center;
+    border-radius:12px;
+    background:#f8fafc;
+}
+
+@media(max-width:600px) {
+    .attendance-summary {
+        grid-template-columns:1fr;
+    }
+}
+</style>
 </head>
-
 
 <body>
 
+<!-- ================= LOGIN ================= -->
 
-<!-- =====================================================
-     LOGIN SCREEN
-===================================================== -->
+<div id="loginPage" class="login-page">
 
-<div id="loginScreen">
-
-    <!-- LOGIN -->
-    <div
-        id="loginBox"
-        class="login-box"
-    >
+    <div class="login-box">
 
         <h1>🔐 Smart Attendance</h1>
 
-        <p>
-            Sign in to access your attendance dashboard
-        </p>
+        <p>Login to continue</p>
 
         <input
             type="text"
             id="loginName"
-            placeholder="Enter your name"
-            autocomplete="name"
-        >
-
-        <input
-            type="tel"
-            id="loginMobile"
-            placeholder="Mobile Number (10 digits)"
-            maxlength="10"
-            inputmode="numeric"
-        >
-
-        <input
-            type="password"
-            id="loginPin"
-            placeholder="4 Digit PIN"
-            maxlength="4"
-            inputmode="numeric"
-        >
-
-        <button
-            type="button"
-            class="login-btn"
-            onclick="loginUser()"
-        >
-            🔓 Login
-        </button>
-
-        <button
-            type="button"
-            class="forgot-btn"
-            onclick="showForgotPin()"
-        >
-            Forgot PIN?
-        </button>
-
-        <div
-            id="loginMessage"
-            class="auth-message"
-        ></div>
-
-    </div>
-
-
-    <!-- FIRST TIME ACCOUNT SETUP -->
-    <div
-        id="setupBox"
-        class="login-box hidden"
-    >
-
-        <h1>👤 Create Account</h1>
-
-        <p>
-            First time here? Create your secure login.
-        </p>
-
-        <input
-            type="text"
-            id="setupName"
             placeholder="Your Name"
         >
 
         <input
             type="tel"
-            id="setupMobile"
-            placeholder="Mobile Number (10 digits)"
+            id="loginMobile"
             maxlength="10"
             inputmode="numeric"
-        >
-
-        <label class="optional-label">
-            📧 Email (Optional)
-        </label>
-
-        <input
-            type="email"
-            id="setupEmail"
-            placeholder="Email address (optional)"
+            placeholder="10 Digit Mobile Number"
         >
 
         <input
             type="password"
-            id="setupPin"
-            placeholder="Create 4 Digit PIN"
+            id="loginPin"
             maxlength="4"
             inputmode="numeric"
+            placeholder="4 Digit PIN"
         >
 
-        <input
-            type="password"
-            id="setupConfirmPin"
-            placeholder="Confirm 4 Digit PIN"
-            maxlength="4"
-            inputmode="numeric"
-        >
-
-        <button
-            type="button"
-            class="login-btn"
-            onclick="createAccount()"
-        >
-            ✅ Create Account
+        <button id="loginButton">
+            🔐 Login
         </button>
 
-        <button
-            type="button"
-            class="forgot-btn"
-            onclick="showLoginBox()"
-        >
-            ← Back to Login
-        </button>
+        <div class="login-links">
 
-        <div
-            id="setupMessage"
-            class="auth-message"
-        ></div>
+            <button id="forgotPinButton">
+                Forgot PIN?
+            </button>
 
-    </div>
+            <br>
 
+            <span>Don't have an account?</span>
 
-    <!-- FORGOT PIN -->
-    <div
-        id="forgotBox"
-        class="login-box hidden"
-    >
+            <button id="signupButton">
+                Create Account
+            </button>
 
-        <h1>🔑 Forgot PIN</h1>
-
-        <p>
-            Verify your account to reset your PIN.
-        </p>
-
-        <input
-            type="text"
-            id="forgotName"
-            placeholder="Enter your name"
-        >
-
-        <input
-            type="tel"
-            id="forgotMobile"
-            placeholder="Mobile Number (10 digits)"
-            maxlength="10"
-            inputmode="numeric"
-        >
-
-        <label class="optional-label">
-            📧 Or use your email
-        </label>
-
-        <input
-            type="email"
-            id="forgotEmail"
-            placeholder="Email address (optional)"
-        >
-
-        <button
-            type="button"
-            class="login-btn"
-            onclick="sendForgotOTP()"
-        >
-            📩 Send OTP
-        </button>
-
-        <button
-            type="button"
-            class="forgot-btn"
-            onclick="showLoginBox()"
-        >
-            ← Back to Login
-        </button>
-
-        <div
-            id="forgotMessage"
-            class="auth-message"
-        ></div>
-
-    </div>
-
-
-    <!-- OTP -->
-    <div
-        id="otpBox"
-        class="login-box hidden"
-    >
-
-        <h1>🔢 Enter OTP</h1>
-
-        <p>
-            Enter the OTP sent for verification.
-        </p>
-
-        <input
-            type="text"
-            id="otpInput"
-            placeholder="Enter OTP"
-            maxlength="6"
-            inputmode="numeric"
-        >
-
-        <button
-            type="button"
-            class="login-btn"
-            onclick="verifyOTP()"
-        >
-            ✅ Verify OTP
-        </button>
-
-        <div
-            id="otpMessage"
-            class="auth-message"
-        ></div>
-
-    </div>
-
-
-    <!-- RESET PIN -->
-    <div
-        id="resetPinBox"
-        class="login-box hidden"
-    >
-
-        <h1>🔐 Set New PIN</h1>
-
-        <p>
-            Your PIN must contain exactly 4 digits.
-        </p>
-
-        <input
-            type="password"
-            id="newPin"
-            placeholder="New 4 Digit PIN"
-            maxlength="4"
-            inputmode="numeric"
-        >
-
-        <input
-            type="password"
-            id="confirmNewPin"
-            placeholder="Confirm New PIN"
-            maxlength="4"
-            inputmode="numeric"
-        >
-
-        <button
-            type="button"
-            class="login-btn"
-            onclick="resetPin()"
-        >
-            💾 Set New PIN
-        </button>
-
-        <div
-            id="resetMessage"
-            class="auth-message"
-        ></div>
+        </div>
 
     </div>
 
 </div>
 
 
+<!-- ================= DASHBOARD ================= -->
 
-<!-- =====================================================
-     MAIN WEBSITE
-===================================================== -->
-
-<div
-    id="mainWebsite"
-    class="hidden"
->
-
+<div id="dashboardPage">
 
 <div class="container">
 
+<header style="position:relative;">
 
-    <!-- =====================================================
-         HEADER
-    ===================================================== -->
+    <div class="menu-container">
 
-    <header style="position:relative;">
+        <button
+            type="button"
+            class="menu-button"
+            onclick="toggleMenu()">
+            ☰
+        </button>
 
-        <!-- LEFT THREE LINE MENU -->
+        <div id="mainMenu" class="main-menu">
 
-        <div class="menu-container">
-
-            <button
-                type="button"
-                class="menu-button"
-                onclick="toggleMenu()"
-            >
-                ☰
+            <button onclick="openEditDetails()">
+                ✏️ Edit My Details
             </button>
 
-
-            <div
-                id="mainMenu"
-                class="main-menu"
-            >
-
-                <button
-                    type="button"
-                    onclick="openEditDetails()"
-                >
-                    ✏️ Edit My Details
-                </button>
-
-
-                <button
-                    type="button"
-                    onclick="openMobileUpdate()"
-                >
-                    📱 Add / Update Mobile
-                </button>
-
-
-                <button
-                    type="button"
-                    onclick="showRegisteredStudents()"
-                >
-                    👥 Registered Students
-                </button>
-
-
-                <button
-                    type="button"
-                    onclick="showCheckAttendance()"
-                >
-                    📊 Check Attendance
-                </button>
-
-
-                <button
-                    type="button"
-                    onclick="showAdminDetails()"
-                >
-                    👑 Admin: Ayush Chatterjee
-                </button>
-
-
-                <button
-                    type="button"
-                    onclick="logoutUser()"
-                >
-                    🚪 Logout
-                </button>
-
-            </div>
-
-        </div>
-
-
-        <h1>Smart Attendance System</h1>
-
-        <p>
-            Student Attendance Dashboard
-        </p>
-
-        <p id="currentDate"></p>
-
-    </header>
-
-
-    <!-- =====================================================
-         DASHBOARD
-    ===================================================== -->
-
-    <section class="dashboard">
-
-        <div class="card">
-
-            <h3>Total Students</h3>
-
-            <h2 id="totalStudents">0</h2>
-
-        </div>
-
-
-        <div class="card">
-
-            <h3>Present</h3>
-
-            <h2 id="presentStudents">0</h2>
-
-        </div>
-
-
-        <div class="card">
-
-            <h3>Absent</h3>
-
-            <h2 id="absentStudents">0</h2>
-
-        </div>
-
-
-        <div class="card">
-
-            <h3>Attendance</h3>
-
-            <h2 id="attendancePercentage">0%</h2>
-
-        </div>
-
-    </section>
-
-
-    <!-- =====================================================
-         FACE REGISTRATION
-    ===================================================== -->
-
-    <section class="section">
-
-        <h2>📸 Face Registration</h2>
-
-        <input
-            type="text"
-            id="faceName"
-            placeholder="Student Name"
-        >
-
-        <input
-            type="text"
-            id="faceRoll"
-            placeholder="Roll Number"
-        >
-
-        <input
-            type="text"
-            id="collegeName"
-            placeholder="College Name"
-        >
-
-        <input
-            type="text"
-            id="departmentName"
-            placeholder="Department"
-        >
-
-        <input
-            type="tel"
-            id="faceMobile"
-            placeholder="Mobile Number (10 digits)"
-            maxlength="10"
-            inputmode="numeric"
-        >
-
-        <label class="optional-label">
-            📧 Email (Optional)
-        </label>
-
-        <input
-            type="email"
-            id="faceEmail"
-            placeholder="Email address (optional)"
-        >
-
-
-        <!-- CAMERA -->
-
-        <div class="camera-box">
-
-            <video
-                id="registrationCamera"
-                autoplay
-                muted
-                playsinline
-            ></video>
-
-            <div
-                id="registrationStatus"
-                class="camera-status"
-            >
-                Camera is OFF
-            </div>
-
-        </div>
-
-
-        <!-- FACE REGISTRATION BUTTON -->
-
-        <button
-            type="button"
-            id="registerFaceButton"
-            onclick="startAutomaticFaceRegistration()"
-        >
-            📸 Capture Face & Register
-        </button>
-
-
-        <div
-            id="registrationMessage"
-            class="face-message"
-        ></div>
-
-    </section>
-
-
-    <!-- =====================================================
-         FACE ATTENDANCE
-    ===================================================== -->
-
-    <section class="section">
-
-        <h2>📸 Face Attendance</h2>
-
-
-        <div class="camera-box">
-
-            <video
-                id="attendanceCamera"
-                autoplay
-                muted
-                playsinline
-            ></video>
-
-            <div
-                id="attendanceStatus"
-                class="camera-status"
-            >
-                Camera is OFF
-            </div>
-
-        </div>
-
-
-        <!-- ONLY CAPTURE FACE -->
-
-        <button
-            type="button"
-            id="attendanceButton"
-            onclick="startFaceAttendance()"
-        >
-            📸 Capture Face
-        </button>
-
-
-        <div
-            id="attendanceResult"
-            class="face-message"
-        ></div>
-
-    </section>
-
-
-    <!-- =====================================================
-         SEARCH
-    ===================================================== -->
-
-    <section class="section">
-
-        <h2>👥 Student List</h2>
-
-        <input
-            type="text"
-            id="searchStudent"
-            placeholder="Search student by name or roll..."
-            oninput="displayStudents()"
-        >
-
-        <div id="studentList"></div>
-
-    </section>
-
-
-</div>
-
-
-
-<!-- =====================================================
-     EDIT DETAILS MODAL
-===================================================== -->
-
-<div
-    id="editDetailsModal"
-    class="modal"
->
-
-    <div class="modal-content">
-
-        <button
-            type="button"
-            class="close-modal"
-            onclick="closeEditDetails()"
-        >
-            ✕
-        </button>
-
-
-        <h2>✏️ Edit My Details</h2>
-
-
-        <input
-            type="text"
-            id="editName"
-            placeholder="Name"
-        >
-
-
-        <input
-            type="text"
-            id="editRoll"
-            placeholder="Roll"
-        >
-
-
-        <input
-            type="text"
-            id="editCollege"
-            placeholder="College"
-        >
-
-
-        <input
-            type="text"
-            id="editDepartment"
-            placeholder="Department"
-        >
-
-
-        <input
-            type="tel"
-            id="editMobile"
-            placeholder="Mobile Number (10 digits)"
-            maxlength="10"
-            inputmode="numeric"
-        >
-
-        <input
-            type="email"
-            id="editEmail"
-            placeholder="Email address (optional)"
-        >
-
-
-        <button
-            type="button"
-            onclick="saveEditedDetails()"
-        >
-            💾 Save Changes
-        </button>
-
-    </div>
-
-</div>
-
-
-
-<!-- =====================================================
-     REGISTERED STUDENTS MODAL
-===================================================== -->
-
-<div
-    id="studentsModal"
-    class="modal"
->
-
-    <div class="modal-content">
-
-        <button
-            type="button"
-            class="close-modal"
-            onclick="closeRegisteredStudents()"
-        >
-            ✕
-        </button>
-
-
-        <h2>👥 Registered Students</h2>
-
-
-        <div
-            id="registeredStudentsList"
-        ></div>
-
-    </div>
-
-</div>
-
-
-
-<!-- =====================================================
-     CHECK ATTENDANCE MODAL
-===================================================== -->
-
-<div
-    id="attendanceCheckModal"
-    class="modal"
->
-
-    <div class="modal-content">
-
-        <button
-            type="button"
-            class="close-modal"
-            onclick="closeCheckAttendance()"
-        >
-            ✕
-        </button>
-
-
-        <h2>📊 Check Attendance</h2>
-
-
-        <div class="attendance-summary">
-
-            <div
-                class="attendance-summary-box total-summary"
-            >
-
-                <h3>Total Days</h3>
-
-                <h2 id="attendanceTotalDays">
-                    0
-                </h2>
-
-            </div>
-
-
-            <div
-                class="attendance-summary-box present-summary"
-            >
-
-                <h3>Present</h3>
-
-                <h2 id="attendancePresentDays">
-                    0
-                </h2>
-
-            </div>
-
-
-            <div
-                class="attendance-summary-box absent-summary"
-            >
-
-                <h3>Absent</h3>
-
-                <h2 id="attendanceAbsentDays">
-                    0
-                </h2>
-
-            </div>
-
-        </div>
-
-
-        <div id="attendanceHistory"></div>
-
-    </div>
-
-</div>
-
-
-
-<!-- =====================================================
-     ADMIN MODAL
-===================================================== -->
-
-<div
-    id="adminModal"
-    class="modal"
->
-
-    <div class="modal-content">
-
-        <button
-            type="button"
-            class="close-modal"
-            onclick="closeAdminDetails()"
-        >
-            ✕
-        </button>
-
-
-        <h2>👑 Admin Details</h2>
-
-
-        <div class="admin-info">
-
-            <strong>👤 Admin:</strong>
-            Ayush Chatterjee
-
-            <br>
-
-            <strong>📋 System:</strong>
-            Smart Attendance System
-
-            <br>
-
-            <strong>🔐 Role:</strong>
-            Administrator
+            <button onclick="openMobileUpdate()">
+                📱 Add / Update Mobile
+            </button>
+
+            <button onclick="openEmailUpdate()">
+                📧 Add / Update Email
+            </button>
+
+            <button onclick="showRegisteredStudents()">
+                👥 Registered Students
+            </button>
+
+            <button onclick="showCheckAttendance()">
+                📊 Check Attendance
+            </button>
+
+            <button onclick="showAdminDetails()">
+                👑 Admin: Ayush Chatterjee
+            </button>
+
+            <button onclick="logoutUser()">
+                🚪 Logout
+            </button>
 
         </div>
 
     </div>
 
+    <h1>Smart Attendance System</h1>
+
+    <p>Student Attendance Dashboard</p>
+
+    <p id="currentDate"></p>
+
+</header>
+
+
+<section class="dashboard">
+
+<div class="card">
+<h3>Total Students</h3>
+<h2 id="totalStudents">0</h2>
+</div>
+
+<div class="card">
+<h3>Present</h3>
+<h2 id="presentStudents">0</h2>
+</div>
+
+<div class="card">
+<h3>Absent</h3>
+<h2 id="absentStudents">0</h2>
+</div>
+
+<div class="card">
+<h3>Attendance</h3>
+<h2 id="attendancePercentage">0%</h2>
+</div>
+
+</section>
+
+
+<!-- FACE REGISTRATION -->
+
+<section class="section">
+
+<h2>📸 Face Registration</h2>
+
+<input id="faceName" placeholder="Student Name">
+<input id="faceRoll" placeholder="Roll Number">
+<input id="collegeName" placeholder="College Name">
+<input id="departmentName" placeholder="Department">
+
+<input
+    id="faceMobile"
+    type="tel"
+    maxlength="10"
+    inputmode="numeric"
+    placeholder="10 Digit Mobile Number"
+>
+
+<input
+    id="faceEmail"
+    type="email"
+    placeholder="Email (Optional)"
+>
+
+<div class="camera-box">
+
+<video
+    id="registrationCamera"
+    autoplay
+    muted
+    playsinline>
+</video>
+
+<div id="registrationStatus" class="camera-status">
+Camera is OFF
+</div>
+
+</div>
+
+<button
+    id="registerFaceButton"
+    onclick="startAutomaticFaceRegistration()">
+    📸 Capture Face & Register
+</button>
+
+<div id="registrationMessage"></div>
+
+</section>
+
+
+<!-- FACE ATTENDANCE -->
+
+<section class="section">
+
+<h2>📸 Face Attendance</h2>
+
+<div class="camera-box">
+
+<video
+    id="attendanceCamera"
+    autoplay
+    muted
+    playsinline>
+</video>
+
+<div id="attendanceStatus" class="camera-status">
+Camera is OFF
+</div>
+
+</div>
+
+<button
+    id="attendanceButton"
+    onclick="startFaceAttendance()">
+    📸 Capture Face
+</button>
+
+<div id="attendanceResult"></div>
+
+</section>
+
+
+<!-- STUDENT LIST -->
+
+<section class="section">
+
+<h2>👥 Student List</h2>
+
+<input
+    id="searchStudent"
+    placeholder="Search student..."
+    oninput="displayStudents()"
+>
+
+<div id="studentList"></div>
+
+</section>
+
+</div>
 </div>
 
 
+<!-- ================= SIGN UP MODAL ================= -->
+
+<div id="signupModal" class="modal">
+
+<div class="modal-content">
+
+<button
+    class="close-modal"
+    onclick="closeSignup()">
+    ✕
+</button>
+
+<h2>📝 Create Account</h2>
+
+<input
+    id="signupName"
+    placeholder="Full Name"
+>
+
+<input
+    id="signupMobile"
+    type="tel"
+    maxlength="10"
+    inputmode="numeric"
+    placeholder="10 Digit Mobile Number"
+>
+
+<input
+    id="signupEmail"
+    type="email"
+    placeholder="Email (Optional)"
+>
+
+<input
+    id="signupPin"
+    type="password"
+    maxlength="4"
+    inputmode="numeric"
+    placeholder="Create 4 Digit PIN"
+>
+
+<input
+    id="signupConfirmPin"
+    type="password"
+    maxlength="4"
+    inputmode="numeric"
+    placeholder="Confirm 4 Digit PIN"
+>
+
+<button onclick="createAccount()">
+    ✅ Create Account
+</button>
+
+</div>
 </div>
 
 
-<!-- =====================================================
-     JAVASCRIPT
-===================================================== -->
+<!-- ================= FORGOT PIN ================= -->
+
+<div id="forgotModal" class="modal">
+
+<div class="modal-content">
+
+<button
+    class="close-modal"
+    onclick="closeForgotPin()">
+    ✕
+</button>
+
+<h2>🔐 Forgot PIN</h2>
+
+<p>Enter your registered details.</p>
+
+<input
+    id="forgotName"
+    placeholder="Name"
+>
+
+<input
+    id="forgotMobile"
+    type="tel"
+    maxlength="10"
+    inputmode="numeric"
+    placeholder="Mobile Number"
+>
+
+<input
+    id="forgotEmail"
+    type="email"
+    placeholder="Email (Optional)"
+>
+
+<button onclick="sendForgotOTP()">
+    📩 Send OTP
+</button>
+
+<div id="forgotOtpArea" style="display:none;">
+
+<input
+    id="forgotOTP"
+    maxlength="6"
+    inputmode="numeric"
+    placeholder="Enter OTP"
+>
+
+<input
+    id="newPin"
+    type="password"
+    maxlength="4"
+    inputmode="numeric"
+    placeholder="New 4 Digit PIN"
+>
+
+<input
+    id="confirmNewPin"
+    type="password"
+    maxlength="4"
+    inputmode="numeric"
+    placeholder="Confirm PIN"
+>
+
+<button onclick="resetPIN()">
+    🔄 Reset PIN
+</button>
+
+</div>
+
+</div>
+</div>
+
+
+<!-- ================= EDIT ================= -->
+
+<div id="editDetailsModal" class="modal">
+
+<div class="modal-content">
+
+<button class="close-modal" onclick="closeEditDetails()">✕</button>
+
+<h2>✏️ Edit My Details</h2>
+
+<input id="editName" placeholder="Name">
+<input id="editRoll" placeholder="Roll">
+<input id="editCollege" placeholder="College">
+<input id="editDepartment" placeholder="Department">
+
+<input
+    id="editMobile"
+    maxlength="10"
+    inputmode="numeric"
+    placeholder="Mobile"
+>
+
+<input id="editEmail" type="email" placeholder="Email">
+
+<button onclick="saveEditedDetails()">
+💾 Save Changes
+</button>
+
+</div>
+</div>
+
+
+<!-- ================= REGISTERED STUDENTS ================= -->
+
+<div id="studentsModal" class="modal">
+
+<div class="modal-content">
+
+<button
+    class="close-modal"
+    onclick="closeRegisteredStudents()">
+    ✕
+</button>
+
+<h2>👥 Registered Students</h2>
+
+<div id="registeredStudentsList"></div>
+
+</div>
+</div>
+
+
+<!-- ================= CHECK ATTENDANCE ================= -->
+
+<div id="attendanceCheckModal" class="modal">
+
+<div class="modal-content">
+
+<button
+    class="close-modal"
+    onclick="closeCheckAttendance()">
+    ✕
+</button>
+
+<h2>📊 Check Attendance</h2>
+
+<div class="attendance-summary">
+
+<div class="attendance-summary-box">
+<h3>Total Days</h3>
+<h2 id="attendanceTotalDays">0</h2>
+</div>
+
+<div class="attendance-summary-box">
+<h3>Present</h3>
+<h2 id="attendancePresentDays">0</h2>
+</div>
+
+<div class="attendance-summary-box">
+<h3>Absent</h3>
+<h2 id="attendanceAbsentDays">0</h2>
+</div>
+
+</div>
+
+<div id="attendanceHistory"></div>
+
+</div>
+</div>
+
+
+<!-- ================= ADMIN ================= -->
+
+<div id="adminModal" class="modal">
+
+<div class="modal-content">
+
+<button
+    class="close-modal"
+    onclick="closeAdminDetails()">
+    ✕
+</button>
+
+<h2>👑 Admin Details</h2>
+
+<p><strong>Admin:</strong> Ayush Chatterjee</p>
+<p><strong>System:</strong> Smart Attendance System</p>
+<p><strong>Role:</strong> Administrator</p>
+
+</div>
+</div>
+
 
 <script src="script.js"></script>
 
-
 </body>
-
 </html>
