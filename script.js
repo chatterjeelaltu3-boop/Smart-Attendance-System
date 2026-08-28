@@ -386,3 +386,424 @@ window.addEventListener(
 
     console.log("Photo captured successfully.");
 }
+// ==========================================
+// AUTOMATIC FACE REGISTRATION
+// ==========================================
+
+const FACE_MODEL_URL =
+    "https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js@master/weights";
+
+let faceRegistrationRunning = false;
+let faceRegistrationStream = null;
+let faceModelReady = false;
+
+
+// Load face detector model
+async function loadAutomaticFaceModel() {
+
+    const status =
+        document.getElementById("faceStatus");
+
+    if (typeof faceapi === "undefined") {
+
+        status.innerText =
+            "Face recognition library not loaded.";
+
+        return false;
+    }
+
+    try {
+
+        status.innerText =
+            "Loading face detection...";
+
+        await faceapi.nets.tinyFaceDetector.loadFromUri(
+            FACE_MODEL_URL
+        );
+
+        faceModelReady = true;
+
+        status.innerText =
+            "Face detection ready. Click the button.";
+
+        return true;
+
+    } catch (error) {
+
+        console.error(
+            "Face model error:",
+            error
+        );
+
+        status.innerText =
+            "Face model could not be loaded.";
+
+        return false;
+    }
+}
+
+
+// Start automatic registration
+async function startAutomaticFaceRegistration() {
+
+    const name =
+        document.getElementById("faceName").value.trim();
+
+    const roll =
+        document.getElementById("faceRoll").value.trim();
+
+    const college =
+        document.getElementById("collegeName").value.trim();
+
+    const department =
+        document.getElementById("departmentName").value.trim();
+
+    const video =
+        document.getElementById("camera");
+
+    const status =
+        document.getElementById("faceStatus");
+
+    const message =
+        document.getElementById("captureMessage");
+
+    const button =
+        document.getElementById("registerFaceButton");
+
+
+    // Check student information
+
+    if (
+        !name ||
+        !roll ||
+        !college ||
+        !department
+    ) {
+
+        message.innerText =
+            "Please fill Name, Roll, College and Department first.";
+
+        return;
+    }
+
+
+    button.disabled = true;
+
+    message.innerText =
+        "";
+
+
+    // Load model if needed
+
+    if (!faceModelReady) {
+
+        const loaded =
+            await loadAutomaticFaceModel();
+
+        if (!loaded) {
+
+            button.disabled = false;
+
+            return;
+        }
+    }
+
+
+    // Start camera
+
+    try {
+
+        status.innerText =
+            "Requesting camera permission...";
+
+        faceRegistrationStream =
+            await navigator.mediaDevices.getUserMedia({
+
+                video: {
+                    facingMode: "user",
+                    width: {
+                        ideal: 640
+                    },
+                    height: {
+                        ideal: 480
+                    }
+                },
+
+                audio: false
+            });
+
+
+        video.srcObject =
+            faceRegistrationStream;
+
+        await video.play();
+
+        status.innerText =
+            "Camera ON — looking for your face...";
+
+        faceRegistrationRunning = true;
+
+
+        // Start automatic detection
+
+        detectFaceForRegistration(
+            name,
+            roll,
+            college,
+            department
+        );
+
+
+    } catch (error) {
+
+        console.error(
+            "Camera error:",
+            error
+        );
+
+        status.innerText =
+            "Camera permission was denied or camera is unavailable.";
+
+        button.disabled = false;
+    }
+}
+
+
+// Detect face automatically
+async function detectFaceForRegistration(
+    name,
+    roll,
+    college,
+    department
+) {
+
+    if (!faceRegistrationRunning) {
+        return;
+    }
+
+
+    const video =
+        document.getElementById("camera");
+
+    const status =
+        document.getElementById("faceStatus");
+
+
+    try {
+
+        const detections =
+            await faceapi.detectAllFaces(
+                video,
+                new faceapi.TinyFaceDetectorOptions({
+                    inputSize: 320,
+                    scoreThreshold: 0.5
+                })
+            );
+
+
+        if (detections.length === 1) {
+
+            status.innerText =
+                "Face detected ✅ Hold still...";
+
+            // Wait a little so the face is stable
+            setTimeout(function () {
+
+                if (faceRegistrationRunning) {
+
+                    captureRegisteredFace(
+                        name,
+                        roll,
+                        college,
+                        department
+                    );
+
+                }
+
+            }, 1200);
+
+            return;
+        }
+
+
+        if (detections.length > 1) {
+
+            status.innerText =
+                "Please keep only one face in the camera.";
+
+        } else {
+
+            status.innerText =
+                "Looking for your face...";
+
+        }
+
+
+        setTimeout(function () {
+
+            detectFaceForRegistration(
+                name,
+                roll,
+                college,
+                department
+            );
+
+        }, 250);
+
+
+    } catch (error) {
+
+        console.error(
+            "Face detection error:",
+            error
+        );
+
+        status.innerText =
+            "Face detection error.";
+
+        faceRegistrationRunning = false;
+
+        document.getElementById(
+            "registerFaceButton"
+        ).disabled = false;
+    }
+}
+
+
+// Capture automatically
+function captureRegisteredFace(
+    name,
+    roll,
+    college,
+    department
+) {
+
+    const video =
+        document.getElementById("camera");
+
+    const canvas =
+        document.getElementById("snapshot");
+
+    const status =
+        document.getElementById("faceStatus");
+
+    const message =
+        document.getElementById("captureMessage");
+
+    const button =
+        document.getElementById("registerFaceButton");
+
+
+    canvas.width =
+        video.videoWidth;
+
+    canvas.height =
+        video.videoHeight;
+
+
+    const context =
+        canvas.getContext("2d");
+
+
+    // Undo mirror when saving photo
+    context.save();
+
+    context.translate(
+        canvas.width,
+        0
+    );
+
+    context.scale(
+        -1,
+        1
+    );
+
+
+    context.drawImage(
+        video,
+        0,
+        0,
+        canvas.width,
+        canvas.height
+    );
+
+
+    context.restore();
+
+
+    const photo =
+        canvas.toDataURL(
+            "image/jpeg",
+            0.90
+        );
+
+
+    // Save registration locally
+    const registration = {
+
+        name: name,
+
+        roll: roll,
+
+        college: college,
+
+        department: department,
+
+        photo: photo,
+
+        registeredAt:
+            new Date().toISOString()
+    };
+
+
+    localStorage.setItem(
+        "registeredFaceStudent",
+        JSON.stringify(registration)
+    );
+
+
+    status.innerText =
+        "Face registered successfully ✅";
+
+
+    message.innerText =
+        name +
+        " has been registered successfully!";
+
+
+    faceRegistrationRunning =
+        false;
+
+
+    button.disabled =
+        false;
+
+
+    // Stop camera
+    if (faceRegistrationStream) {
+
+        faceRegistrationStream
+            .getTracks()
+            .forEach(track => track.stop());
+
+        faceRegistrationStream = null;
+    }
+
+
+    video.srcObject =
+        null;
+}
+
+
+// Try loading the model when page opens
+window.addEventListener(
+    "load",
+    function () {
+
+        setTimeout(
+            loadAutomaticFaceModel,
+            500
+        );
+
+    }
+);
