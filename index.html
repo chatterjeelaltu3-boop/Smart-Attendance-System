@@ -4,84 +4,124 @@
 <head>
 
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
     <title>Smart Attendance System</title>
 
-    <link rel="stylesheet" href="style.css">
+    <link
+        rel="stylesheet"
+        href="style.css"
+    >
 
-    <!-- Face API -->
+    <!-- FACE API -->
     <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
+
 
     <style>
 
         /* =====================================================
-           THREE HORIZONTAL BAR MENU
+           MENU
         ===================================================== */
 
         .menu-container {
+
             position: relative;
+
             display: flex;
-            justify-content: flex-start;
-            align-items: flex-start;
+
+            justify-content: center;
+
             margin-bottom: 15px;
-            width: 100%;
+
         }
+
 
         .menu-button {
+
             width: 70px;
+
             height: 55px;
+
             font-size: 28px;
+
             border-radius: 12px;
+
             background: #2563eb;
+
             color: white;
+
             border: none;
+
             cursor: pointer;
+
         }
 
-        .menu-button:hover {
-            opacity: 0.9;
-        }
 
         .main-menu {
+
             display: none;
+
             position: absolute;
+
             top: 65px;
-            left: 0;
+
             z-index: 1000;
+
             width: 300px;
+
             background: white;
+
             padding: 12px;
+
             border-radius: 15px;
-            box-shadow: 0 10px 35px rgba(0,0,0,0.20);
+
+            box-shadow:
+                0 10px 35px
+                rgba(0,0,0,0.20);
+
         }
+
 
         .main-menu.show {
+
             display: block;
+
         }
+
 
         .main-menu button {
+
             width: 100%;
+
             margin: 5px 0;
+
             text-align: left;
+
             background: #2563eb;
+
             color: white;
+
             border: none;
+
             padding: 14px;
+
             border-radius: 10px;
+
             cursor: pointer;
+
             font-size: 15px;
+
         }
+
 
         .main-menu button:hover {
+
             opacity: 0.88;
-        }
 
-        /* ADMIN BUTTON */
-
-        .admin-menu-button {
-            background: #7c3aed !important;
-            font-weight: bold;
         }
 
 
@@ -90,70 +130,278 @@
         ===================================================== */
 
         .modal {
+
             display: none;
+
             position: fixed;
+
             inset: 0;
-            background: rgba(0,0,0,0.55);
+
+            background:
+                rgba(0,0,0,0.55);
+
             z-index: 2000;
+
             align-items: center;
+
             justify-content: center;
+
             padding: 20px;
+
         }
+
 
         .modal.show {
+
             display: flex;
+
         }
+
 
         .modal-content {
+
             width: 100%;
+
             max-width: 500px;
+
             max-height: 85vh;
+
             overflow-y: auto;
+
             background: white;
+
             padding: 25px;
+
             border-radius: 18px;
+
             position: relative;
-            box-shadow: 0 15px 50px rgba(0,0,0,0.3);
+
+            box-shadow:
+                0 15px 50px
+                rgba(0,0,0,0.3);
+
         }
+
 
         .modal-content h2 {
+
             margin-bottom: 20px;
+
         }
+
 
         .modal-content input {
+
             width: 100%;
+
             margin-bottom: 12px;
+
             box-sizing: border-box;
+
         }
+
 
         .close-modal {
+
             position: absolute;
+
             right: 15px;
+
             top: 15px;
+
             width: 40px;
+
             height: 40px;
+
             padding: 0;
+
             background: #dc3545;
+
             color: white;
-            border-radius: 50%;
+
             border: none;
+
+            border-radius: 50%;
+
             cursor: pointer;
+
+            font-size: 20px;
+
         }
+
+
+        /* =====================================================
+           ADMIN
+        ===================================================== */
 
         .admin-info {
+
             background: #eff6ff;
+
             border: 1px solid #bfdbfe;
+
             padding: 18px;
+
             border-radius: 12px;
+
             line-height: 1.8;
+
         }
 
+
+        /* =====================================================
+           REGISTERED STUDENT
+        ===================================================== */
+
         .registered-student {
+
             background: #f8fafc;
+
             border: 1px solid #e2e8f0;
+
             padding: 15px;
+
             border-radius: 12px;
+
             margin-bottom: 12px;
+
+        }
+
+
+        /* =====================================================
+           ATTENDANCE SUMMARY
+        ===================================================== */
+
+        .attendance-summary {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(3, 1fr);
+
+            gap: 12px;
+
+            margin-bottom: 20px;
+
+        }
+
+
+        .attendance-box {
+
+            padding: 18px;
+
+            border-radius: 14px;
+
+            text-align: center;
+
+            font-weight: bold;
+
+        }
+
+
+        .attendance-total {
+
+            background: #eff6ff;
+
+            border: 1px solid #bfdbfe;
+
+        }
+
+
+        .attendance-present {
+
+            background: #ecfdf5;
+
+            border: 1px solid #86efac;
+
+        }
+
+
+        .attendance-absent {
+
+            background: #fef2f2;
+
+            border: 1px solid #fecaca;
+
+        }
+
+
+        .attendance-box h3 {
+
+            margin: 0 0 8px 0;
+
+        }
+
+
+        .attendance-box h2 {
+
+            margin: 0;
+
+            font-size: 28px;
+
+        }
+
+
+        /* =====================================================
+           ATTENDANCE HISTORY
+        ===================================================== */
+
+        .attendance-history {
+
+            margin-top: 15px;
+
+        }
+
+
+        .attendance-history-item {
+
+            padding: 14px;
+
+            margin-bottom: 10px;
+
+            border-radius: 12px;
+
+            background: #f8fafc;
+
+            border: 1px solid #e2e8f0;
+
+        }
+
+
+        .present-history {
+
+            border-left:
+                5px solid #22c55e;
+
+        }
+
+
+        .absent-history {
+
+            border-left:
+                5px solid #ef4444;
+
+        }
+
+
+        /* =====================================================
+           MOBILE
+        ===================================================== */
+
+        @media (max-width: 600px) {
+
+            .attendance-summary {
+
+                grid-template-columns: 1fr;
+
+            }
+
+            .main-menu {
+
+                width: 280px;
+
+            }
+
         }
 
     </style>
@@ -174,25 +422,29 @@
     <header>
 
 
-        <!-- THREE HORIZONTAL BAR -->
+        <!-- THREE LINE MENU -->
 
         <div class="menu-container">
+
 
             <button
                 type="button"
                 class="menu-button"
                 onclick="toggleMenu()"
             >
+
                 ☰
+
             </button>
 
 
-            <!-- EVERYTHING INSIDE THREE BAR -->
+            <!-- MENU -->
 
             <div
                 id="mainMenu"
                 class="main-menu"
             >
+
 
                 <!-- 1 -->
 
@@ -200,7 +452,9 @@
                     type="button"
                     onclick="openEditDetails()"
                 >
+
                     ✏️ Edit My Details
+
                 </button>
 
 
@@ -210,7 +464,9 @@
                     type="button"
                     onclick="openMobileUpdate()"
                 >
+
                     📱 Add / Update Mobile
+
                 </button>
 
 
@@ -220,28 +476,55 @@
                     type="button"
                     onclick="showRegisteredStudents()"
                 >
+
                     👥 Registered Students
+
                 </button>
 
 
-                <!-- ADMIN ALWAYS LAST -->
+                <!-- 4 -->
 
                 <button
                     type="button"
-                    class="admin-menu-button"
+                    onclick="showAttendanceCheck()"
+                >
+
+                    📊 Check Attendance
+
+                </button>
+
+
+                <!-- 5 -->
+
+                <button
+                    type="button"
                     onclick="showAdminDetails()"
                 >
+
                     👑 Admin: Ayush Chatterjee
+
                 </button>
+
 
             </div>
 
         </div>
 
 
-        <h1>Smart Attendance System</h1>
+        <h1>
+            Smart Attendance System
+        </h1>
 
-        <p>Student Attendance Dashboard</p>
+
+        <p>
+            Student Attendance Dashboard
+        </p>
+
+
+        <!-- CURRENT DATE -->
+
+        <p id="currentDate"></p>
+
 
     </header>
 
@@ -256,38 +539,55 @@
 
         <div class="card">
 
-            <h3>Total Students</h3>
+            <h3>
+                Total Students
+            </h3>
 
-            <h2 id="totalStudents">0</h2>
-
-        </div>
-
-
-        <div class="card">
-
-            <h3>Present</h3>
-
-            <h2 id="presentStudents">0</h2>
+            <h2 id="totalStudents">
+                0
+            </h2>
 
         </div>
 
 
         <div class="card">
 
-            <h3>Absent</h3>
+            <h3>
+                Present
+            </h3>
 
-            <h2 id="absentStudents">0</h2>
+            <h2 id="presentStudents">
+                0
+            </h2>
 
         </div>
 
 
         <div class="card">
 
-            <h3>Attendance</h3>
+            <h3>
+                Absent
+            </h3>
 
-            <h2 id="attendancePercentage">0%</h2>
+            <h2 id="absentStudents">
+                0
+            </h2>
 
         </div>
+
+
+        <div class="card">
+
+            <h3>
+                Attendance
+            </h3>
+
+            <h2 id="attendancePercentage">
+                0%
+            </h2>
+
+        </div>
+
 
     </section>
 
@@ -297,50 +597,58 @@
          ADD STUDENT
     ===================================================== -->
 
-    <section class="box">
+    <section>
 
-        <h2>➕ Add Student</h2>
 
-        <div class="form">
+        <h2>
+            Add Student
+        </h2>
 
-            <input
-                type="text"
-                id="studentName"
-                placeholder="Student Name"
-            >
 
-            <input
-                type="text"
-                id="studentRoll"
-                placeholder="Roll Number"
-            >
+        <input
+            type="text"
+            id="studentName"
+            placeholder="Student Name"
+        >
 
-            <input
-                type="text"
-                id="studentCollege"
-                placeholder="College Name"
-            >
 
-            <input
-                type="text"
-                id="studentDepartment"
-                placeholder="Department"
-            >
+        <input
+            type="text"
+            id="studentRoll"
+            placeholder="Roll Number"
+        >
 
-            <input
-                type="tel"
-                id="studentMobile"
-                placeholder="Mobile Number"
-            >
 
-            <button
-                type="button"
-                onclick="addStudent()"
-            >
-                Add Student
-            </button>
+        <input
+            type="text"
+            id="studentCollege"
+            placeholder="College Name"
+        >
 
-        </div>
+
+        <input
+            type="text"
+            id="studentDepartment"
+            placeholder="Department"
+        >
+
+
+        <input
+            type="tel"
+            id="studentMobile"
+            placeholder="Mobile Number"
+        >
+
+
+        <button
+            type="button"
+            onclick="addStudent()"
+        >
+
+            ➕ Add Student
+
+        </button>
+
 
     </section>
 
@@ -350,40 +658,24 @@
          SEARCH STUDENT
     ===================================================== -->
 
-    <section class="box">
+    <section>
 
-        <h2>🔍 Search Student</h2>
+
+        <h2>
+            Student List
+        </h2>
+
 
         <input
-            class="search"
             type="text"
             id="searchStudent"
-            placeholder="Search by name or roll number"
+            placeholder="Search by name or roll..."
             oninput="displayStudents()"
         >
 
-    </section>
-
-
-
-    <!-- =====================================================
-         TODAY ATTENDANCE
-    ===================================================== -->
-
-    <section class="box">
-
-        <h2>📋 Today's Attendance</h2>
-
-        <div
-            id="currentDate"
-            style="
-                margin-bottom:20px;
-                font-size:18px;
-                font-weight:bold;
-            "
-        ></div>
 
         <div id="studentList"></div>
+
 
     </section>
 
@@ -393,104 +685,86 @@
          FACE REGISTRATION
     ===================================================== -->
 
-    <section class="box face-section">
+    <section>
 
 
-        <div class="section-title">
-
-            <span>👤</span>
-
-            <div>
-
-                <h2>Face Registration</h2>
-
-                <p>
-                    Enter student details and register your face
-                </p>
-
-            </div>
-
-        </div>
+        <h2>
+            Face Registration
+        </h2>
 
 
-        <!-- STUDENT INFORMATION -->
-
-        <div class="face-form">
-
-            <input
-                type="text"
-                id="faceName"
-                placeholder="Student Name"
-            >
-
-            <input
-                type="text"
-                id="faceRoll"
-                placeholder="Roll Number"
-            >
-
-            <input
-                type="text"
-                id="collegeName"
-                placeholder="College Name"
-            >
-
-            <input
-                type="text"
-                id="departmentName"
-                placeholder="Department"
-            >
-
-            <input
-                type="tel"
-                id="faceMobile"
-                placeholder="Mobile Number"
-            >
-
-        </div>
-
-
-        <!-- REGISTRATION CAMERA -->
-
-        <div class="camera-box">
-
-            <video
-                id="registrationCamera"
-                autoplay
-                playsinline
-            ></video>
-
-            <div id="registrationStatus">
-                Camera is ready
-            </div>
-
-        </div>
-
-
-        <!-- START CAMERA -->
-
-        <button
-            type="button"
-            class="face-register-btn"
-            onclick="startRegistrationCamera()"
+        <input
+            type="text"
+            id="faceName"
+            placeholder="Student Name"
         >
-            📷 Start Registration Camera
-        </button>
 
 
-        <!-- REGISTER FACE -->
+        <input
+            type="text"
+            id="faceRoll"
+            placeholder="Roll Number"
+        >
+
+
+        <input
+            type="text"
+            id="collegeName"
+            placeholder="College Name"
+        >
+
+
+        <input
+            type="text"
+            id="departmentName"
+            placeholder="Department"
+        >
+
+
+        <input
+            type="tel"
+            id="faceMobile"
+            placeholder="Mobile Number"
+        >
+
+
+        <video
+            id="registrationCamera"
+            autoplay
+            muted
+            playsinline
+            width="100%"
+        ></video>
+
+
+        <p id="registrationStatus">
+            Camera not started
+        </p>
+
+
+        <div id="registrationMessage"></div>
+
 
         <button
-            id="registerFaceButton"
             type="button"
-            class="face-register-btn"
+            id="registerFaceButton"
             onclick="startAutomaticFaceRegistration()"
         >
-            📸 Register Face
+
+            📷 Capture & Register Face
+
         </button>
 
 
-        <p id="registrationMessage"></p>
+        <button
+            type="button"
+            onclick="startRegistrationCamera()"
+        >
+
+            🎥 Start Camera
+
+        </button>
+
 
     </section>
 
@@ -500,63 +774,54 @@
          FACE ATTENDANCE
     ===================================================== -->
 
-    <section class="box face-attendance-section">
+    <section>
 
 
-        <div class="section-title">
-
-            <span>📷</span>
-
-            <div>
-
-                <h2>Face Attendance</h2>
-
-                <p>
-                    Face will be detected automatically
-                </p>
-
-            </div>
-
-        </div>
+        <h2>
+            Face Attendance
+        </h2>
 
 
-        <!-- ATTENDANCE CAMERA -->
-
-        <div class="camera-box">
-
-            <video
-                id="attendanceCamera"
-                autoplay
-                playsinline
-            ></video>
-
-            <div id="attendanceStatus">
-                Camera is ready
-            </div>
-
-        </div>
+        <video
+            id="attendanceCamera"
+            autoplay
+            muted
+            playsinline
+            width="100%"
+        ></video>
 
 
-        <!-- FACE ATTENDANCE -->
+        <p id="attendanceStatus">
+            Camera not started
+        </p>
+
+
+        <div id="attendanceResult"></div>
+
 
         <button
-            id="attendanceButton"
             type="button"
-            class="face-register-btn"
+            id="attendanceButton"
             onclick="startFaceAttendance()"
         >
-            📷 Start Face Attendance
+
+            📸 Mark Attendance
+
         </button>
 
 
-        <!-- RESULT -->
+        <button
+            type="button"
+            onclick="startAttendanceCamera()"
+        >
 
-        <div
-            id="attendanceResult"
-            class="attendance-result"
-        ></div>
+            🎥 Start Camera
+
+        </button>
+
 
     </section>
+
 
 
 </div>
@@ -564,7 +829,7 @@
 
 
 <!-- =====================================================
-     EDIT DETAILS POPUP
+     EDIT DETAILS MODAL
 ===================================================== -->
 
 <div
@@ -572,39 +837,44 @@
     class="modal"
 >
 
+
     <div class="modal-content">
 
 
         <button
-            class="close-modal"
             type="button"
+            class="close-modal"
             onclick="closeEditDetails()"
         >
-            ✖
+
+            ×
+
         </button>
 
 
-        <h2>✏️ Edit My Details</h2>
+        <h2>
+            ✏️ Edit My Details
+        </h2>
 
 
         <input
             type="text"
             id="editName"
-            placeholder="Student Name"
+            placeholder="Name"
         >
 
 
         <input
             type="text"
             id="editRoll"
-            placeholder="Roll Number"
+            placeholder="Roll"
         >
 
 
         <input
             type="text"
             id="editCollege"
-            placeholder="College Name"
+            placeholder="College"
         >
 
 
@@ -626,7 +896,9 @@
             type="button"
             onclick="saveEditedDetails()"
         >
-            💾 Save Details
+
+            💾 Save Changes
+
         </button>
 
 
@@ -637,7 +909,7 @@
 
 
 <!-- =====================================================
-     REGISTERED STUDENTS POPUP
+     REGISTERED STUDENTS MODAL
 ===================================================== -->
 
 <div
@@ -645,22 +917,29 @@
     class="modal"
 >
 
+
     <div class="modal-content">
 
 
         <button
-            class="close-modal"
             type="button"
+            class="close-modal"
             onclick="closeRegisteredStudents()"
         >
-            ✖
+
+            ×
+
         </button>
 
 
-        <h2>👥 Registered Students</h2>
+        <h2>
+            👥 Registered Students
+        </h2>
 
 
-        <div id="registeredStudentsList"></div>
+        <div
+            id="registeredStudentsList"
+        ></div>
 
 
     </div>
@@ -670,43 +949,89 @@
 
 
 <!-- =====================================================
-     ADMIN POPUP
+     CHECK ATTENDANCE MODAL
 ===================================================== -->
 
 <div
-    id="adminModal"
+    id="attendanceModal"
     class="modal"
 >
+
 
     <div class="modal-content">
 
 
         <button
-            class="close-modal"
             type="button"
-            onclick="closeAdminDetails()"
+            class="close-modal"
+            onclick="closeAttendanceCheck()"
         >
-            ✖
+
+            ×
+
         </button>
 
 
-        <h2>👑 Admin Details</h2>
+        <h2>
+            📊 Check Attendance
+        </h2>
 
 
-        <div class="admin-info">
+        <!-- SUMMARY -->
 
-            <strong>👤 Admin:</strong>
-            Ayush Chatterjee
+        <div class="attendance-summary">
 
-            <br>
 
-            <strong>🔐 Role:</strong>
-            System Administrator
+            <div class="attendance-box attendance-total">
 
-            <br>
+                <h3>
+                    Total
+                </h3>
 
-            <strong>📋 Access:</strong>
-            Attendance Management
+                <h2 id="checkTotal">
+                    0
+                </h2>
+
+            </div>
+
+
+            <div class="attendance-box attendance-present">
+
+                <h3>
+                    Present
+                </h3>
+
+                <h2 id="checkPresent">
+                    0
+                </h2>
+
+            </div>
+
+
+            <div class="attendance-box attendance-absent">
+
+                <h3>
+                    Absent
+                </h3>
+
+                <h2 id="checkAbsent">
+                    0
+                </h2>
+
+            </div>
+
+
+        </div>
+
+
+        <div
+            id="attendanceHistory"
+            class="attendance-history"
+        >
+
+            <p>
+                Attendance history will appear here.
+            </p>
 
         </div>
 
@@ -718,7 +1043,81 @@
 
 
 <!-- =====================================================
-     JAVASCRIPT
+     ADMIN MODAL
+===================================================== -->
+
+<div
+    id="adminModal"
+    class="modal"
+>
+
+
+    <div class="modal-content">
+
+
+        <button
+            type="button"
+            class="close-modal"
+            onclick="closeAdminDetails()"
+        >
+
+            ×
+
+        </button>
+
+
+        <h2>
+            👑 Admin Details
+        </h2>
+
+
+        <div class="admin-info">
+
+
+            <p>
+
+                <strong>
+                    👤 Admin:
+                </strong>
+
+                Ayush Chatterjee
+
+            </p>
+
+
+            <p>
+
+                <strong>
+                    🏫 System:
+                </strong>
+
+                Smart Attendance System
+
+            </p>
+
+
+            <p>
+
+                <strong>
+                    🔐 Role:
+                </strong>
+
+                Administrator
+
+            </p>
+
+
+        </div>
+
+
+    </div>
+
+</div>
+
+
+
+<!-- =====================================================
+     SCRIPT
 ===================================================== -->
 
 <script src="script.js"></script>
