@@ -11,6 +11,20 @@ let students = JSON.parse(
     localStorage.getItem("students")
 ) || [];
 
+
+// =====================================================
+// DAILY ATTENDANCE HISTORY
+// =====================================================
+
+let attendanceHistory = JSON.parse(
+    localStorage.getItem("attendanceHistory")
+) || [];
+
+
+// =====================================================
+// CAMERA VARIABLES
+// =====================================================
+
 let registrationStream = null;
 let attendanceStream = null;
 
@@ -33,20 +47,20 @@ function saveStudents() {
 
 
 // =====================================================
-// ATTENDANCE HISTORY
+// SAVE ATTENDANCE HISTORY
 // =====================================================
 
-function ensureAttendanceHistory(student) {
+function saveAttendanceHistory() {
 
-    if (!Array.isArray(student.attendanceHistory)) {
-        student.attendanceHistory = [];
-    }
-
+    localStorage.setItem(
+        "attendanceHistory",
+        JSON.stringify(attendanceHistory)
+    );
 }
 
 
 // =====================================================
-// GET DATE + DAY + TIME
+// DATE + DAY + TIME
 // =====================================================
 
 function getAttendanceDateTime() {
@@ -70,75 +84,11 @@ function getAttendanceDateTime() {
             minute: "2-digit",
             second: "2-digit",
             hour12: true
-        })
+        }),
+
+        dateKey: now.toISOString().split("T")[0]
 
     };
-}
-
-
-// =====================================================
-// SAVE DAILY ATTENDANCE
-// =====================================================
-
-function saveDailyAttendance(student, status) {
-
-    ensureAttendanceHistory(student);
-
-    const attendance =
-        getAttendanceDateTime();
-
-    const todayDate =
-        attendance.date;
-
-
-    // Check if today's attendance already exists
-
-    const existing =
-        student.attendanceHistory.find(
-            record => record.date === todayDate
-        );
-
-
-    if (existing) {
-
-        // Update today's record
-
-        existing.status = status;
-        existing.day = attendance.day;
-        existing.time = attendance.time;
-
-    } else {
-
-        // Create new daily record
-
-        student.attendanceHistory.push({
-
-            date: attendance.date,
-            day: attendance.day,
-            time: attendance.time,
-            status: status
-
-        });
-
-    }
-
-
-    // Keep old fields working
-
-    student.status = status;
-
-    student.attendanceDate =
-        attendance.date;
-
-    student.attendanceDay =
-        attendance.day;
-
-    student.attendanceTime =
-        attendance.time;
-
-
-    saveStudents();
-
 }
 
 
@@ -173,29 +123,19 @@ function showCurrentDate() {
 function addStudent() {
 
     const name =
-        document.getElementById(
-            "studentName"
-        ).value.trim();
+        document.getElementById("studentName").value.trim();
 
     const roll =
-        document.getElementById(
-            "studentRoll"
-        ).value.trim();
+        document.getElementById("studentRoll").value.trim();
 
     const college =
-        document.getElementById(
-            "studentCollege"
-        ).value.trim();
+        document.getElementById("studentCollege").value.trim();
 
     const department =
-        document.getElementById(
-            "studentDepartment"
-        ).value.trim();
+        document.getElementById("studentDepartment").value.trim();
 
     const mobile =
-        document.getElementById(
-            "studentMobile"
-        ).value.trim();
+        document.getElementById("studentMobile").value.trim();
 
 
     if (
@@ -214,21 +154,41 @@ function addStudent() {
     }
 
 
+    const existing =
+        students.find(
+            student => student.roll === roll
+        );
+
+
+    if (existing) {
+
+        alert(
+            "This roll number is already registered."
+        );
+
+        return;
+    }
+
+
     students.push({
 
         name: name,
+
         roll: roll,
+
         college: college,
+
         department: department,
+
         mobile: mobile,
 
         status: "Not Marked",
 
         attendanceDate: "",
-        attendanceDay: "",
-        attendanceTime: "",
 
-        attendanceHistory: []
+        attendanceDay: "",
+
+        attendanceTime: ""
 
     });
 
@@ -258,6 +218,7 @@ function addStudent() {
 
 
     displayStudents();
+
     updateDashboard();
 
 }
@@ -295,18 +256,18 @@ function displayStudents() {
 
 
     const filtered =
-        students.filter(student =>
+        students.filter(
+            student =>
 
-            student.name
-                .toLowerCase()
-                .includes(search)
+                student.name
+                    .toLowerCase()
+                    .includes(search)
 
-            ||
+                ||
 
-            student.roll
-                .toLowerCase()
-                .includes(search)
-
+                student.roll
+                    .toLowerCase()
+                    .includes(search)
         );
 
 
@@ -319,123 +280,204 @@ function displayStudents() {
     }
 
 
-    filtered.forEach(student => {
+    filtered.forEach(
+        student => {
 
-        const index =
-            students.indexOf(student);
-
-
-        ensureAttendanceHistory(student);
+            const index =
+                students.indexOf(student);
 
 
-        const row =
-            document.createElement(
-                "div"
-            );
+            const row =
+                document.createElement(
+                    "div"
+                );
 
 
-        row.className =
-            "student-row";
+            row.className =
+                "student-row";
 
 
-        let attendanceInfo = "";
+            let attendanceInfo = "";
 
 
-        if (student.attendanceDate) {
+            if (student.attendanceDate) {
 
-            attendanceInfo = `
+                attendanceInfo = `
 
-                <br>
-                📅 Date:
-                ${student.attendanceDate}
+                    <br>
 
-                <br>
+                    📅 Date:
+                    ${student.attendanceDate}
 
-                📆 Day:
-                ${student.attendanceDay}
+                    <br>
 
-                <br>
+                    📆 Day:
+                    ${student.attendanceDay}
 
-                🕐 Time:
-                ${student.attendanceTime}
+                    <br>
 
-            `;
-        }
+                    🕐 Time:
+                    ${student.attendanceTime}
+
+                `;
+            }
 
 
-        row.innerHTML = `
+            row.innerHTML = `
 
-            <div class="student-info">
+                <div class="student-info">
 
-                <strong>
-                    ${student.name}
-                </strong>
+                    <strong>
+                        ${student.name}
+                    </strong>
 
-                <br>
+                    <br>
 
-                Roll:
-                ${student.roll}
+                    Roll:
+                    ${student.roll}
 
-                <br>
+                    <br>
 
-                College:
-                ${student.college}
+                    College:
+                    ${student.college}
 
-                <br>
+                    <br>
 
-                Department:
-                ${student.department}
+                    Department:
+                    ${student.department}
 
-                <br>
+                    <br>
 
-                📱 Mobile:
-                ${student.mobile || "Not added"}
+                    📱 Mobile:
+                    ${student.mobile || "Not added"}
 
-                ${attendanceInfo}
+                    ${attendanceInfo}
 
-                <div class="status">
+                    <div class="status">
 
-                    Status:
-                    ${student.status}
+                        Status:
+                        ${student.status}
+
+                    </div>
 
                 </div>
 
-            </div>
+
+                <div class="student-actions">
+
+                    <button
+                        class="present-btn"
+                        onclick="markPresent(${index})"
+                    >
+
+                        Present
+
+                    </button>
 
 
-            <div class="student-actions">
+                    <button
+                        class="absent-btn"
+                        onclick="markAbsent(${index})"
+                    >
 
-                <button
-                    class="present-btn"
-                    onclick="markPresent(${index})"
-                >
-                    Present
-                </button>
+                        Absent
 
-
-                <button
-                    class="absent-btn"
-                    onclick="markAbsent(${index})"
-                >
-                    Absent
-                </button>
+                    </button>
 
 
-                <button
-                    class="delete-btn"
-                    onclick="deleteStudent(${index})"
-                >
-                    Delete
-                </button>
+                    <button
+                        class="delete-btn"
+                        onclick="deleteStudent(${index})"
+                    >
 
-            </div>
+                        Delete
 
-        `;
+                    </button>
+
+                </div>
+
+            `;
 
 
-        list.appendChild(row);
+            list.appendChild(row);
 
-    });
+        }
+    );
+
+}
+
+
+// =====================================================
+// SAVE DAILY ATTENDANCE
+// =====================================================
+
+function saveDailyAttendance(
+    student,
+    status
+) {
+
+    const attendance =
+        getAttendanceDateTime();
+
+
+    const existing =
+        attendanceHistory.find(
+            record =>
+
+                record.roll === student.roll &&
+
+                record.dateKey ===
+                    attendance.dateKey
+        );
+
+
+    if (existing) {
+
+        existing.name =
+            student.name;
+
+        existing.status =
+            status;
+
+        existing.date =
+            attendance.date;
+
+        existing.day =
+            attendance.day;
+
+        existing.time =
+            attendance.time;
+
+    } else {
+
+        attendanceHistory.push({
+
+            name: student.name,
+
+            roll: student.roll,
+
+            college: student.college,
+
+            department: student.department,
+
+            mobile: student.mobile || "",
+
+            status: status,
+
+            date: attendance.date,
+
+            day: attendance.day,
+
+            time: attendance.time,
+
+            dateKey: attendance.dateKey
+
+        });
+
+    }
+
+
+    saveAttendanceHistory();
 
 }
 
@@ -446,6 +488,32 @@ function displayStudents() {
 
 function markPresent(index) {
 
+    if (!students[index]) return;
+
+
+    const attendance =
+        getAttendanceDateTime();
+
+
+    students[index].status =
+        "Present";
+
+
+    students[index].attendanceDate =
+        attendance.date;
+
+
+    students[index].attendanceDay =
+        attendance.day;
+
+
+    students[index].attendanceTime =
+        attendance.time;
+
+
+    saveStudents();
+
+
     saveDailyAttendance(
         students[index],
         "Present"
@@ -453,12 +521,10 @@ function markPresent(index) {
 
 
     displayStudents();
+
     updateDashboard();
 
-
-    alert(
-        "✅ Attendance marked PRESENT for today."
-    );
+    showAttendanceCheck();
 
 }
 
@@ -469,6 +535,32 @@ function markPresent(index) {
 
 function markAbsent(index) {
 
+    if (!students[index]) return;
+
+
+    const attendance =
+        getAttendanceDateTime();
+
+
+    students[index].status =
+        "Absent";
+
+
+    students[index].attendanceDate =
+        attendance.date;
+
+
+    students[index].attendanceDay =
+        attendance.day;
+
+
+    students[index].attendanceTime =
+        attendance.time;
+
+
+    saveStudents();
+
+
     saveDailyAttendance(
         students[index],
         "Absent"
@@ -476,12 +568,10 @@ function markAbsent(index) {
 
 
     displayStudents();
+
     updateDashboard();
 
-
-    alert(
-        "❌ Attendance marked ABSENT for today."
-    );
+    showAttendanceCheck();
 
 }
 
@@ -492,20 +582,61 @@ function markAbsent(index) {
 
 function deleteStudent(index) {
 
+    if (!students[index]) return;
+
+
     if (
         !confirm(
             "Delete this student?"
         )
     ) {
+
         return;
     }
 
 
-    students.splice(index, 1);
+    const roll =
+        students[index].roll;
+
+
+    students.splice(
+        index,
+        1
+    );
+
+
+    // Remove saved face if same roll
+
+    const saved =
+        localStorage.getItem(
+            "registeredFaceStudent"
+        );
+
+
+    if (saved) {
+
+        const registered =
+            JSON.parse(saved);
+
+
+        if (
+            registered.roll === roll
+        ) {
+
+            localStorage.removeItem(
+                "registeredFaceStudent"
+            );
+
+        }
+
+    }
+
 
     saveStudents();
 
+
     displayStudents();
+
     updateDashboard();
 
 }
@@ -523,13 +654,15 @@ function updateDashboard() {
 
     const present =
         students.filter(
-            s => s.status === "Present"
+            student =>
+                student.status === "Present"
         ).length;
 
 
     const absent =
         students.filter(
-            s => s.status === "Absent"
+            student =>
+                student.status === "Absent"
         ).length;
 
 
@@ -546,15 +679,18 @@ function updateDashboard() {
             "totalStudents"
         );
 
+
     const presentElement =
         document.getElementById(
             "presentStudents"
         );
 
+
     const absentElement =
         document.getElementById(
             "absentStudents"
         );
+
 
     const percentageElement =
         document.getElementById(
@@ -562,24 +698,36 @@ function updateDashboard() {
         );
 
 
-    if (totalElement)
+    if (totalElement) {
+
         totalElement.innerText =
             total;
 
+    }
 
-    if (presentElement)
+
+    if (presentElement) {
+
         presentElement.innerText =
             present;
 
+    }
 
-    if (absentElement)
+
+    if (absentElement) {
+
         absentElement.innerText =
             absent;
 
+    }
 
-    if (percentageElement)
+
+    if (percentageElement) {
+
         percentageElement.innerText =
             percentage + "%";
+
+    }
 
 }
 
@@ -599,7 +747,9 @@ const MODEL_URL =
 async function loadFaceModels() {
 
     if (faceModelLoaded) {
+
         return true;
+
     }
 
 
@@ -617,7 +767,9 @@ async function loadFaceModels() {
             .loadFromUri(MODEL_URL);
 
 
-        faceModelLoaded = true;
+        faceModelLoaded =
+            true;
+
 
         return true;
 
@@ -628,7 +780,9 @@ async function loadFaceModels() {
             error
         );
 
+
         return false;
+
     }
 
 }
@@ -648,13 +802,18 @@ async function startCameraForVideo(
             videoId
         );
 
+
     const status =
         document.getElementById(
             statusId
         );
 
 
-    if (!video) return null;
+    if (!video) {
+
+        return null;
+
+    }
 
 
     try {
@@ -699,7 +858,6 @@ async function startCameraForVideo(
 
         return stream;
 
-
     } catch (error) {
 
         console.error(error);
@@ -714,6 +872,7 @@ async function startCameraForVideo(
 
 
         return null;
+
     }
 
 }
@@ -726,7 +885,9 @@ async function startCameraForVideo(
 async function startRegistrationCamera() {
 
     if (registrationStream) {
+
         return;
+
     }
 
 
@@ -746,7 +907,9 @@ async function startRegistrationCamera() {
 async function startAttendanceCamera() {
 
     if (attendanceStream) {
+
         return;
+
     }
 
 
@@ -770,20 +933,24 @@ async function startAutomaticFaceRegistration() {
             "faceName"
         ).value.trim();
 
+
     const roll =
         document.getElementById(
             "faceRoll"
         ).value.trim();
+
 
     const college =
         document.getElementById(
             "collegeName"
         ).value.trim();
 
+
     const department =
         document.getElementById(
             "departmentName"
         ).value.trim();
+
 
     const mobile =
         document.getElementById(
@@ -796,15 +963,18 @@ async function startAutomaticFaceRegistration() {
             "registrationCamera"
         );
 
+
     const status =
         document.getElementById(
             "registrationStatus"
         );
 
+
     const message =
         document.getElementById(
             "registrationMessage"
         );
+
 
     const button =
         document.getElementById(
@@ -827,11 +997,14 @@ async function startAutomaticFaceRegistration() {
 
         }
 
+
         return;
+
     }
 
 
-    button.disabled = true;
+    button.disabled =
+        true;
 
 
     const modelsReady =
@@ -840,12 +1013,20 @@ async function startAutomaticFaceRegistration() {
 
     if (!modelsReady) {
 
-        message.innerText =
-            "Face detection model could not load.";
+        if (message) {
 
-        button.disabled = false;
+            message.innerText =
+                "Face detection model could not load.";
+
+        }
+
+
+        button.disabled =
+            false;
+
 
         return;
+
     }
 
 
@@ -860,10 +1041,13 @@ async function startAutomaticFaceRegistration() {
 
         if (!registrationStream) {
 
-            button.disabled = false;
+            button.disabled =
+                false;
 
             return;
+
         }
+
     }
 
 
@@ -899,7 +1083,9 @@ async function detectRegistrationFace(
 ) {
 
     if (!registrationRunning) {
+
         return;
+
     }
 
 
@@ -907,6 +1093,7 @@ async function detectRegistrationFace(
         document.getElementById(
             "registrationCamera"
         );
+
 
     const status =
         document.getElementById(
@@ -921,8 +1108,11 @@ async function detectRegistrationFace(
                 .detectSingleFace(
                     video,
                     new faceapi.TinyFaceDetectorOptions({
+
                         inputSize: 320,
+
                         scoreThreshold: 0.5
+
                     })
                 )
                 .withFaceLandmarks()
@@ -946,10 +1136,15 @@ async function detectRegistrationFace(
                 JSON.stringify({
 
                     name: name,
+
                     roll: roll,
+
                     college: college,
+
                     department: department,
+
                     mobile: mobile,
+
                     descriptor: descriptor
 
                 })
@@ -958,7 +1153,8 @@ async function detectRegistrationFace(
 
             const existing =
                 students.find(
-                    s => s.roll === roll
+                    student =>
+                        student.roll === roll
                 );
 
 
@@ -976,27 +1172,27 @@ async function detectRegistrationFace(
                 existing.mobile =
                     mobile;
 
-                ensureAttendanceHistory(
-                    existing
-                );
-
             } else {
 
                 students.push({
 
                     name: name,
+
                     roll: roll,
+
                     college: college,
+
                     department: department,
+
                     mobile: mobile,
 
                     status: "Not Marked",
 
                     attendanceDate: "",
-                    attendanceDay: "",
-                    attendanceTime: "",
 
-                    attendanceHistory: []
+                    attendanceDay: "",
+
+                    attendanceTime: ""
 
                 });
 
@@ -1005,6 +1201,7 @@ async function detectRegistrationFace(
 
             saveStudents();
 
+
             displayStudents();
 
             updateDashboard();
@@ -1012,7 +1209,9 @@ async function detectRegistrationFace(
 
             registrationSuccessful();
 
+
             return;
+
         }
 
 
@@ -1073,6 +1272,7 @@ function registrationSuccessful() {
             "registrationStatus"
         );
 
+
     const message =
         document.getElementById(
             "registrationMessage"
@@ -1129,11 +1329,14 @@ function registrationSuccessful() {
         registrationStream
             .getTracks()
             .forEach(
-                track => track.stop()
+                track =>
+                    track.stop()
             );
+
 
         registrationStream =
             null;
+
     }
 
 
@@ -1189,15 +1392,18 @@ async function startFaceAttendance() {
             "attendanceCamera"
         );
 
+
     const status =
         document.getElementById(
             "attendanceStatus"
         );
 
+
     const button =
         document.getElementById(
             "attendanceButton"
         );
+
 
     const result =
         document.getElementById(
@@ -1217,11 +1423,14 @@ async function startFaceAttendance() {
             "❌ No face registered. Please register first.";
 
         return;
+
     }
 
 
     const registeredStudent =
-        JSON.parse(savedData);
+        JSON.parse(
+            savedData
+        );
 
 
     button.disabled =
@@ -1238,6 +1447,7 @@ async function startFaceAttendance() {
             false;
 
         return;
+
     }
 
 
@@ -1256,6 +1466,7 @@ async function startFaceAttendance() {
                 false;
 
             return;
+
         }
 
     }
@@ -1285,7 +1496,9 @@ async function detectAttendanceFace(
 ) {
 
     if (!attendanceRunning) {
+
         return;
+
     }
 
 
@@ -1293,6 +1506,7 @@ async function detectAttendanceFace(
         document.getElementById(
             "attendanceCamera"
         );
+
 
     const status =
         document.getElementById(
@@ -1307,8 +1521,11 @@ async function detectAttendanceFace(
                 .detectSingleFace(
                     video,
                     new faceapi.TinyFaceDetectorOptions({
+
                         inputSize: 320,
+
                         scoreThreshold: 0.5
+
                     })
                 )
                 .withFaceLandmarks()
@@ -1332,7 +1549,9 @@ async function detectAttendanceFace(
                 300
             );
 
+
             return;
+
         }
 
 
@@ -1405,7 +1624,9 @@ async function detectAttendanceFace(
 // ATTENDANCE SUCCESS
 // =====================================================
 
-function showAttendanceSuccess(student) {
+function showAttendanceSuccess(
+    student
+) {
 
     attendanceRunning =
         false;
@@ -1423,34 +1644,57 @@ function showAttendanceSuccess(student) {
 
     let index =
         students.findIndex(
-            s => s.roll === student.roll
+            s =>
+                s.roll === student.roll
         );
 
 
     if (index !== -1) {
 
-        ensureAttendanceHistory(
-            students[index]
-        );
+        students[index].status =
+            "Present";
 
 
-        // Save today's attendance
+        students[index].attendanceDate =
+            attendance.date;
+
+
+        students[index].attendanceDay =
+            attendance.day;
+
+
+        students[index].attendanceTime =
+            attendance.time;
+
+
+        students[index].mobile =
+            student.mobile ||
+            students[index].mobile ||
+            "";
+
+
+        saveStudents();
+
 
         saveDailyAttendance(
             students[index],
             "Present"
         );
 
-
     } else {
 
-        students.push({
+        const newStudent = {
 
             name: student.name,
+
             roll: student.roll,
+
             college: student.college,
+
             department: student.department,
-            mobile: student.mobile || "",
+
+            mobile:
+                student.mobile || "",
 
             status: "Present",
 
@@ -1461,39 +1705,26 @@ function showAttendanceSuccess(student) {
                 attendance.day,
 
             attendanceTime:
-                attendance.time,
+                attendance.time
 
-            attendanceHistory: [
+        };
 
-                {
 
-                    date:
-                        attendance.date,
-
-                    day:
-                        attendance.day,
-
-                    time:
-                        attendance.time,
-
-                    status:
-                        "Present"
-
-                }
-
-            ]
-
-        });
+        students.push(
+            newStudent
+        );
 
 
         saveStudents();
 
+
+        saveDailyAttendance(
+            newStudent,
+            "Present"
+        );
+
     }
 
-
-    // =================================================
-    // SUCCESS MESSAGE
-    // =================================================
 
     result.innerHTML = `
 
@@ -1514,7 +1745,9 @@ function showAttendanceSuccess(student) {
                     margin-bottom:10px;
                 "
             >
+
                 ✅
+
             </div>
 
 
@@ -1524,37 +1757,64 @@ function showAttendanceSuccess(student) {
                     margin-bottom:15px;
                 "
             >
+
                 Attendance Successfully
+
             </h3>
 
 
             <p>
-                <strong>👤 Name:</strong>
+
+                <strong>
+                    👤 Name:
+                </strong>
+
                 ${student.name}
+
             </p>
 
 
             <p>
-                <strong>🔢 Roll:</strong>
+
+                <strong>
+                    🔢 Roll:
+                </strong>
+
                 ${student.roll}
+
             </p>
 
 
             <p>
-                <strong>🏫 College:</strong>
+
+                <strong>
+                    🏫 College:
+                </strong>
+
                 ${student.college}
+
             </p>
 
 
             <p>
-                <strong>🎓 Department:</strong>
+
+                <strong>
+                    🎓 Department:
+                </strong>
+
                 ${student.department}
+
             </p>
 
 
             <p>
-                <strong>📱 Mobile:</strong>
+
+                <strong>
+                    📱 Mobile:
+                </strong>
+
                 ${student.mobile || "Not added"}
+
             </p>
 
 
@@ -1568,33 +1828,37 @@ function showAttendanceSuccess(student) {
 
 
             <p>
-                <strong>📅 Date:</strong>
+
+                <strong>
+                    📅 Date:
+                </strong>
+
                 ${attendance.date}
+
             </p>
 
 
             <p>
-                <strong>📆 Day:</strong>
+
+                <strong>
+                    📆 Day:
+                </strong>
+
                 ${attendance.day}
+
             </p>
 
 
             <p>
-                <strong>🕐 Time:</strong>
+
+                <strong>
+                    🕐 Time:
+                </strong>
+
                 ${attendance.time}
+
             </p>
 
-
-            <p
-                style="
-                    color:#15803d;
-                    font-size:18px;
-                    font-weight:bold;
-                    margin-top:15px;
-                "
-            >
-                ✅ PRESENT
-            </p>
 
         </div>
 
@@ -1627,7 +1891,6 @@ function showAttendanceSuccess(student) {
         "attendanceButton"
     );
 
-
 }
 
 
@@ -1642,11 +1905,14 @@ function stopAttendanceCamera() {
         attendanceStream
             .getTracks()
             .forEach(
-                track => track.stop()
+                track =>
+                    track.stop()
             );
+
 
         attendanceStream =
             null;
+
     }
 
 
@@ -1788,20 +2054,24 @@ function saveEditedDetails() {
             "editName"
         ).value.trim();
 
+
     const roll =
         document.getElementById(
             "editRoll"
         ).value.trim();
+
 
     const college =
         document.getElementById(
             "editCollege"
         ).value.trim();
 
+
     const department =
         document.getElementById(
             "editDepartment"
         ).value.trim();
+
 
     const mobile =
         document.getElementById(
@@ -1821,13 +2091,16 @@ function saveEditedDetails() {
             "Please fill all details."
         );
 
+
         return;
+
     }
 
 
     const index =
         students.findIndex(
-            s => s.roll === roll
+            s =>
+                s.roll === roll
         );
 
 
@@ -1836,19 +2109,17 @@ function saveEditedDetails() {
         students[index].name =
             name;
 
+
         students[index].college =
             college;
+
 
         students[index].department =
             department;
 
+
         students[index].mobile =
             mobile;
-
-
-        ensureAttendanceHistory(
-            students[index]
-        );
 
 
         saveStudents();
@@ -1871,14 +2142,18 @@ function saveEditedDetails() {
         student.name =
             name;
 
+
         student.roll =
             roll;
+
 
         student.college =
             college;
 
+
         student.department =
             department;
+
 
         student.mobile =
             mobile;
@@ -1933,7 +2208,9 @@ function openMobileUpdate() {
             "Please register your face first."
         );
 
+
         return;
+
     }
 
 
@@ -1953,7 +2230,8 @@ function openMobileUpdate() {
 
     const index =
         students.findIndex(
-            s => s.roll === student.roll
+            s =>
+                s.roll === student.roll
         );
 
 
@@ -1961,6 +2239,7 @@ function openMobileUpdate() {
 
         students[index].mobile =
             mobile.trim();
+
 
         saveStudents();
 
@@ -1988,6 +2267,7 @@ function showRegisteredStudents() {
             "studentsModal"
         );
 
+
     const list =
         document.getElementById(
             "registeredStudentsList"
@@ -2010,11 +2290,6 @@ function showRegisteredStudents() {
         students.forEach(
             (student, index) => {
 
-                ensureAttendanceHistory(
-                    student
-                );
-
-
                 const div =
                     document.createElement(
                         "div"
@@ -2028,7 +2303,10 @@ function showRegisteredStudents() {
                 div.innerHTML = `
 
                     <strong>
-                        ${index + 1}. ${student.name}
+
+                        ${index + 1}.
+                        ${student.name}
+
                     </strong>
 
                     <br>
@@ -2059,10 +2337,13 @@ function showRegisteredStudents() {
                 `;
 
 
-                list.appendChild(div);
+                list.appendChild(
+                    div
+                );
 
             }
         );
+
     }
 
 
@@ -2100,211 +2381,16 @@ function closeRegisteredStudents() {
 // CHECK ATTENDANCE
 // =====================================================
 
-function showCheckAttendance() {
+function showAttendanceCheck() {
 
     const modal =
         document.getElementById(
-            "attendanceCheckModal"
-        );
-
-    const list =
-        document.getElementById(
-            "attendanceCheckList"
+            "attendanceModal"
         );
 
 
-    if (!modal || !list) {
+    if (!modal) return;
 
-        alert(
-            "Attendance Check section is not added in index.html yet."
-        );
-
-        return;
-    }
-
-
-    list.innerHTML = "";
-
-
-    if (students.length === 0) {
-
-        list.innerHTML =
-            "<p>No students registered yet.</p>";
-
-        modal.classList.add("show");
-
-        return;
-    }
-
-
-    students.forEach(
-        (student, index) => {
-
-            ensureAttendanceHistory(
-                student
-            );
-
-
-            const presentCount =
-                student.attendanceHistory.filter(
-                    record =>
-                        record.status === "Present"
-                ).length;
-
-
-            const absentCount =
-                student.attendanceHistory.filter(
-                    record =>
-                        record.status === "Absent"
-                ).length;
-
-
-            const div =
-                document.createElement(
-                    "div"
-                );
-
-
-            div.className =
-                "registered-student";
-
-
-            let historyHTML = "";
-
-
-            if (
-                student.attendanceHistory.length > 0
-            ) {
-
-                historyHTML = `
-
-                    <div
-                        style="
-                            margin-top:15px;
-                            padding-top:12px;
-                            border-top:1px solid #ddd;
-                        "
-                    >
-
-                        <strong>
-                            📅 Daily Attendance
-                        </strong>
-
-                `;
-
-
-                student.attendanceHistory
-                    .slice()
-                    .reverse()
-                    .forEach(record => {
-
-                        historyHTML += `
-
-                            <div
-                                style="
-                                    margin-top:8px;
-                                    padding:8px;
-                                    border-radius:8px;
-                                    background:#f8fafc;
-                                "
-                            >
-
-                                📅 ${record.date}
-
-                                <br>
-
-                                📆 ${record.day}
-
-                                <br>
-
-                                🕐 ${record.time}
-
-                                <br>
-
-                                ${
-                                    record.status === "Present"
-                                    ? "✅ PRESENT"
-                                    : "❌ ABSENT"
-                                }
-
-                            </div>
-
-                        `;
-
-                    });
-
-
-                historyHTML += `
-                    </div>
-                `;
-
-            } else {
-
-                historyHTML = `
-
-                    <p>
-                        No attendance recorded yet.
-                    </p>
-
-                `;
-
-            }
-
-
-            div.innerHTML = `
-
-                <strong>
-                    ${index + 1}. ${student.name}
-                </strong>
-
-                <br>
-
-                🔢 Roll:
-                ${student.roll}
-
-                <br>
-
-                🏫 College:
-                ${student.college}
-
-                <br>
-
-                🎓 Department:
-                ${student.department}
-
-                <br><br>
-
-                📊
-                <strong>
-                    Present:
-                </strong>
-                ${presentCount}
-
-                &nbsp;&nbsp;
-
-                📊
-                <strong>
-                    Absent:
-                </strong>
-                ${absentCount}
-
-                ${historyHTML}
-
-            `;
-
-
-            list.appendChild(div);
-
-        }
-    );
-
-
-    modal.classList.add(
-        "show"
-    );
-
-
-    // Close three line menu
 
     const menu =
         document.getElementById(
@@ -2320,6 +2406,179 @@ function showCheckAttendance() {
 
     }
 
+
+    updateAttendanceCheck();
+
+
+    modal.classList.add(
+        "show"
+    );
+
+}
+
+
+// =====================================================
+// UPDATE ATTENDANCE CHECK
+// =====================================================
+
+function updateAttendanceCheck() {
+
+    const totalElement =
+        document.getElementById(
+            "checkTotal"
+        );
+
+
+    const presentElement =
+        document.getElementById(
+            "checkPresent"
+        );
+
+
+    const absentElement =
+        document.getElementById(
+            "checkAbsent"
+        );
+
+
+    const historyElement =
+        document.getElementById(
+            "attendanceHistory"
+        );
+
+
+    const totalDays =
+        attendanceHistory.length;
+
+
+    const presentDays =
+        attendanceHistory.filter(
+            record =>
+                record.status === "Present"
+        ).length;
+
+
+    const absentDays =
+        attendanceHistory.filter(
+            record =>
+                record.status === "Absent"
+        ).length;
+
+
+    if (totalElement) {
+
+        totalElement.innerText =
+            totalDays;
+
+    }
+
+
+    if (presentElement) {
+
+        presentElement.innerText =
+            presentDays;
+
+    }
+
+
+    if (absentElement) {
+
+        absentElement.innerText =
+            absentDays;
+
+    }
+
+
+    if (!historyElement) return;
+
+
+    historyElement.innerHTML = "";
+
+
+    if (
+        attendanceHistory.length === 0
+    ) {
+
+        historyElement.innerHTML = `
+
+            <p>
+
+                📭 No attendance history yet.
+
+            </p>
+
+        `;
+
+
+        return;
+
+    }
+
+
+    const sortedHistory =
+        [...attendanceHistory]
+            .reverse();
+
+
+    sortedHistory.forEach(
+        record => {
+
+            const div =
+                document.createElement(
+                    "div"
+                );
+
+
+            div.className =
+                "attendance-history-item " +
+                (
+                    record.status === "Present"
+                        ? "present-history"
+                        : "absent-history"
+                );
+
+
+            div.innerHTML = `
+
+                <strong>
+                    👤 ${record.name}
+                </strong>
+
+                <br>
+
+                🔢 Roll:
+                ${record.roll}
+
+                <br>
+
+                📌 Status:
+                ${record.status}
+
+                <br>
+
+                📅 Date:
+                ${record.date}
+
+                <br>
+
+                📆 Day:
+                ${record.day}
+
+                <br>
+
+                🕐 Time:
+                ${record.time}
+
+            `;
+
+
+            historyElement.appendChild(
+                div
+            );
+
+        }
+    );
+
 }
 
 
@@ -2331,7 +2590,7 @@ function closeAttendanceCheck() {
 
     const modal =
         document.getElementById(
-            "attendanceCheckModal"
+            "attendanceModal"
         );
 
 
@@ -2414,28 +2673,11 @@ window.addEventListener(
     "load",
     async function () {
 
-        // Upgrade old students data
-
-        students.forEach(
-            student => {
-
-                ensureAttendanceHistory(
-                    student
-                );
-
-            }
-        );
-
-
-        saveStudents();
-
-
         displayStudents();
 
         updateDashboard();
 
         showCurrentDate();
-
 
         await loadFaceModels();
 
