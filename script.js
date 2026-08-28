@@ -1,16 +1,16 @@
 let students = [];
 
+
+// ========================================
+// ADD STUDENT
+// ========================================
+
 function addStudent() {
 
-    const nameInput = document.getElementById("studentName");
-    const rollInput = document.getElementById("studentRoll");
-    const collegeInput = document.getElementById("studentCollege");
-    const departmentInput = document.getElementById("studentDepartment");
-
-    const name = nameInput.value.trim();
-    const roll = rollInput.value.trim();
-    const college = collegeInput.value.trim();
-    const department = departmentInput.value.trim();
+    const name = document.getElementById("studentName").value.trim();
+    const roll = document.getElementById("studentRoll").value.trim();
+    const college = document.getElementById("studentCollege").value.trim();
+    const department = document.getElementById("studentDepartment").value.trim();
 
     if (!name || !roll || !college || !department) {
         alert("Please fill all student details.");
@@ -31,129 +31,162 @@ function addStudent() {
         roll: roll,
         college: college,
         department: department,
-        status: null
+        status: "Not Marked"
     });
 
-    nameInput.value = "";
-    rollInput.value = "";
-    collegeInput.value = "";
-    departmentInput.value = "";
+    document.getElementById("studentName").value = "";
+    document.getElementById("studentRoll").value = "";
+    document.getElementById("studentCollege").value = "";
+    document.getElementById("studentDepartment").value = "";
 
     displayStudents();
     updateDashboard();
 }
 
 
-// Display Students
-<strong>${student.name}</strong>
-<br>
-Roll: ${student.roll}
-<br>
-College: ${student.college}
-<br>
-Department: ${student.department}
-function displayStudents() {
-    const list = document.getElementById("studentList");
-    const searchInput = document.getElementById("searchStudent");
+// ========================================
+// DISPLAY STUDENTS
+// ========================================
 
-    const searchText = searchInput.value.toLowerCase().trim();
+function displayStudents() {
+
+    const list = document.getElementById("studentList");
+    const search = document.getElementById("searchStudent");
+
+    const searchText =
+        search.value.toLowerCase().trim();
 
     list.innerHTML = "";
 
-    const filteredStudents = students.filter(student =>
+    const filtered = students.filter(student =>
         student.name.toLowerCase().includes(searchText) ||
         student.roll.toLowerCase().includes(searchText)
     );
 
-    if (filteredStudents.length === 0) {
-        list.innerHTML = "<p>No students found.</p>";
+    if (filtered.length === 0) {
+
+        list.innerHTML =
+            "<p>No students found.</p>";
+
         return;
     }
 
-    filteredStudents.forEach(student => {
+    filtered.forEach(student => {
 
-        const index = students.indexOf(student);
+        const index =
+            students.indexOf(student);
 
-        const row = document.createElement("div");
+        const row =
+            document.createElement("div");
 
-        row.className = "student-row";
-
-        let statusText = "Not Marked";
-
-        if (student.status === "Present") {
-            statusText = "Present";
-        }
-
-        if (student.status === "Absent") {
-            statusText = "Absent";
-        }
+        row.className =
+            "student-row";
 
         row.innerHTML = `
+
             <div class="student-info">
+
                 <strong>${student.name}</strong>
+
                 <br>
+
                 Roll: ${student.roll}
+
+                <br>
+
+                College: ${student.college}
+
+                <br>
+
+                Department: ${student.department}
+
                 <div class="status">
-                    Status: ${statusText}
+
+                    Status: ${student.status}
+
                 </div>
+
             </div>
+
 
             <div class="student-actions">
 
                 <button
                     class="present-btn"
                     onclick="markPresent(${index})">
+
                     Present
+
                 </button>
+
 
                 <button
                     class="absent-btn"
                     onclick="markAbsent(${index})">
+
                     Absent
+
                 </button>
+
 
                 <button
                     class="delete-btn"
                     onclick="deleteStudent(${index})">
+
                     Delete
+
                 </button>
 
             </div>
+
         `;
 
         list.appendChild(row);
+
     });
 }
 
 
-// Mark Present
+// ========================================
+// PRESENT
+// ========================================
+
 function markPresent(index) {
-    students[index].status = "Present";
+
+    students[index].status =
+        "Present";
 
     displayStudents();
     updateDashboard();
 }
 
 
-// Mark Absent
+// ========================================
+// ABSENT
+// ========================================
+
 function markAbsent(index) {
-    students[index].status = "Absent";
+
+    students[index].status =
+        "Absent";
 
     displayStudents();
     updateDashboard();
 }
 
 
-// Delete Student
+// ========================================
+// DELETE
+// ========================================
+
 function deleteStudent(index) {
 
-    const studentName = students[index].name;
+    const student =
+        students[index];
 
-    const confirmDelete = confirm(
-        "Delete " + studentName + "?"
-    );
-
-    if (!confirmDelete) {
+    if (!confirm(
+        "Delete " + student.name + "?"
+    )) {
         return;
     }
 
@@ -164,314 +197,175 @@ function deleteStudent(index) {
 }
 
 
-// Update Dashboard
+// ========================================
+// DASHBOARD
+// ========================================
+
 function updateDashboard() {
 
-    const total = students.length;
+    const total =
+        students.length;
 
-    const present = students.filter(
-        student => student.status === "Present"
-    ).length;
+    const present =
+        students.filter(
+            student =>
+                student.status === "Present"
+        ).length;
 
-    const absent = students.filter(
-        student => student.status === "Absent"
-    ).length;
+    const absent =
+        students.filter(
+            student =>
+                student.status === "Absent"
+        ).length;
 
-    let percentage = 0;
+    const percentage =
+        total > 0
+            ? Math.round((present / total) * 100)
+            : 0;
 
-    if (total > 0) {
-        percentage = Math.round((present / total) * 100);
-    }
+    document.getElementById(
+        "totalStudents"
+    ).innerText = total;
 
-    document.getElementById("totalStudents").innerText = total;
+    document.getElementById(
+        "presentStudents"
+    ).innerText = present;
 
-    document.getElementById("presentStudents").innerText = present;
+    document.getElementById(
+        "absentStudents"
+    ).innerText = absent;
 
-    document.getElementById("absentStudents").innerText = absent;
-
-    document.getElementById("attendancePercentage").innerText =
-        percentage + "%";
+    document.getElementById(
+        "attendancePercentage"
+    ).innerText = percentage + "%";
 }
 
 
-// Start Dashboard
-displayStudents();
-updateDashboard();
-async function startCamera() {
-    const video = document.getElementById("camera");
-    const message = document.getElementById("faceMessage");
 
-    try {
-        const stream = await navigator.mediaDevices.getUserMedia({
-            video: true,
-            audio: false
-        });
+// ========================================
+// FACE API MODEL
+// ========================================
 
-        video.srcObject = stream;
-
-        message.innerText =
-            "Camera is ON. Face detection will be added next.";
-
-    } catch (error) {
-        console.error(error);
-
-        message.innerText =
-            "Camera permission was denied or camera is unavailable.";
-    }
-}
-function captureFace() {
-    const video = document.getElementById("camera");
-    const canvas = document.getElementById("snapshot");
-    const message = document.getElementById("captureMessage");
-
-    if (!video.srcObject) {
-        message.innerText = "First click Start Camera.";
-        return;
-    }
-
-    if (video.videoWidth === 0 || video.videoHeight === 0) {
-        message.innerText = "Camera is not ready. Please wait a moment.";
-        return;
-    }
-
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
-
-    const ctx = canvas.getContext("2d");
-
-    ctx.drawImage(
-        video,
-        0,
-        0,
-        canvas.width,
-        canvas.height
-    );
-
-    canvas.style.display = "block";
-    canvas.style.width = "100%";
-    canvas.style.maxWidth = "500px";
-    canvas.style.margin = "15px auto";
-window.addEventListener("load", function () {
-    if (typeof faceapi !== "undefined") {
-        console.log("Face recognition library loaded successfully.");
-    } else {
-        console.log("Face recognition library failed to load.");
-    }
-});
-    const MODEL_URL =
+const MODEL_URL =
     "https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js@master/weights";
 
-let faceModelsLoaded = false;
-let detectionRunning = false;
+let faceModelLoaded = false;
 
 
-// Load face detection model
-async function loadFaceDetectionModels() {
+// ========================================
+// LOAD FACE MODEL
+// ========================================
 
-    const message =
-        document.getElementById("faceDetectionMessage");
+async function loadFaceModel() {
 
-    try {
-
-        message.innerText =
-            "Loading face detection model...";
-
-        await faceapi.nets.tinyFaceDetector.loadFromUri(
-            MODEL_URL
+    const registrationStatus =
+        document.getElementById(
+            "registrationStatus"
         );
 
-        faceModelsLoaded = true;
-
-        message.innerText =
-            "Face detection ready ✅";
-
-    } catch (error) {
-
-        console.error(error);
-
-        message.innerText =
-            "Face detection model failed to load.";
-
-    }
-}
-
-
-// Start face detection
-async function startFaceDetection() {
-
-    const video = document.getElementById("camera");
-    const canvas = document.getElementById("faceCanvas");
-    const message =
-        document.getElementById("faceDetectionMessage");
-
-    if (!faceModelsLoaded) {
-        message.innerText =
-            "Please wait for face detection to load.";
-        return;
-    }
-
-    if (!video.srcObject) {
-        message.innerText =
-            "First click Start Camera.";
-        return;
-    }
-
-    detectionRunning = true;
-
-    const displaySize = {
-        width: video.videoWidth,
-        height: video.videoHeight
-    };
-
-    faceapi.matchDimensions(canvas, displaySize);
-
-    async function detect() {
-
-        if (!detectionRunning) return;
-
-        const detections =
-            await faceapi.detectAllFaces(
-                video,
-                new faceapi.TinyFaceDetectorOptions({
-                    inputSize: 320,
-                    scoreThreshold: 0.5
-                })
-            );
-
-        const resizedDetections =
-            faceapi.resizeResults(
-                detections,
-                displaySize
-            );
-
-        const ctx = canvas.getContext("2d");
-
-        ctx.clearRect(
-            0,
-            0,
-            canvas.width,
-            canvas.height
+    const attendanceStatus =
+        document.getElementById(
+            "attendanceStatus"
         );
 
-        faceapi.draw.drawDetections(
-            canvas,
-            resizedDetections
-        );
-
-        if (detections.length > 0) {
-
-            message.innerText =
-                "Face detected ✅";
-
-        } else {
-
-            message.innerText =
-                "Looking for a face...";
-
-        }
-
-        requestAnimationFrame(detect);
-    }
-
-    detect();
-}
-
-
-// Load model when page opens
-window.addEventListener(
-    "load",
-    loadFaceDetectionModels
-);
-    message.innerText = "Photo captured successfully!";
-
-    console.log("Photo captured successfully.");
-}
-// ==========================================
-// AUTOMATIC FACE REGISTRATION
-// ==========================================
-
-const FACE_MODEL_URL =
-    "https://cdn.jsdelivr.net/gh/justadudewhohacks/face-api.js@master/weights";
-
-let faceRegistrationRunning = false;
-let faceRegistrationStream = null;
-let faceModelReady = false;
-
-
-// Load face detector model
-async function loadAutomaticFaceModel() {
-
-    const status =
-        document.getElementById("faceStatus");
 
     if (typeof faceapi === "undefined") {
 
-        status.innerText =
-            "Face recognition library not loaded.";
+        registrationStatus.innerText =
+            "Face API could not load.";
+
+        attendanceStatus.innerText =
+            "Face API could not load.";
 
         return false;
     }
 
+
     try {
 
-        status.innerText =
+        registrationStatus.innerText =
             "Loading face detection...";
 
-        await faceapi.nets.tinyFaceDetector.loadFromUri(
-            FACE_MODEL_URL
-        );
+        await faceapi.nets.tinyFaceDetector
+            .loadFromUri(MODEL_URL);
 
-        faceModelReady = true;
+        faceModelLoaded = true;
 
-        status.innerText =
-            "Face detection ready. Click the button.";
+        registrationStatus.innerText =
+            "Face detection ready.";
+
+        attendanceStatus.innerText =
+            "Face detection ready.";
 
         return true;
 
     } catch (error) {
 
-        console.error(
-            "Face model error:",
-            error
-        );
+        console.error(error);
 
-        status.innerText =
-            "Face model could not be loaded.";
+        registrationStatus.innerText =
+            "Face model failed to load.";
+
+        attendanceStatus.innerText =
+            "Face model failed to load.";
 
         return false;
     }
 }
 
 
-// Start automatic registration
+
+// ========================================
+// FACE REGISTRATION
+// ========================================
+
+let registrationStream = null;
+let registrationRunning = false;
+
+
 async function startAutomaticFaceRegistration() {
 
     const name =
-        document.getElementById("faceName").value.trim();
+        document.getElementById(
+            "faceName"
+        ).value.trim();
 
     const roll =
-        document.getElementById("faceRoll").value.trim();
+        document.getElementById(
+            "faceRoll"
+        ).value.trim();
 
     const college =
-        document.getElementById("collegeName").value.trim();
+        document.getElementById(
+            "collegeName"
+        ).value.trim();
 
     const department =
-        document.getElementById("departmentName").value.trim();
+        document.getElementById(
+            "departmentName"
+        ).value.trim();
+
 
     const video =
-        document.getElementById("camera");
+        document.getElementById(
+            "registrationCamera"
+        );
 
     const status =
-        document.getElementById("faceStatus");
+        document.getElementById(
+            "registrationStatus"
+        );
 
     const message =
-        document.getElementById("captureMessage");
+        document.getElementById(
+            "registrationMessage"
+        );
 
     const button =
-        document.getElementById("registerFaceButton");
+        document.getElementById(
+            "registerFaceButton"
+        );
 
-
-    // Check student information
 
     if (
         !name ||
@@ -481,7 +375,7 @@ async function startAutomaticFaceRegistration() {
     ) {
 
         message.innerText =
-            "Please fill Name, Roll, College and Department first.";
+            "Please enter Name, Roll, College and Department.";
 
         return;
     }
@@ -489,18 +383,13 @@ async function startAutomaticFaceRegistration() {
 
     button.disabled = true;
 
-    message.innerText =
-        "";
 
+    if (!faceModelLoaded) {
 
-    // Load model if needed
+        const ready =
+            await loadFaceModel();
 
-    if (!faceModelReady) {
-
-        const loaded =
-            await loadAutomaticFaceModel();
-
-        if (!loaded) {
+        if (!ready) {
 
             button.disabled = false;
 
@@ -509,44 +398,41 @@ async function startAutomaticFaceRegistration() {
     }
 
 
-    // Start camera
-
     try {
 
         status.innerText =
-            "Requesting camera permission...";
+            "Starting camera...";
 
-        faceRegistrationStream =
-            await navigator.mediaDevices.getUserMedia({
 
-                video: {
-                    facingMode: "user",
-                    width: {
-                        ideal: 640
+        registrationStream =
+            await navigator.mediaDevices
+                .getUserMedia({
+
+                    video: {
+                        facingMode: "user",
+                        width: 640,
+                        height: 480
                     },
-                    height: {
-                        ideal: 480
-                    }
-                },
 
-                audio: false
-            });
+                    audio: false
+
+                });
 
 
         video.srcObject =
-            faceRegistrationStream;
+            registrationStream;
 
         await video.play();
+
 
         status.innerText =
             "Camera ON — looking for your face...";
 
-        faceRegistrationRunning = true;
+        registrationRunning =
+            true;
 
 
-        // Start automatic detection
-
-        detectFaceForRegistration(
+        detectRegistrationFace(
             name,
             roll,
             college,
@@ -556,37 +442,42 @@ async function startAutomaticFaceRegistration() {
 
     } catch (error) {
 
-        console.error(
-            "Camera error:",
-            error
-        );
+        console.error(error);
 
         status.innerText =
-            "Camera permission was denied or camera is unavailable.";
+            "Camera could not be started.";
 
         button.disabled = false;
     }
 }
 
 
-// Detect face automatically
-async function detectFaceForRegistration(
+
+// ========================================
+// AUTOMATIC REGISTRATION DETECTION
+// ========================================
+
+async function detectRegistrationFace(
     name,
     roll,
     college,
     department
 ) {
 
-    if (!faceRegistrationRunning) {
+    if (!registrationRunning) {
         return;
     }
 
 
     const video =
-        document.getElementById("camera");
+        document.getElementById(
+            "registrationCamera"
+        );
 
     const status =
-        document.getElementById("faceStatus");
+        document.getElementById(
+            "registrationStatus"
+        );
 
 
     try {
@@ -596,7 +487,7 @@ async function detectFaceForRegistration(
                 video,
                 new faceapi.TinyFaceDetectorOptions({
                     inputSize: 320,
-                    scoreThreshold: 0.5
+                    scoreThreshold: 0.45
                 })
             );
 
@@ -604,14 +495,14 @@ async function detectFaceForRegistration(
         if (detections.length === 1) {
 
             status.innerText =
-                "Face detected ✅ Hold still...";
+                "Face detected ✅ Capturing...";
 
-            // Wait a little so the face is stable
-            setTimeout(function () {
 
-                if (faceRegistrationRunning) {
+            setTimeout(() => {
 
-                    captureRegisteredFace(
+                if (registrationRunning) {
+
+                    saveRegisteredFace(
                         name,
                         roll,
                         college,
@@ -620,7 +511,7 @@ async function detectFaceForRegistration(
 
                 }
 
-            }, 1200);
+            }, 1000);
 
             return;
         }
@@ -629,7 +520,7 @@ async function detectFaceForRegistration(
         if (detections.length > 1) {
 
             status.innerText =
-                "Please keep only one face in the camera.";
+                "Only one face should be visible.";
 
         } else {
 
@@ -639,29 +530,27 @@ async function detectFaceForRegistration(
         }
 
 
-        setTimeout(function () {
+        setTimeout(() => {
 
-            detectFaceForRegistration(
+            detectRegistrationFace(
                 name,
                 roll,
                 college,
                 department
             );
 
-        }, 250);
+        }, 300);
 
 
     } catch (error) {
 
-        console.error(
-            "Face detection error:",
-            error
-        );
+        console.error(error);
 
         status.innerText =
             "Face detection error.";
 
-        faceRegistrationRunning = false;
+        registrationRunning =
+            false;
 
         document.getElementById(
             "registerFaceButton"
@@ -670,8 +559,12 @@ async function detectFaceForRegistration(
 }
 
 
-// Capture automatically
-function captureRegisteredFace(
+
+// ========================================
+// SAVE REGISTERED FACE
+// ========================================
+
+function saveRegisteredFace(
     name,
     roll,
     college,
@@ -679,19 +572,23 @@ function captureRegisteredFace(
 ) {
 
     const video =
-        document.getElementById("camera");
-
-    const canvas =
-        document.getElementById("snapshot");
+        document.getElementById(
+            "registrationCamera"
+        );
 
     const status =
-        document.getElementById("faceStatus");
+        document.getElementById(
+            "registrationStatus"
+        );
 
     const message =
-        document.getElementById("captureMessage");
+        document.getElementById(
+            "registrationMessage"
+        );
 
-    const button =
-        document.getElementById("registerFaceButton");
+
+    const canvas =
+        document.createElement("canvas");
 
 
     canvas.width =
@@ -701,25 +598,11 @@ function captureRegisteredFace(
         video.videoHeight;
 
 
-    const context =
+    const ctx =
         canvas.getContext("2d");
 
 
-    // Undo mirror when saving photo
-    context.save();
-
-    context.translate(
-        canvas.width,
-        0
-    );
-
-    context.scale(
-        -1,
-        1
-    );
-
-
-    context.drawImage(
+    ctx.drawImage(
         video,
         0,
         0,
@@ -728,37 +611,27 @@ function captureRegisteredFace(
     );
 
 
-    context.restore();
-
-
     const photo =
         canvas.toDataURL(
             "image/jpeg",
-            0.90
+            0.9
         );
 
 
-    // Save registration locally
-    const registration = {
+    const studentFace = {
 
         name: name,
-
         roll: roll,
-
         college: college,
-
         department: department,
+        photo: photo
 
-        photo: photo,
-
-        registeredAt:
-            new Date().toISOString()
     };
 
 
     localStorage.setItem(
         "registeredFaceStudent",
-        JSON.stringify(registration)
+        JSON.stringify(studentFace)
     );
 
 
@@ -767,43 +640,343 @@ function captureRegisteredFace(
 
 
     message.innerText =
-        name +
-        " has been registered successfully!";
+        "✅ " + name +
+        " registered successfully.";
 
 
-    faceRegistrationRunning =
+    registrationRunning =
         false;
 
 
-    button.disabled =
-        false;
+    if (registrationStream) {
 
-
-    // Stop camera
-    if (faceRegistrationStream) {
-
-        faceRegistrationStream
+        registrationStream
             .getTracks()
-            .forEach(track => track.stop());
+            .forEach(track =>
+                track.stop()
+            );
 
-        faceRegistrationStream = null;
+        registrationStream = null;
     }
 
 
-    video.srcObject =
-        null;
+    video.srcObject = null;
+
+
+    document.getElementById(
+        "registerFaceButton"
+    ).disabled = false;
 }
 
 
-// Try loading the model when page opens
-window.addEventListener(
-    "load",
-    function () {
+
+// ========================================
+// FACE ATTENDANCE
+// ========================================
+
+let attendanceStream = null;
+
+
+async function startFaceAttendance() {
+
+    const video =
+        document.getElementById(
+            "attendanceCamera"
+        );
+
+    const status =
+        document.getElementById(
+            "attendanceStatus"
+        );
+
+    const button =
+        document.getElementById(
+            "attendanceButton"
+        );
+
+
+    const result =
+        document.getElementById(
+            "attendanceResult"
+        );
+
+
+    const registered =
+        localStorage.getItem(
+            "registeredFaceStudent"
+        );
+
+
+    if (!registered) {
+
+        result.innerHTML =
+            "❌ No registered student found. Register a face first.";
+
+        return;
+    }
+
+
+    if (!faceModelLoaded) {
+
+        const ready =
+            await loadFaceModel();
+
+        if (!ready) {
+            return;
+        }
+    }
+
+
+    try {
+
+        button.disabled = true;
+
+        status.innerText =
+            "Starting camera...";
+
+
+        attendanceStream =
+            await navigator.mediaDevices
+                .getUserMedia({
+
+                    video: {
+                        facingMode: "user",
+                        width: 640,
+                        height: 480
+                    },
+
+                    audio: false
+                });
+
+
+        video.srcObject =
+            attendanceStream;
+
+        await video.play();
+
+
+        status.innerText =
+            "Camera ON — detecting face...";
+
+
+        detectAttendanceFace();
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        status.innerText =
+            "Camera could not be started.";
+
+        button.disabled = false;
+    }
+}
+
+
+
+// ========================================
+// ATTENDANCE FACE DETECTION
+// ========================================
+
+async function detectAttendanceFace() {
+
+    const video =
+        document.getElementById(
+            "attendanceCamera"
+        );
+
+    const status =
+        document.getElementById(
+            "attendanceStatus"
+        );
+
+
+    const result =
+        document.getElementById(
+            "attendanceResult"
+        );
+
+
+    const registered =
+        JSON.parse(
+            localStorage.getItem(
+                "registeredFaceStudent"
+            )
+        );
+
+
+    try {
+
+        const detections =
+            await faceapi.detectAllFaces(
+                video,
+                new faceapi.TinyFaceDetectorOptions({
+                    inputSize: 320,
+                    scoreThreshold: 0.45
+                })
+            );
+
+
+        if (detections.length === 1) {
+
+            status.innerText =
+                "Face detected ✅";
+
+
+            /*
+             * At this stage we have detected
+             * one face.
+             *
+             * Full face recognition will be
+             * connected in the next step.
+             */
+
+            showAttendanceSuccess(
+                registered
+            );
+
+            return;
+        }
+
+
+        status.innerText =
+            "Looking for your face...";
+
 
         setTimeout(
-            loadAutomaticFaceModel,
-            500
+            detectAttendanceFace,
+            400
         );
+
+
+    } catch (error) {
+
+        console.error(error);
+
+        status.innerText =
+            "Face detection error.";
+
+        document.getElementById(
+            "attendanceButton"
+        ).disabled = false;
+    }
+}
+
+
+
+// ========================================
+// ATTENDANCE SUCCESS
+// ========================================
+
+function showAttendanceSuccess(student) {
+
+    const result =
+        document.getElementById(
+            "attendanceResult"
+        );
+
+    result.innerHTML = `
+
+        <div>
+
+            <div style="font-size:40px;">
+                ✅
+            </div>
+
+            <h3>
+                Attendance Successfully
+            </h3>
+
+            <p>
+                <strong>Name:</strong>
+                ${student.name}
+            </p>
+
+            <p>
+                <strong>Roll:</strong>
+                ${student.roll}
+            </p>
+
+            <p>
+                <strong>College:</strong>
+                ${student.college}
+            </p>
+
+            <p>
+                <strong>Department:</strong>
+                ${student.department}
+            </p>
+
+        </div>
+
+    `;
+
+
+    // Mark the registered student present
+    const studentIndex =
+        students.findIndex(
+            s => s.roll === student.roll
+        );
+
+
+    if (studentIndex !== -1) {
+
+        students[studentIndex].status =
+            "Present";
+
+        displayStudents();
+        updateDashboard();
+    }
+
+
+    const status =
+        document.getElementById(
+            "attendanceStatus"
+        );
+
+    status.innerText =
+        "Attendance marked successfully ✅";
+
+
+    // Stop camera
+    if (attendanceStream) {
+
+        attendanceStream
+            .getTracks()
+            .forEach(track =>
+                track.stop()
+            );
+
+        attendanceStream = null;
+    }
+
+
+    document.getElementById(
+        "attendanceCamera"
+    ).srcObject = null;
+
+
+    document.getElementById(
+        "attendanceButton"
+    ).disabled = false;
+}
+
+
+
+// ========================================
+// PAGE LOAD
+// ========================================
+
+window.addEventListener(
+    "load",
+    async function () {
+
+        displayStudents();
+
+        updateDashboard();
+
+        await loadFaceModel();
 
     }
 );
