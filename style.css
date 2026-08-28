@@ -1,350 +1,467 @@
+/* =====================================================
+   SMART ATTENDANCE SYSTEM
+   STYLE.CSS
+===================================================== */
+
+
+/* =====================================================
+   GLOBAL
+===================================================== */
+
 * {
-    margin: 0;
-    padding: 0;
     box-sizing: border-box;
 }
 
 body {
-    font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #eef2ff, #ecfeff, #fdf2f8);
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f1f5f9;
     color: #1e293b;
-    min-height: 100vh;
 }
+
+
+/* =====================================================
+   MAIN CONTAINER
+===================================================== */
 
 .container {
-    width: 92%;
-    max-width: 1200px;
+    width: 100%;
+    max-width: 1100px;
     margin: auto;
-    padding: 35px 0 60px;
+    padding: 25px;
 }
 
-/* ================= HEADER ================= */
+
+/* =====================================================
+   HEADER
+===================================================== */
 
 header {
+    position: relative;
     text-align: center;
-    margin-bottom: 35px;
-    padding: 30px;
-    border-radius: 22px;
-    background: linear-gradient(135deg, #4f46e5, #2563eb, #06b6d4);
-    color: white;
-    box-shadow: 0 12px 30px rgba(37, 99, 235, 0.25);
+    background: white;
+    padding: 35px 20px;
+    border-radius: 20px;
+    margin-bottom: 25px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
 }
 
 header h1 {
-    font-size: 40px;
-    margin-bottom: 10px;
+    margin: 0 0 8px;
+    font-size: 32px;
+    color: #1e40af;
 }
 
 header p {
-    font-size: 17px;
-    opacity: 0.9;
+    margin: 5px 0;
+    color: #64748b;
 }
 
 
-/* ================= DASHBOARD ================= */
+/* =====================================================
+   DASHBOARD
+===================================================== */
 
 .dashboard {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 20px;
+    gap: 18px;
+    margin-bottom: 25px;
 }
 
 .card {
-    background: rgba(255, 255, 255, 0.95);
-    padding: 25px;
-    border-radius: 18px;
+    background: white;
+    padding: 22px;
     text-align: center;
-    box-shadow: 0 8px 25px rgba(30, 41, 59, 0.10);
-    border-top: 5px solid #6366f1;
-}
-
-.card:nth-child(2) {
-    border-top-color: #10b981;
-}
-
-.card:nth-child(3) {
-    border-top-color: #ef4444;
-}
-
-.card:nth-child(4) {
-    border-top-color: #06b6d4;
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
 }
 
 .card h3 {
-    color: #64748b;
+    margin: 0 0 10px;
+    color: #475569;
     font-size: 16px;
-    margin-bottom: 12px;
 }
 
 .card h2 {
-    font-size: 32px;
-    color: #1e293b;
+    margin: 0;
+    font-size: 30px;
+    color: #2563eb;
 }
 
 
-/* ================= BOX ================= */
+/* =====================================================
+   SECTIONS
+===================================================== */
 
-.box {
-    background: rgba(255, 255, 255, 0.96);
-    margin-top: 25px;
-    padding: 28px;
-    border-radius: 20px;
-    box-shadow: 0 8px 25px rgba(30, 41, 59, 0.09);
-    border: 1px solid #e0e7ff;
+.section {
+    background: white;
+    padding: 25px;
+    border-radius: 18px;
+    margin-bottom: 25px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.08);
 }
 
-.box > h2 {
-    color: #4338ca;
+.section h2 {
+    margin-top: 0;
     margin-bottom: 20px;
+    color: #1e40af;
 }
 
 
-/* ================= FORM ================= */
-
-.form {
-    display: flex;
-    gap: 12px;
-    flex-wrap: wrap;
-}
+/* =====================================================
+   INPUTS
+===================================================== */
 
 input {
-    padding: 14px;
-    border: 2px solid #dbeafe;
+    width: 100%;
+    padding: 13px 15px;
+    border: 1px solid #cbd5e1;
     border-radius: 10px;
     font-size: 15px;
     outline: none;
-    background: #ffffff;
+    background: white;
 }
 
 input:focus {
-    border-color: #6366f1;
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.12);
-}
-
-.form input {
-    flex: 1;
-    min-width: 200px;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.12);
 }
 
 
-/* ================= BUTTON ================= */
+/* =====================================================
+   BUTTONS
+===================================================== */
 
 button {
-    padding: 14px 22px;
+    padding: 13px 18px;
     border: none;
     border-radius: 10px;
-    background: linear-gradient(135deg, #4f46e5, #2563eb);
+    background: #2563eb;
     color: white;
-    cursor: pointer;
     font-size: 15px;
-    font-weight: bold;
+    cursor: pointer;
     transition: 0.2s;
 }
 
 button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 18px rgba(37, 99, 235, 0.25);
+    opacity: 0.9;
+    transform: translateY(-1px);
 }
 
-
-/* ================= SEARCH ================= */
-
-.search {
-    width: 100%;
-}
-
-
-/* ================= STUDENT LIST ================= */
-
-.student-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 15px;
-    padding: 18px 5px;
-    border-bottom: 1px solid #e2e8f0;
-}
-
-.student-info {
-    flex: 1;
-}
-
-.student-actions {
-    display: flex;
-    gap: 8px;
-    flex-wrap: wrap;
-}
-
-.present-btn {
-    background: #10b981;
-}
-
-.absent-btn {
-    background: #ef4444;
-}
-
-.delete-btn {
-    background: #64748b;
-}
-
-.status {
-    margin-top: 5px;
-    font-size: 13px;
-    color: #64748b;
-}
-
-
-/* ================= FACE SECTIONS ================= */
-
-.face-section,
-.face-attendance-section {
-    background: linear-gradient(135deg, #ffffff, #eff6ff);
-    border: 2px solid #dbeafe;
-}
-
-.section-title {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    margin-bottom: 25px;
-}
-
-.section-title > span {
-    font-size: 42px;
-}
-
-.section-title h2 {
-    margin: 0;
-    color: #4f46e5;
-    font-size: 28px;
-}
-
-.section-title p {
-    margin-top: 6px;
-    color: #64748b;
-}
-
-
-/* ================= FACE FORM ================= */
-
-.face-form {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-    margin-bottom: 25px;
-}
-
-.face-form input {
-    width: 100%;
-    padding: 15px;
-    border: 2px solid #c7d2fe;
-    border-radius: 12px;
-    font-size: 16px;
-}
-
-
-/* ================= CAMERA ================= */
-
-.camera-box {
-    position: relative;
-    width: 100%;
-    max-width: 700px;
-    margin: 20px auto;
-    overflow: hidden;
-    border-radius: 22px;
-    background: #0f172a;
-    border: 4px solid #6366f1;
-    box-shadow: 0 12px 30px rgba(37, 99, 235, 0.25);
-}
-
-.camera-box video {
-    width: 100%;
-    display: block;
-    aspect-ratio: 16 / 9;
-    object-fit: cover;
-    background: #0f172a;
-
-    /* Selfie-style preview */
-    transform: scaleX(-1);
-}
-
-.camera-box div {
-    position: absolute;
-    left: 15px;
-    right: 15px;
-    bottom: 15px;
-    padding: 12px;
-    border-radius: 12px;
-    text-align: center;
-    color: white;
-    background: rgba(15, 23, 42, 0.78);
-    backdrop-filter: blur(5px);
-}
-
-
-/* ================= FACE BUTTON ================= */
-
-.face-register-btn {
-    display: block;
-    margin: 25px auto 10px;
-    padding: 16px 30px;
-    border-radius: 13px;
-
-    background: linear-gradient(
-        135deg,
-        #7c3aed,
-        #4f46e5,
-        #06b6d4
-    );
-
-    color: white;
-    font-size: 17px;
-    font-weight: bold;
-
-    box-shadow: 0 10px 25px rgba(79, 70, 229, 0.28);
-}
-
-.face-register-btn:hover {
-    transform: translateY(-2px) scale(1.01);
-}
-
-.face-register-btn:disabled {
+button:disabled {
     opacity: 0.6;
     cursor: not-allowed;
     transform: none;
 }
 
 
-/* ================= MESSAGES ================= */
+/* =====================================================
+   CAMERA
+===================================================== */
 
-#registrationMessage,
-#attendanceResult {
+.camera-box {
+    width: 100%;
+    max-width: 640px;
+    margin: 20px auto;
     text-align: center;
+}
+
+.camera-box video {
+    width: 100%;
+    max-width: 640px;
+    min-height: 300px;
+    object-fit: cover;
+    display: block;
+    margin: auto;
+    border-radius: 18px;
+    background: #0f172a;
+    border: 3px solid #cbd5e1;
+}
+
+.camera-status {
+    margin-top: 12px;
+    padding: 10px;
+    font-weight: bold;
+    color: #334155;
+}
+
+
+/* =====================================================
+   FACE MESSAGE
+===================================================== */
+
+.face-message {
+    width: 100%;
     margin-top: 15px;
+}
+
+
+/* =====================================================
+   SUCCESS MESSAGE
+===================================================== */
+
+.success-message {
+    padding: 22px;
+    margin-top: 20px;
+    border-radius: 16px;
+    background: #ecfdf5;
+    border: 2px solid #22c55e;
+    color: #166534;
+    text-align: center;
+}
+
+.success-message .success-icon {
+    font-size: 50px;
+    margin-bottom: 10px;
+}
+
+
+/* =====================================================
+   STUDENT LIST
+===================================================== */
+
+#studentList {
+    margin-top: 20px;
+}
+
+.student-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 18px;
+    margin-bottom: 12px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+}
+
+.student-info {
+    line-height: 1.7;
+}
+
+.student-info strong {
+    font-size: 18px;
+    color: #1e40af;
+}
+
+.student-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.present-btn {
+    background: #16a34a;
+}
+
+.absent-btn {
+    background: #dc2626;
+}
+
+.delete-btn {
+    background: #475569;
+}
+
+.status {
+    margin-top: 8px;
     font-weight: bold;
 }
 
-#registrationMessage {
-    color: #059669;
+
+/* =====================================================
+   REGISTERED STUDENTS
+===================================================== */
+
+.registered-student {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    line-height: 1.7;
 }
 
 
-/* ================= ATTENDANCE SUCCESS ================= */
+/* =====================================================
+   ATTENDANCE SUMMARY
+===================================================== */
 
-.attendance-result {
-    margin: 20px auto;
-    max-width: 600px;
-    padding: 20px;
-    border-radius: 16px;
-    background: #ecfdf5;
-    border: 2px solid #86efac;
-    color: #166534;
+.attendance-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.attendance-summary-box {
+    padding: 18px;
+    border-radius: 14px;
     text-align: center;
-    font-size: 17px;
+    background: #f8fafc;
+    border: 2px solid #cbd5e1;
+}
+
+.attendance-summary-box h3 {
+    margin: 0 0 8px;
+}
+
+.attendance-summary-box h2 {
+    margin: 0;
+}
+
+.total-summary {
+    border-color: #2563eb;
+}
+
+.present-summary {
+    border-color: #22c55e;
+}
+
+.absent-summary {
+    border-color: #ef4444;
 }
 
 
-/* ================= MOBILE ================= */
+/* =====================================================
+   ATTENDANCE HISTORY
+===================================================== */
+
+.attendance-history-item {
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 12px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+}
+
+.attendance-history-item strong {
+    color: #1e40af;
+}
+
+
+/* =====================================================
+   ADMIN
+===================================================== */
+
+.admin-info {
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    padding: 18px;
+    border-radius: 12px;
+    line-height: 1.8;
+}
+
+
+/* =====================================================
+   MODAL
+===================================================== */
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    z-index: 4000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.modal.show {
+    display: flex;
+}
+
+.modal-content {
+    width: 100%;
+    max-width: 520px;
+    max-height: 85vh;
+    overflow-y: auto;
+    background: white;
+    padding: 25px;
+    border-radius: 18px;
+    position: relative;
+    box-shadow: 0 15px 50px rgba(0,0,0,0.3);
+}
+
+.modal-content h2 {
+    margin-top: 0;
+    margin-bottom: 20px;
+}
+
+.modal-content input {
+    margin-bottom: 12px;
+}
+
+.close-modal {
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    background: #dc3545;
+    border-radius: 50%;
+    color: white;
+}
+
+
+/* =====================================================
+   LEFT THREE-LINE MENU
+===================================================== */
+
+.menu-container {
+    position: absolute;
+    left: 20px;
+    top: 20px;
+    z-index: 3000;
+}
+
+.menu-button {
+    width: 55px;
+    height: 50px;
+    padding: 0;
+    font-size: 27px;
+    border-radius: 12px;
+    background: #2563eb;
+    color: white;
+}
+
+.main-menu {
+    display: none;
+    position: absolute;
+    left: 0;
+    top: 60px;
+    width: 290px;
+    background: white;
+    padding: 12px;
+    border-radius: 15px;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.20);
+}
+
+.main-menu.show {
+    display: block;
+}
+
+.main-menu button {
+    width: 100%;
+    margin: 5px 0;
+    text-align: left;
+    background: #2563eb;
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+
+/* =====================================================
+   MOBILE RESPONSIVE
+===================================================== */
 
 @media (max-width: 800px) {
 
@@ -352,49 +469,62 @@ button:hover {
         grid-template-columns: repeat(2, 1fr);
     }
 
-    .face-form {
-        grid-template-columns: 1fr;
-    }
-
-    header h1 {
-        font-size: 32px;
-    }
-}
-
-
-@media (max-width: 500px) {
-
-    .container {
-        width: 94%;
-        padding-top: 20px;
-    }
-
-    .dashboard {
-        grid-template-columns: 1fr;
-    }
-
-    .box {
-        padding: 20px;
-    }
-
     .student-row {
         flex-direction: column;
-        align-items: flex-start;
     }
 
     .student-actions {
         width: 100%;
     }
 
+    .student-actions button {
+        flex: 1;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .container {
+        padding: 12px;
+    }
+
     header {
-        padding: 24px 15px;
+        padding: 80px 15px 25px;
     }
 
     header h1 {
-        font-size: 27px;
+        font-size: 25px;
     }
 
-    .section-title h2 {
-        font-size: 23px;
+    .dashboard {
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
     }
+
+    .card {
+        padding: 16px 10px;
+    }
+
+    .card h2 {
+        font-size: 25px;
+    }
+
+    .section {
+        padding: 18px;
+    }
+
+    .attendance-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .main-menu {
+        width: 260px;
+    }
+
+    .camera-box video {
+        min-height: 240px;
+    }
+
 }
