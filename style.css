@@ -1107,3 +1107,23 @@ input:focus {
         font-size: 23px;
     }
 }
+/* HETC Logo Size */
+.college-logo-img {
+    width: 80px;
+    height: 80px;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto 12px;
+}
+
+/* Login page logo */
+.college-logo-area .college-logo-img {
+    width: 85px;
+    height: 85px;
+}
+
+/* Dashboard sidebar logo */
+.sidebar-logo .college-logo-img {
+    width: 65px;
+    height: 65px;
+}
