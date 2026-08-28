@@ -1,6 +1,5 @@
 // =====================================================
 // SMART ATTENDANCE SYSTEM
-// ADMIN: AYUSH CHATTERJEE
 // =====================================================
 
 
@@ -8,8 +7,9 @@
 // STUDENTS DATA
 // =====================================================
 
-let students =
-    JSON.parse(localStorage.getItem("students")) || [];
+let students = JSON.parse(
+    localStorage.getItem("students")
+) || [];
 
 let registrationStream = null;
 let attendanceStream = null;
@@ -17,26 +17,6 @@ let attendanceStream = null;
 let faceModelLoaded = false;
 let registrationRunning = false;
 let attendanceRunning = false;
-
-
-// =====================================================
-// ADMIN SETTINGS
-// =====================================================
-
-const ADMIN_NAME = "Ayush Chatterjee";
-
-const DEFAULT_ADMIN_PASSWORD = "1234";
-
-
-// =====================================================
-// GET ADMIN PASSWORD
-// =====================================================
-
-function getAdminPassword() {
-
-    return localStorage.getItem("adminPassword")
-        || DEFAULT_ADMIN_PASSWORD;
-}
 
 
 // =====================================================
@@ -78,6 +58,7 @@ function getAttendanceDateTime() {
             second: "2-digit",
             hour12: true
         })
+
     };
 }
 
@@ -144,29 +125,13 @@ function addStudent() {
     }
 
 
-    const existing =
-        students.find(
-            s => s.roll.toLowerCase() === roll.toLowerCase()
-        );
-
-
-    if (existing) {
-
-        alert(
-            "This Roll Number is already registered."
-        );
-
-        return;
-    }
-
-
     students.push({
 
-        name,
-        roll,
-        college,
-        department,
-        mobile,
+        name: name,
+        roll: roll,
+        college: college,
+        department: department,
+        mobile: mobile,
 
         status: "Not Marked",
 
@@ -189,11 +154,6 @@ function addStudent() {
 
     displayStudents();
     updateDashboard();
-
-
-    alert(
-        "✅ Student added successfully!"
-    );
 }
 
 
@@ -270,11 +230,9 @@ function displayStudents() {
                 📅 Date: ${student.attendanceDate}
 
                 <br>
-
                 📆 Day: ${student.attendanceDay}
 
                 <br>
-
                 🕐 Time: ${student.attendanceTime}
 
             `;
@@ -298,6 +256,11 @@ function displayStudents() {
                 <br>
 
                 Department: ${student.department}
+
+                <br>
+
+                📱 Mobile:
+                ${student.mobile || "Not added"}
 
                 ${attendanceInfo}
 
@@ -375,7 +338,6 @@ function markPresent(index) {
     saveStudents();
 
     displayStudents();
-
     updateDashboard();
 }
 
@@ -389,11 +351,9 @@ function markAbsent(index) {
     students[index].status =
         "Absent";
 
-
     saveStudents();
 
     displayStudents();
-
     updateDashboard();
 }
 
@@ -415,11 +375,9 @@ function deleteStudent(index) {
 
     students.splice(index, 1);
 
-
     saveStudents();
 
     displayStudents();
-
     updateDashboard();
 }
 
@@ -472,14 +430,11 @@ function updateDashboard() {
     if (totalElement)
         totalElement.innerText = total;
 
-
     if (presentElement)
         presentElement.innerText = present;
 
-
     if (absentElement)
         absentElement.innerText = absent;
-
 
     if (percentageElement)
         percentageElement.innerText =
@@ -511,17 +466,14 @@ async function loadFaceModels() {
         await faceapi.nets.tinyFaceDetector
             .loadFromUri(MODEL_URL);
 
-
         await faceapi.nets.faceLandmark68Net
             .loadFromUri(MODEL_URL);
-
 
         await faceapi.nets.faceRecognitionNet
             .loadFromUri(MODEL_URL);
 
 
         faceModelLoaded = true;
-
 
         return true;
 
@@ -531,7 +483,6 @@ async function loadFaceModels() {
             "Face model loading error:",
             error
         );
-
 
         return false;
     }
@@ -592,7 +543,6 @@ async function startCameraForVideo(
 
             status.innerText =
                 "Camera ON ✅";
-
         }
 
 
@@ -608,7 +558,6 @@ async function startCameraForVideo(
 
             status.innerText =
                 "Camera permission denied or unavailable ❌";
-
         }
 
 
@@ -666,24 +615,20 @@ async function startAutomaticFaceRegistration() {
             "faceName"
         ).value.trim();
 
-
     const roll =
         document.getElementById(
             "faceRoll"
         ).value.trim();
-
 
     const college =
         document.getElementById(
             "collegeName"
         ).value.trim();
 
-
     const department =
         document.getElementById(
             "departmentName"
         ).value.trim();
-
 
     const mobile =
         document.getElementById(
@@ -696,18 +641,15 @@ async function startAutomaticFaceRegistration() {
             "registrationCamera"
         );
 
-
     const status =
         document.getElementById(
             "registrationStatus"
         );
 
-
     const message =
         document.getElementById(
             "registrationMessage"
         );
-
 
     const button =
         document.getElementById(
@@ -723,8 +665,11 @@ async function startAutomaticFaceRegistration() {
         !mobile
     ) {
 
-        message.innerText =
-            "Please fill all student details.";
+        if (message) {
+
+            message.innerText =
+                "Please fill all student details.";
+        }
 
         return;
     }
@@ -806,7 +751,6 @@ async function detectRegistrationFace(
             "registrationCamera"
         );
 
-
     const status =
         document.getElementById(
             "registrationStatus"
@@ -820,11 +764,8 @@ async function detectRegistrationFace(
                 .detectSingleFace(
                     video,
                     new faceapi.TinyFaceDetectorOptions({
-
                         inputSize: 320,
-
                         scoreThreshold: 0.5
-
                     })
                 )
                 .withFaceLandmarks()
@@ -845,15 +786,14 @@ async function detectRegistrationFace(
 
             localStorage.setItem(
                 "registeredFaceStudent",
-
                 JSON.stringify({
 
-                    name,
-                    roll,
-                    college,
-                    department,
-                    mobile,
-                    descriptor
+                    name: name,
+                    roll: roll,
+                    college: college,
+                    department: department,
+                    mobile: mobile,
+                    descriptor: descriptor
 
                 })
             );
@@ -883,18 +823,16 @@ async function detectRegistrationFace(
 
                 students.push({
 
-                    name,
-                    roll,
-                    college,
-                    department,
-                    mobile,
+                    name: name,
+                    roll: roll,
+                    college: college,
+                    department: department,
+                    mobile: mobile,
 
                     status: "Not Marked",
 
                     attendanceDate: "",
-
                     attendanceDay: "",
-
                     attendanceTime: ""
 
                 });
@@ -903,14 +841,13 @@ async function detectRegistrationFace(
 
             saveStudents();
 
-
             displayStudents();
 
             updateDashboard();
 
 
+            // SUCCESS MESSAGE
             registrationSuccessful();
-
 
             return;
         }
@@ -940,14 +877,11 @@ async function detectRegistrationFace(
 
         console.error(error);
 
-
         status.innerText =
             "Face detection error ❌";
 
-
         registrationRunning =
             false;
-
 
         buttonEnable(
             "registerFaceButton"
@@ -957,7 +891,7 @@ async function detectRegistrationFace(
 
 
 // =====================================================
-// REGISTRATION SUCCESS
+// ⭐ FACE CAPTURE SUCCESS MESSAGE ⭐
 // =====================================================
 
 function registrationSuccessful() {
@@ -971,26 +905,62 @@ function registrationSuccessful() {
             "registrationStatus"
         );
 
-
     const message =
         document.getElementById(
             "registrationMessage"
         );
 
 
+    // CAMERA STATUS MESSAGE
+
     if (status) {
 
         status.innerText =
-            "Face captured successfully ✅";
+            "✅ Face Captured Successfully!";
     }
 
+
+    // BIG MESSAGE ON PAGE
 
     if (message) {
 
-        message.innerText =
-            "✅ Face Registration Successful";
+        message.innerHTML = `
+
+            <div
+                style="
+                    margin-top:15px;
+                    padding:18px;
+                    border-radius:14px;
+                    background:#ecfdf5;
+                    border:2px solid #22c55e;
+                    color:#166534;
+                    font-size:18px;
+                    font-weight:bold;
+                    text-align:center;
+                "
+            >
+
+                ✅ Face Captured Successfully!
+
+                <br>
+
+                🎉 Face Registration Completed
+
+            </div>
+
+        `;
     }
 
+
+    // POPUP MESSAGE
+
+    alert(
+        "✅ Face Captured Successfully!\n\n" +
+        "🎉 Face Registration Completed"
+    );
+
+
+    // STOP CAMERA
 
     if (registrationStream) {
 
@@ -999,7 +969,6 @@ function registrationSuccessful() {
             .forEach(
                 track => track.stop()
             );
-
 
         registrationStream =
             null;
@@ -1019,6 +988,8 @@ function registrationSuccessful() {
     }
 
 
+    // ENABLE BUTTON
+
     buttonEnable(
         "registerFaceButton"
     );
@@ -1033,7 +1004,6 @@ function buttonEnable(id) {
 
     const button =
         document.getElementById(id);
-
 
     if (button) {
 
@@ -1054,18 +1024,15 @@ async function startFaceAttendance() {
             "attendanceCamera"
         );
 
-
     const status =
         document.getElementById(
             "attendanceStatus"
         );
 
-
     const button =
         document.getElementById(
             "attendanceButton"
         );
-
 
     const result =
         document.getElementById(
@@ -1143,7 +1110,7 @@ async function startFaceAttendance() {
 
 
 // =====================================================
-// ATTENDANCE DETECTION
+// AUTOMATIC ATTENDANCE DETECTION
 // =====================================================
 
 async function detectAttendanceFace(
@@ -1160,7 +1127,6 @@ async function detectAttendanceFace(
             "attendanceCamera"
         );
 
-
     const status =
         document.getElementById(
             "attendanceStatus"
@@ -1174,11 +1140,8 @@ async function detectAttendanceFace(
                 .detectSingleFace(
                     video,
                     new faceapi.TinyFaceDetectorOptions({
-
                         inputSize: 320,
-
                         scoreThreshold: 0.5
-
                     })
                 )
                 .withFaceLandmarks()
@@ -1201,7 +1164,6 @@ async function detectAttendanceFace(
                 },
                 300
             );
-
 
             return;
         }
@@ -1235,13 +1197,10 @@ async function detectAttendanceFace(
             status.innerText =
                 "Face does not match ❌";
 
-
             attendanceRunning =
                 false;
 
-
             stopAttendanceCamera();
-
 
             buttonEnable(
                 "attendanceButton"
@@ -1253,14 +1212,11 @@ async function detectAttendanceFace(
 
         console.error(error);
 
-
         status.innerText =
             "Face detection error ❌";
 
-
         attendanceRunning =
             false;
-
 
         buttonEnable(
             "attendanceButton"
@@ -1300,18 +1256,14 @@ function showAttendanceSuccess(student) {
         students[index].status =
             "Present";
 
-
         students[index].attendanceDate =
             attendance.date;
-
 
         students[index].attendanceDay =
             attendance.day;
 
-
         students[index].attendanceTime =
             attendance.time;
-
 
         students[index].mobile =
             student.mobile ||
@@ -1323,13 +1275,9 @@ function showAttendanceSuccess(student) {
         students.push({
 
             name: student.name,
-
             roll: student.roll,
-
             college: student.college,
-
             department: student.department,
-
             mobile: student.mobile || "",
 
             status: "Present",
@@ -1344,6 +1292,7 @@ function showAttendanceSuccess(student) {
                 attendance.time
 
         });
+
     }
 
 
@@ -1372,7 +1321,6 @@ function showAttendanceSuccess(student) {
                 ✅
             </div>
 
-
             <h3
                 style="
                     font-size:24px;
@@ -1382,30 +1330,30 @@ function showAttendanceSuccess(student) {
                 Attendance Successfully
             </h3>
 
-
             <p>
                 <strong>👤 Name:</strong>
                 ${student.name}
             </p>
-
 
             <p>
                 <strong>🔢 Roll:</strong>
                 ${student.roll}
             </p>
 
-
             <p>
                 <strong>🏫 College:</strong>
                 ${student.college}
             </p>
-
 
             <p>
                 <strong>🎓 Department:</strong>
                 ${student.department}
             </p>
 
+            <p>
+                <strong>📱 Mobile:</strong>
+                ${student.mobile || "Not added"}
+            </p>
 
             <hr
                 style="
@@ -1415,18 +1363,15 @@ function showAttendanceSuccess(student) {
                 "
             >
 
-
             <p>
                 <strong>📅 Date:</strong>
                 ${attendance.date}
             </p>
 
-
             <p>
                 <strong>📆 Day:</strong>
                 ${attendance.day}
             </p>
-
 
             <p>
                 <strong>🕐 Time:</strong>
@@ -1478,7 +1423,6 @@ function stopAttendanceCamera() {
             .forEach(
                 track => track.stop()
             );
-
 
         attendanceStream =
             null;
@@ -1617,24 +1561,20 @@ function saveEditedDetails() {
             "editName"
         ).value.trim();
 
-
     const roll =
         document.getElementById(
             "editRoll"
         ).value.trim();
-
 
     const college =
         document.getElementById(
             "editCollege"
         ).value.trim();
 
-
     const department =
         document.getElementById(
             "editDepartment"
         ).value.trim();
-
 
     const mobile =
         document.getElementById(
@@ -1678,7 +1618,6 @@ function saveEditedDetails() {
         students[index].mobile =
             mobile;
 
-
         saveStudents();
     }
 
@@ -1713,7 +1652,6 @@ function saveEditedDetails() {
 
         localStorage.setItem(
             "registeredFaceStudent",
-
             JSON.stringify(student)
         );
     }
@@ -1738,6 +1676,15 @@ function saveEditedDetails() {
 
 function openMobileUpdate() {
 
+    const mobile =
+        prompt(
+            "Enter your mobile number:"
+        );
+
+
+    if (!mobile) return;
+
+
     const saved =
         localStorage.getItem(
             "registeredFaceStudent"
@@ -1758,23 +1705,12 @@ function openMobileUpdate() {
         JSON.parse(saved);
 
 
-    const mobile =
-        prompt(
-            "Enter your mobile number:",
-            student.mobile || ""
-        );
-
-
-    if (!mobile) return;
-
-
     student.mobile =
         mobile.trim();
 
 
     localStorage.setItem(
         "registeredFaceStudent",
-
         JSON.stringify(student)
     );
 
@@ -1804,446 +1740,6 @@ function openMobileUpdate() {
 
 
 // =====================================================
-// ADMIN PASSWORD LOGIN
-// =====================================================
-
-function showAdminDetails() {
-
-    const password =
-        prompt(
-            "🔐 Enter Admin Password:"
-        );
-
-
-    if (password === null) {
-        return;
-    }
-
-
-    if (
-        password !== getAdminPassword()
-    ) {
-
-        alert(
-            "❌ Wrong Admin Password!"
-        );
-
-        return;
-    }
-
-
-    showAdminPanel();
-}
-
-
-// =====================================================
-// ADMIN PANEL
-// =====================================================
-
-function showAdminPanel() {
-
-    let old =
-        document.getElementById(
-            "adminPanelModal"
-        );
-
-
-    if (old) {
-
-        old.remove();
-    }
-
-
-    const modal =
-        document.createElement("div");
-
-
-    modal.id =
-        "adminPanelModal";
-
-
-    modal.style.position =
-        "fixed";
-
-    modal.style.inset =
-        "0";
-
-    modal.style.background =
-        "rgba(0,0,0,0.65)";
-
-    modal.style.zIndex =
-        "99999";
-
-    modal.style.display =
-        "flex";
-
-    modal.style.alignItems =
-        "center";
-
-    modal.style.justifyContent =
-        "center";
-
-    modal.style.padding =
-        "20px";
-
-
-    const content =
-        document.createElement("div");
-
-
-    content.style.width =
-        "100%";
-
-    content.style.maxWidth =
-        "650px";
-
-    content.style.maxHeight =
-        "85vh";
-
-    content.style.overflowY =
-        "auto";
-
-    content.style.background =
-        "white";
-
-    content.style.borderRadius =
-        "20px";
-
-    content.style.padding =
-        "25px";
-
-
-    let studentHTML = "";
-
-
-    if (students.length === 0) {
-
-        studentHTML =
-            "<p>No registered students yet.</p>";
-
-    } else {
-
-        students.forEach(
-            (student, index) => {
-
-                studentHTML += `
-
-                    <div
-                        style="
-                            background:#f8fafc;
-                            border:1px solid #e2e8f0;
-                            border-radius:14px;
-                            padding:15px;
-                            margin-bottom:12px;
-                        "
-                    >
-
-                        <strong>
-                            ${index + 1}. ${student.name}
-                        </strong>
-
-                        <br>
-
-                        🔢 Roll:
-                        ${student.roll}
-
-                        <br>
-
-                        🏫 College:
-                        ${student.college}
-
-                        <br>
-
-                        🎓 Department:
-                        ${student.department}
-
-                        <br>
-
-                        📱 Mobile:
-                        <strong>
-                            ${student.mobile || "Not added"}
-                        </strong>
-
-                        <br>
-
-                        📌 Status:
-                        ${student.status}
-
-                    </div>
-
-                `;
-            }
-        );
-    }
-
-
-    content.innerHTML = `
-
-        <div
-            style="
-                display:flex;
-                justify-content:space-between;
-                align-items:center;
-                margin-bottom:20px;
-            "
-        >
-
-            <h2 style="margin:0;">
-                👑 Admin Panel
-            </h2>
-
-
-            <button
-                onclick="closeAdminPanel()"
-                style="
-                    width:40px;
-                    height:40px;
-                    border:none;
-                    border-radius:50%;
-                    background:#dc3545;
-                    color:white;
-                    font-size:18px;
-                    cursor:pointer;
-                "
-            >
-                ✖
-            </button>
-
-        </div>
-
-
-        <div
-            style="
-                background:#eff6ff;
-                border:1px solid #bfdbfe;
-                padding:16px;
-                border-radius:14px;
-                margin-bottom:20px;
-            "
-        >
-
-            <strong>
-                👤 Admin:
-            </strong>
-
-            ${ADMIN_NAME}
-
-            <br>
-
-            🔐 Admin access: Active
-
-        </div>
-
-
-        <h3>
-            👥 All Registered Students
-        </h3>
-
-
-        <p>
-            🔒 Only Admin can view all mobile numbers from this panel.
-        </p>
-
-
-        <div>
-            ${studentHTML}
-        </div>
-
-
-        <hr
-            style="
-                margin:25px 0;
-                border:none;
-                border-top:1px solid #ddd;
-            "
-        >
-
-
-        <h3>
-            🔑 Change Admin Password
-        </h3>
-
-
-        <input
-            type="password"
-            id="currentAdminPassword"
-            placeholder="Current Password"
-            style="
-                width:100%;
-                box-sizing:border-box;
-                padding:12px;
-                margin-bottom:10px;
-                border:1px solid #ccc;
-                border-radius:10px;
-            "
-        >
-
-
-        <input
-            type="password"
-            id="newAdminPassword"
-            placeholder="New Password"
-            style="
-                width:100%;
-                box-sizing:border-box;
-                padding:12px;
-                margin-bottom:10px;
-                border:1px solid #ccc;
-                border-radius:10px;
-            "
-        >
-
-
-        <input
-            type="password"
-            id="confirmAdminPassword"
-            placeholder="Confirm New Password"
-            style="
-                width:100%;
-                box-sizing:border-box;
-                padding:12px;
-                margin-bottom:12px;
-                border:1px solid #ccc;
-                border-radius:10px;
-            "
-        >
-
-
-        <button
-            onclick="changeAdminPassword()"
-            style="
-                width:100%;
-                padding:13px;
-                border:none;
-                border-radius:10px;
-                background:#2563eb;
-                color:white;
-                font-size:16px;
-                cursor:pointer;
-            "
-        >
-            🔐 Change Password
-        </button>
-
-    `;
-
-
-    modal.appendChild(
-        content
-    );
-
-
-    document.body.appendChild(
-        modal
-    );
-}
-
-
-// =====================================================
-// CLOSE ADMIN PANEL
-// =====================================================
-
-function closeAdminPanel() {
-
-    const modal =
-        document.getElementById(
-            "adminPanelModal"
-        );
-
-
-    if (modal) {
-
-        modal.remove();
-    }
-}
-
-
-// =====================================================
-// CHANGE ADMIN PASSWORD
-// =====================================================
-
-function changeAdminPassword() {
-
-    const current =
-        document.getElementById(
-            "currentAdminPassword"
-        ).value;
-
-
-    const newPassword =
-        document.getElementById(
-            "newAdminPassword"
-        ).value;
-
-
-    const confirmPassword =
-        document.getElementById(
-            "confirmAdminPassword"
-        ).value;
-
-
-    if (!current || !newPassword || !confirmPassword) {
-
-        alert(
-            "Please fill all password fields."
-        );
-
-        return;
-    }
-
-
-    if (
-        current !== getAdminPassword()
-    ) {
-
-        alert(
-            "❌ Current password is incorrect."
-        );
-
-        return;
-    }
-
-
-    if (
-        newPassword.length < 4
-    ) {
-
-        alert(
-            "New password must contain at least 4 characters."
-        );
-
-        return;
-    }
-
-
-    if (
-        newPassword !== confirmPassword
-    ) {
-
-        alert(
-            "❌ New password and confirm password do not match."
-        );
-
-        return;
-    }
-
-
-    localStorage.setItem(
-        "adminPassword",
-        newPassword
-    );
-
-
-    alert(
-        "✅ Admin password changed successfully!"
-    );
-
-
-    closeAdminPanel();
-}
-
-
-// =====================================================
 // REGISTERED STUDENTS
 // =====================================================
 
@@ -2253,7 +1749,6 @@ function showRegisteredStudents() {
         document.getElementById(
             "studentsModal"
         );
-
 
     const list =
         document.getElementById(
@@ -2295,8 +1790,7 @@ function showRegisteredStudents() {
 
                     <br>
 
-                    🔢 Roll:
-                    ${student.roll}
+                    🔢 Roll: ${student.roll}
 
                     <br>
 
@@ -2310,15 +1804,18 @@ function showRegisteredStudents() {
 
                     <br>
 
+                    📱 Mobile:
+                    ${student.mobile || "Not added"}
+
+                    <br>
+
                     📌 Status:
                     ${student.status}
 
                 `;
 
 
-                list.appendChild(
-                    div
-                );
+                list.appendChild(div);
 
             }
         );
@@ -2353,12 +1850,69 @@ function closeRegisteredStudents() {
 
 
 // =====================================================
+// ADMIN DETAILS
+// =====================================================
+
+function showAdminDetails() {
+
+    const modal =
+        document.getElementById(
+            "adminModal"
+        );
+
+
+    if (!modal) return;
+
+
+    modal.classList.add(
+        "show"
+    );
+
+
+    // Close main menu
+
+    const menu =
+        document.getElementById(
+            "mainMenu"
+        );
+
+
+    if (menu) {
+
+        menu.classList.remove(
+            "show"
+        );
+    }
+}
+
+
+// =====================================================
+// CLOSE ADMIN DETAILS
+// =====================================================
+
+function closeAdminDetails() {
+
+    const modal =
+        document.getElementById(
+            "adminModal"
+        );
+
+
+    if (modal) {
+
+        modal.classList.remove(
+            "show"
+        );
+    }
+}
+
+
+// =====================================================
 // PAGE LOAD
 // =====================================================
 
 window.addEventListener(
     "load",
-
     async function () {
 
         displayStudents();
