@@ -1,738 +1,168 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Smart Attendance System</title>
-
     <link rel="stylesheet" href="style.css">
-
-    <!-- FACE API -->
-    <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
-
-    <style>
-
-        /* ================= LEFT MENU ================= */
-
-        .menu-container {
-            position: absolute;
-            left: 20px;
-            top: 20px;
-            z-index: 3000;
-        }
-
-        .menu-button {
-            width: 55px;
-            height: 50px;
-            font-size: 27px;
-            border: none;
-            border-radius: 12px;
-            background: #2563eb;
-            color: white;
-            cursor: pointer;
-        }
-
-        .main-menu {
-            display: none;
-            position: absolute;
-            left: 0;
-            top: 60px;
-            width: 290px;
-            background: white;
-            padding: 12px;
-            border-radius: 15px;
-            box-shadow: 0 10px 35px rgba(0,0,0,0.20);
-        }
-
-        .main-menu.show {
-            display: block;
-        }
-
-        .main-menu button {
-            width: 100%;
-            margin: 5px 0;
-            padding: 14px;
-            border: none;
-            border-radius: 10px;
-            background: #2563eb;
-            color: white;
-            font-size: 15px;
-            text-align: left;
-            cursor: pointer;
-        }
-
-        .main-menu button:hover {
-            opacity: 0.88;
-        }
-
-
-        /* ================= MODAL ================= */
-
-        .modal {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.55);
-            z-index: 4000;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-        }
-
-        .modal.show {
-            display: flex;
-        }
-
-        .modal-content {
-            width: 100%;
-            max-width: 520px;
-            max-height: 85vh;
-            overflow-y: auto;
-            background: white;
-            padding: 25px;
-            border-radius: 18px;
-            position: relative;
-            box-shadow: 0 15px 50px rgba(0,0,0,0.3);
-        }
-
-        .modal-content h2 {
-            margin-bottom: 20px;
-        }
-
-        .modal-content input {
-            width: 100%;
-            margin-bottom: 12px;
-            box-sizing: border-box;
-        }
-
-        .close-modal {
-            position: absolute;
-            right: 15px;
-            top: 15px;
-            width: 40px;
-            height: 40px;
-            padding: 0;
-            border: none;
-            background: #dc3545;
-            color: white;
-            border-radius: 50%;
-            cursor: pointer;
-            font-size: 18px;
-        }
-
-
-        /* ================= CAMERA ================= */
-
-        .camera-box {
-            width: 100%;
-            max-width: 640px;
-            margin: 20px auto;
-            text-align: center;
-        }
-
-        .camera-box video {
-            width: 100%;
-            max-width: 640px;
-            min-height: 300px;
-            object-fit: cover;
-
-            /* MIRROR / SELFIE VIEW */
-            transform: scaleX(-1);
-
-            border-radius: 16px;
-            background: #111827;
-            display: block;
-            margin: auto;
-        }
-
-        .camera-status {
-            margin-top: 10px;
-            font-weight: bold;
-        }
-
-        .face-message {
-            margin-top: 15px;
-        }
-
-
-        /* ================= SUCCESS MESSAGE ================= */
-
-        .success-message {
-            padding: 22px;
-            margin-top: 20px;
-            border-radius: 16px;
-            background: #ecfdf5;
-            border: 2px solid #22c55e;
-            color: #166534;
-            text-align: center;
-        }
-
-        .success-message .success-icon {
-            font-size: 50px;
-            margin-bottom: 10px;
-        }
-
-
-        /* ================= ATTENDANCE SUMMARY ================= */
-
-        .attendance-summary {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .attendance-summary-box {
-            padding: 18px;
-            border-radius: 14px;
-            text-align: center;
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-        }
-
-        .attendance-summary-box h3 {
-            margin: 0 0 8px 0;
-        }
-
-        .attendance-summary-box h2 {
-            margin: 0;
-        }
-
-        .present-summary {
-            border: 2px solid #22c55e;
-        }
-
-        .absent-summary {
-            border: 2px solid #ef4444;
-        }
-
-        .total-summary {
-            border: 2px solid #2563eb;
-        }
-
-
-        /* ================= REGISTERED STUDENT ================= */
-
-        .registered-student {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            padding: 15px;
-            border-radius: 12px;
-            margin-bottom: 12px;
-        }
-
-
-        /* ================= ADMIN ================= */
-
-        .admin-info {
-            background: #eff6ff;
-            border: 1px solid #bfdbfe;
-            padding: 18px;
-            border-radius: 12px;
-            line-height: 1.8;
-        }
-
-
-        /* ================= MOBILE ================= */
-
-        @media (max-width: 600px) {
-
-            .menu-container {
-                left: 10px;
-                top: 10px;
-            }
-
-            .attendance-summary {
-                grid-template-columns: 1fr;
-            }
-
-            .main-menu {
-                width: 260px;
-            }
-
-            .camera-box video {
-                min-height: 240px;
-            }
-        }
-
-    </style>
-
 </head>
-
-
 <body>
 
-<div class="container">
+    <!-- 1. LOGIN & REGISTER CONTAINER -->
+    <div id="authSection" class="auth-container">
+        <div class="auth-tabs">
+            <button class="tab-btn active" onclick="switchTab('student')">Student Login</button>
+            <button class="tab-btn" onclick="switchTab('admin')">Admin Login</button>
+        </div>
 
-
-    <!-- ================= HEADER ================= -->
-
-    <header style="position:relative;">
-
-        <!-- LEFT THREE LINE MENU -->
-
-        <div class="menu-container">
-
-            <button
-                type="button"
-                class="menu-button"
-                onclick="toggleMenu()">
-                ☰
-            </button>
-
-
-            <div
-                id="mainMenu"
-                class="main-menu">
-
-                <button
-                    type="button"
-                    onclick="openEditDetails()">
-                    ✏️ Edit My Details
-                </button>
-
-
-                <button
-                    type="button"
-                    onclick="openMobileUpdate()">
-                    📱 Add / Update Mobile
-                </button>
-
-
-                <button
-                    type="button"
-                    onclick="showRegisteredStudents()">
-                    👥 Registered Students
-                </button>
-
-
-                <button
-                    type="button"
-                    onclick="showCheckAttendance()">
-                    📊 Check Attendance
-                </button>
-
-
-                <button
-                    type="button"
-                    onclick="showAdminDetails()">
-                    👑 Admin: Ayush Chatterjee
-                </button>
-
+        <!-- Student Login Form -->
+        <form id="studentLoginForm">
+            <div class="form-group">
+                <label>Mobile No or Email</label>
+                <input type="text" class="form-control" placeholder="Enter Mobile or Email" required>
             </div>
-
-        </div>
-
-
-        <h1>Smart Attendance System</h1>
-
-        <p>Student Attendance Dashboard</p>
-
-        <p id="currentDate"></p>
-
-    </header>
-
-
-    <!-- ================= DASHBOARD ================= -->
-
-    <section class="dashboard">
-
-        <div class="card">
-            <h3>Total Students</h3>
-            <h2 id="totalStudents">0</h2>
-        </div>
-
-
-        <div class="card">
-            <h3>Present</h3>
-            <h2 id="presentStudents">0</h2>
-        </div>
-
-
-        <div class="card">
-            <h3>Absent</h3>
-            <h2 id="absentStudents">0</h2>
-        </div>
-
-
-        <div class="card">
-            <h3>Attendance</h3>
-            <h2 id="attendancePercentage">0%</h2>
-        </div>
-
-    </section>
-
-
-    <!-- ================= FACE REGISTRATION ================= -->
-
-    <section class="section">
-
-        <h2>📸 Face Registration</h2>
-
-
-        <input
-            type="text"
-            id="faceName"
-            placeholder="Student Name">
-
-
-        <input
-            type="text"
-            id="faceRoll"
-            placeholder="Roll Number">
-
-
-        <input
-            type="text"
-            id="collegeName"
-            placeholder="College Name">
-
-
-        <input
-            type="text"
-            id="departmentName"
-            placeholder="Department">
-
-
-        <!-- MOBILE: MAX 10 DIGITS -->
-
-        <input
-            type="tel"
-            id="faceMobile"
-            placeholder="Mobile Number (10 digits)"
-            maxlength="10"
-            inputmode="numeric"
-            oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,10)">
-
-
-        <!-- OPTIONAL EMAIL -->
-
-        <input
-            type="email"
-            id="faceEmail"
-            placeholder="Email Address (Optional)">
-
-
-        <!-- CAMERA -->
-
-        <div class="camera-box">
-
-            <video
-                id="registrationCamera"
-                autoplay
-                muted
-                playsinline>
-            </video>
-
-            <div
-                id="registrationStatus"
-                class="camera-status">
-                Camera is OFF
+            <div class="form-group">
+                <label>4-Digit PIN</label>
+                <input type="password" class="form-control" maxlength="4" placeholder="••••" required>
             </div>
-
-        </div>
-
-
-        <!-- CAPTURE FACE & REGISTER -->
-
-        <button
-            type="button"
-            id="registerFaceButton"
-            onclick="startAutomaticFaceRegistration()">
-
-            📸 Capture Face & Register
-
-        </button>
-
-
-        <div
-            id="registrationMessage"
-            class="face-message">
-        </div>
-
-    </section>
-
-
-    <!-- ================= FACE ATTENDANCE ================= -->
-
-    <section class="section">
-
-        <h2>📸 Face Attendance</h2>
-
-
-        <div class="camera-box">
-
-            <video
-                id="attendanceCamera"
-                autoplay
-                muted
-                playsinline>
-            </video>
-
-
-            <div
-                id="attendanceStatus"
-                class="camera-status">
-
-                Camera is OFF
-
+            <button type="button" class="btn-submit" onclick="loginSuccess('Student')">Log In</button>
+            <div class="form-links">
+                <a href="#" onclick="showForm('forgotPinForm')">Forgot PIN?</a>
+                <a href="#" onclick="showForm('registerForm')">Create Account</a>
             </div>
+        </form>
 
-        </div>
+        <!-- Admin Login Form -->
+        <form id="adminLoginForm" class="hidden">
+            <div class="form-group">
+                <label>Admin Username</label>
+                <input type="text" class="form-control" value="Pradyut Chatterjee" readonly>
+            </div>
+            <div class="form-group">
+                <label>4-Digit Admin PIN</label>
+                <input type="password" class="form-control" id="adminPin" maxlength="4" placeholder="Default PIN: 1234" required>
+            </div>
+            <button type="button" class="btn-submit" onclick="loginSuccess('Admin')">Admin Log In</button>
+            <div class="form-links">
+                <a href="#" onclick="showForm('forgotPinForm')">Forgot Admin PIN?</a>
+            </div>
+        </form>
 
+        <!-- Registration Form -->
+        <form id="registerForm" class="hidden">
+            <div class="form-group"><label>Full Name</label><input type="text" class="form-control" required></div>
+            <div class="form-group"><label>Mobile No</label><input type="tel" class="form-control" required></div>
+            <div class="form-group"><label>Email ID</label><input type="email" class="form-control" required></div>
+            <div class="form-group"><label>College Name</label><input type="text" class="form-control" value="Hooghly Engineering & Technology College" readonly></div>
+            <div class="form-group"><label>Department</label><input type="text" class="form-control" placeholder="e.g. CSE, ECE" required></div>
+            <div class="form-group"><label>Set 4-Digit PIN</label><input type="password" class="form-control" maxlength="4" required></div>
+            <button type="button" class="btn-submit" onclick="showForm('studentLoginForm')">Sign In / Register</button>
+            <div class="form-links"><a href="#" onclick="showForm('studentLoginForm')">Back to Login</a></div>
+        </form>
 
-        <!-- ONLY CAPTURE FACE -->
-
-        <button
-            type="button"
-            id="attendanceButton"
-            onclick="startFaceAttendance()">
-
-            📸 Capture Face
-
-        </button>
-
-
-        <div
-            id="attendanceResult"
-            class="face-message">
-        </div>
-
-    </section>
-
-
-    <!-- ================= SEARCH ================= -->
-
-    <section class="section">
-
-        <h2>👥 Student List</h2>
-
-
-        <input
-            type="text"
-            id="searchStudent"
-            placeholder="Search student by name or roll..."
-            oninput="displayStudents()">
-
-
-        <div id="studentList"></div>
-
-    </section>
-
-
-</div>
-
-
-<!-- ================= EDIT DETAILS MODAL ================= -->
-
-<div
-    id="editDetailsModal"
-    class="modal">
-
-    <div class="modal-content">
-
-        <button
-            type="button"
-            class="close-modal"
-            onclick="closeEditDetails()">
-            ✕
-        </button>
-
-
-        <h2>✏️ Edit My Details</h2>
-
-
-        <input
-            type="text"
-            id="editName"
-            placeholder="Name">
-
-
-        <input
-            type="text"
-            id="editRoll"
-            placeholder="Roll">
-
-
-        <input
-            type="text"
-            id="editCollege"
-            placeholder="College">
-
-
-        <input
-            type="text"
-            id="editDepartment"
-            placeholder="Department">
-
-
-        <input
-            type="tel"
-            id="editMobile"
-            placeholder="Mobile Number (10 digits)"
-            maxlength="10"
-            inputmode="numeric"
-            oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,10)">
-
-
-        <input
-            type="email"
-            id="editEmail"
-            placeholder="Email Address (Optional)">
-
-
-        <button
-            type="button"
-            onclick="saveEditedDetails()">
-
-            💾 Save Changes
-
-        </button>
-
+        <!-- Forgot PIN Form -->
+        <form id="forgotPinForm" class="hidden">
+            <div class="form-group">
+                <label>Enter Mobile or Email</label>
+                <input type="text" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label>New Confirm PIN</label>
+                <input type="password" class="form-control" maxlength="4" placeholder="Enter 4 digit pin" required>
+            </div>
+            <button type="button" class="btn-submit" onclick="showForm('studentLoginForm')">Set & Confirm PIN</button>
+            <div class="form-links"><a href="#" onclick="showForm('studentLoginForm')">Back to Login</a></div>
+        </form>
     </div>
 
-</div>
-
-
-<!-- ================= REGISTERED STUDENTS MODAL ================= -->
-
-<div
-    id="studentsModal"
-    class="modal">
-
-    <div class="modal-content">
-
-        <button
-            type="button"
-            class="close-modal"
-            onclick="closeRegisteredStudents()">
-            ✕
-        </button>
-
-
-        <h2>👥 Registered Students</h2>
-
-
-        <div
-            id="registeredStudentsList">
+    <!-- 2. MAIN DASHBOARD SYSTEM (Hidden Before Login) -->
+    <div id="dashboardSection" class="dashboard-container hidden">
+        <!-- Sidebar Menu -->
+        <div class="sidebar">
+            <div class="admin-profile">
+                <p style="font-size: 12px; color: #a0aec0;">System Administrator</p>
+                <p class="admin-name">Ayush Chatterjee</p>
+            </div>
+            <div class="menu-items">
+                <a href="#" class="active">🏠 Dashboard</a>
+                <a href="#">📸 Face Register</a>
+                <a href="#">✔️ Attendance</a>
+                <a href="#" onclick="location.reload()">🚪 Logout</a>
+            </div>
         </div>
 
-    </div>
-
-</div>
-
-
-<!-- ================= CHECK ATTENDANCE MODAL ================= -->
-
-<div
-    id="attendanceCheckModal"
-    class="modal">
-
-    <div class="modal-content">
-
-        <button
-            type="button"
-            class="close-modal"
-            onclick="closeCheckAttendance()">
-            ✕
-        </button>
-
-
-        <h2>📊 Check Attendance</h2>
-
-
-        <div class="attendance-summary">
-
-            <div class="attendance-summary-box total-summary">
-
-                <h3>Total Days</h3>
-
-                <h2 id="attendanceTotalDays">
-                    0
-                </h2>
-
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="dashboard-header">
+                <!-- ছোট সাইজের মানানসই লোগো -->
+                <img src="Screenshot 2026-08-28 160906.png" alt="Logo" class="logo-small">
+                <h1>Smart Attendance System</h1>
+                <h3>Hooghly Engineering & Technology College</h3>
+                <div class="welcome-msg" id="welcomeUser">Welcome, User!</div>
             </div>
 
-
-            <div class="attendance-summary-box present-summary">
-
-                <h3>Present</h3>
-
-                <h2 id="attendancePresentDays">
-                    0
-                </h2>
-
+            <!-- Mirror Style Camera Area -->
+            <div style="text-align: center; margin-top: 40px;">
+                <h2>Face Recognition Node (Automatic Capture)</h2>
+                <div class="camera-box">
+                    <!-- লাইভ ক্যামেরা মিরর ভিউ এর জন্য ভিডিও ট্যাগ -->
+                    <video id="webcam" autoplay playsinline></video>
+                </div>
+                <p style="color: #718096; margin-top: 10px;">Camera has a mirror-like view for natural alignment</p>
             </div>
-
-
-            <div class="attendance-summary-box absent-summary">
-
-                <h3>Absent</h3>
-
-                <h2 id="attendanceAbsentDays">
-                    0
-                </h2>
-
-            </div>
-
         </div>
-
-
-        <div id="attendanceHistory"></div>
-
     </div>
 
-</div>
-
-
-<!-- ================= ADMIN MODAL ================= -->
-
-<div
-    id="adminModal"
-    class="modal">
-
-    <div class="modal-content">
-
-        <button
-            type="button"
-            class="close-modal"
-            onclick="closeAdminDetails()">
-            ✕
-        </button>
-
-
-        <h2>👑 Admin Details</h2>
-
-
-        <div class="admin-info">
-
-            <strong>👤 Admin:</strong>
-            Ayush Chatterjee
-
-            <br>
-
-            <strong>📋 System:</strong>
-            Smart Attendance System
-
-            <br>
-
-            <strong>🔐 Role:</strong>
-            Administrator
-
-        </div>
-
+    <!-- Pop-up Message Grid -->
+    <div id="popupAlert" class="popup-success hidden">
+        🎉 Verification Successful! Attendance Automatically Captured.
     </div>
 
-</div>
+    <!-- Interface Navigation Script -->
+    <script>
+        function switchTab(type) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('studentLoginForm').classList.add('hidden');
+            document.getElementById('adminLoginForm').classList.add('hidden');
+            document.getElementById('registerForm').classList.add('hidden');
+            document.getElementById('forgotPinForm').classList.add('hidden');
+            
+            if(type === 'student') {
+                event.target.classList.add('active');
+                document.getElementById('studentLoginForm').classList.remove('hidden');
+            } else {
+                event.target.classList.add('active');
+                document.getElementById('adminLoginForm').classList.remove('hidden');
+            }
+        }
 
+        function showForm(formId) {
+            document.getElementById('studentLoginForm').classList.add('hidden');
+            document.getElementById('adminLoginForm').classList.add('hidden');
+            document.getElementById('registerForm').classList.add('hidden');
+            document.getElementById('forgotPinForm').classList.add('hidden');
+            document.getElementById(formId).classList.remove('hidden');
+        }
 
-<!-- ================= JAVASCRIPT ================= -->
+        function loginSuccess(role) {
+            document.getElementById('authSection').classList.add('hidden');
+            document.getElementById('dashboardSection').classList.remove('hidden');
+            document.getElementById('welcomeUser').innerText = `Welcome back, Authorized ${role}!`;
+            
+            // ক্যামেরা চালু করা এবং পপ-আপ ট্রিগার
+            initCamera();
+            setTimeout(() => {
+                const pop = document.getElementById('popupAlert');
+                pop.classList.remove('hidden');
+                setTimeout(() => pop.classList.add('hidden'), 4000);
+            }, 2500);
+        }
 
-<script src="script.js"></script>
-
-
+        function initCamera() {
+            navigator.mediaDevices.getUserMedia({ video: true })
+            .then(stream => { document.getElementById('webcam').srcObject = stream; })
+            .catch(err => { console.log("Camera access denied or missing."); });
+        }
+    </script>
 </body>
-
 </html>
