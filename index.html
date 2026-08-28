@@ -15,7 +15,6 @@
 
 </head>
 
-
 <body>
 
 <div class="container">
@@ -108,7 +107,18 @@
                 placeholder="Department"
             >
 
-            <button onclick="addStudent()">
+            <!-- MOBILE NUMBER -->
+
+            <input
+                type="tel"
+                id="studentMobile"
+                placeholder="Mobile Number"
+            >
+
+            <button
+                type="button"
+                onclick="addStudent()"
+            >
                 Add Student
             </button>
 
@@ -142,6 +152,18 @@
 
         <h2>📋 Today's Attendance</h2>
 
+        <!-- DATE AND DAY -->
+
+        <div
+            id="currentDate"
+            style="
+                margin-bottom:20px;
+                font-size:18px;
+                font-weight:bold;
+            "
+        >
+        </div>
+
         <div id="studentList"></div>
 
     </section>
@@ -169,7 +191,8 @@
         </div>
 
 
-        <!-- Student Information -->
+
+        <!-- STUDENT INFORMATION -->
 
         <div class="face-form">
 
@@ -197,10 +220,19 @@
                 placeholder="Department"
             >
 
+            <!-- MOBILE NUMBER -->
+
+            <input
+                type="tel"
+                id="faceMobile"
+                placeholder="Mobile Number"
+            >
+
         </div>
 
 
-        <!-- Registration Camera -->
+
+        <!-- REGISTRATION CAMERA -->
 
         <div class="camera-box">
 
@@ -217,19 +249,28 @@
             </div>
 
         </div>
+
+
+
+        <!-- START CAMERA -->
+
         <button
-    type="button"
-    class="face-register-btn"
-    onclick="startRegistrationCamera()"
->
-    📷 Start Registration Camera
-</button>
+            type="button"
+            class="face-register-btn"
+            onclick="startRegistrationCamera()"
+        >
+
+            📷 Start Registration Camera
+
+        </button>
 
 
-        <!-- ONE BUTTON ONLY -->
+
+        <!-- REGISTER FACE -->
 
         <button
             id="registerFaceButton"
+            type="button"
             class="face-register-btn"
             onclick="startAutomaticFaceRegistration()"
         >
@@ -239,8 +280,8 @@
         </button>
 
 
-        <p id="registrationMessage"></p>
 
+        <p id="registrationMessage"></p>
 
     </section>
 
@@ -267,7 +308,8 @@
         </div>
 
 
-        <!-- Attendance Camera -->
+
+        <!-- ATTENDANCE CAMERA -->
 
         <div class="camera-box">
 
@@ -286,10 +328,12 @@
         </div>
 
 
-        <!-- ONLY ONE BUTTON -->
+
+        <!-- FACE ATTENDANCE BUTTON -->
 
         <button
             id="attendanceButton"
+            type="button"
             class="face-register-btn"
             onclick="startFaceAttendance()"
         >
@@ -299,13 +343,13 @@
         </button>
 
 
-        <!-- Result -->
+
+        <!-- RESULT -->
 
         <div
             id="attendanceResult"
             class="attendance-result"
         >
-
         </div>
 
     </section>
