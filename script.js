@@ -1,30 +1,23 @@
 // =====================================================
 // SMART ATTENDANCE SYSTEM
 // COMPLETE SCRIPT.JS
+// LOGIN + ACCOUNT + FACE + ATTENDANCE
 // =====================================================
 
 
 // =====================================================
-// STUDENTS DATA
+// STORAGE
 // =====================================================
 
-let students = JSON.parse(
-    localStorage.getItem("students")
-) || [];
+let students =
+    JSON.parse(localStorage.getItem("students")) || [];
 
-
-// =====================================================
-// ATTENDANCE HISTORY
-// =====================================================
-// Every day's attendance is stored separately.
-
-let attendanceHistory = JSON.parse(
-    localStorage.getItem("attendanceHistory")
-) || {};
+let attendanceHistory =
+    JSON.parse(localStorage.getItem("attendanceHistory")) || {};
 
 
 // =====================================================
-// CAMERA / FACE VARIABLES
+// CAMERA VARIABLES
 // =====================================================
 
 let registrationStream = null;
@@ -45,7 +38,7 @@ const MODEL_URL =
 
 
 // =====================================================
-// SAVE STUDENTS
+// SAVE DATA
 // =====================================================
 
 function saveStudents() {
@@ -57,10 +50,6 @@ function saveStudents() {
 }
 
 
-// =====================================================
-// SAVE ATTENDANCE HISTORY
-// =====================================================
-
 function saveAttendanceHistory() {
 
     localStorage.setItem(
@@ -71,23 +60,20 @@ function saveAttendanceHistory() {
 
 
 // =====================================================
-// GET DATE KEY
+// DATE
 // =====================================================
 
 function getDateKey() {
 
     const now = new Date();
 
-    const year =
-        now.getFullYear();
+    const year = now.getFullYear();
 
     const month =
-        String(now.getMonth() + 1)
-            .padStart(2, "0");
+        String(now.getMonth() + 1).padStart(2, "0");
 
     const day =
-        String(now.getDate())
-            .padStart(2, "0");
+        String(now.getDate()).padStart(2, "0");
 
     return `${year}-${month}-${day}`;
 }
@@ -133,15 +119,13 @@ function getAttendanceDateTime() {
 
 
 // =====================================================
-// SHOW CURRENT DATE
+// CURRENT DATE
 // =====================================================
 
 function showCurrentDate() {
 
     const element =
-        document.getElementById(
-            "currentDate"
-        );
+        document.getElementById("currentDate");
 
     if (!element) return;
 
@@ -162,31 +146,736 @@ function showCurrentDate() {
 
 
 // =====================================================
-// MOBILE VALIDATION
+// VALIDATION
 // =====================================================
 
 function isValidMobile(mobile) {
 
-    return /^[0-9]{10}$/.test(
-        mobile
-    );
+    return /^[0-9]{10}$/.test(mobile);
 }
 
 
-// =====================================================
-// EMAIL VALIDATION
-// =====================================================
+function isValidPIN(pin) {
+
+    return /^[0-9]{4}$/.test(pin);
+}
+
 
 function isValidEmail(email) {
 
-    if (!email) {
+    if (!email) return true;
+
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+
+// =====================================================
+// =====================================================
+// LOGIN SYSTEM
+// =====================================================
+// =====================================================
+
+
+// =====================================================
+// CREATE ACCOUNT
+// =====================================================
+
+function createSmartAttendanceAccount(
+    name,
+    mobile,
+    roll,
+    college,
+    department,
+    email
+) {
+
+    name = String(name || "").trim();
+
+    mobile = String(mobile || "").trim();
+
+    roll = String(roll || "").trim();
+
+    college = String(college || "").trim();
+
+    department = String(department || "").trim();
+
+    email = String(email || "").trim();
+
+
+    if (!name || !mobile) {
+
+        alert(
+            "❌ Name and mobile number are required."
+        );
+
+        return false;
+    }
+
+
+    if (!isValidMobile(mobile)) {
+
+        alert(
+            "📱 Mobile number must contain exactly 10 digits."
+        );
+
+        return false;
+    }
+
+
+    if (!isValidEmail(email)) {
+
+        alert(
+            "📧 Please enter a valid email address."
+        );
+
+        return false;
+    }
+
+
+    // Existing account
+
+    let account =
+        JSON.parse(
+            localStorage.getItem(
+                "smartAttendanceAccount"
+            )
+        );
+
+
+    // Ask PIN if account does not exist
+
+    if (!account) {
+
+        let pin =
+            prompt(
+                "🔐 Create your 4 digit PIN:"
+            );
+
+
+        if (pin === null) {
+
+            return false;
+        }
+
+
+        pin = pin.trim();
+
+
+        if (!isValidPIN(pin)) {
+
+            alert(
+                "❌ PIN must contain exactly 4 digits."
+            );
+
+            return false;
+        }
+
+
+        let confirmPin =
+            prompt(
+                "🔐 Confirm your 4 digit PIN:"
+            );
+
+
+        if (confirmPin === null) {
+
+            return false;
+        }
+
+
+        confirmPin =
+            confirmPin.trim();
+
+
+        if (pin !== confirmPin) {
+
+            alert(
+                "❌ PINs do not match."
+            );
+
+            return false;
+        }
+
+
+        account = {
+
+            name: name,
+
+            mobile: mobile,
+
+            pin: pin,
+
+            roll: roll,
+
+            college: college,
+
+            department: department,
+
+            email: email
+        };
+
+
+        localStorage.setItem(
+            "smartAttendanceAccount",
+            JSON.stringify(account)
+        );
+
+
+        alert(
+            "🎉 Account Created Successfully!\n\n" +
+            "Your 4 digit PIN has been saved.\n\n" +
+            "You can now Login."
+        );
+
+
         return true;
     }
 
-    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(
-        email
+
+    // Update existing account
+
+    account.name = name;
+
+    account.mobile = mobile;
+
+    account.roll = roll;
+
+    account.college = college;
+
+    account.department = department;
+
+    account.email = email;
+
+
+    localStorage.setItem(
+        "smartAttendanceAccount",
+        JSON.stringify(account)
+    );
+
+
+    return true;
+}
+
+
+// =====================================================
+// LOGIN
+// =====================================================
+
+function loginUser() {
+
+    const name =
+        document.getElementById(
+            "loginName"
+        )?.value.trim();
+
+
+    const mobile =
+        document.getElementById(
+            "loginMobile"
+        )?.value.trim();
+
+
+    const pin =
+        document.getElementById(
+            "loginPin"
+        )?.value.trim();
+
+
+    if (!name || !mobile || !pin) {
+
+        alert(
+            "⚠️ Please enter Name, Mobile Number and PIN."
+        );
+
+        return;
+    }
+
+
+    if (!isValidMobile(mobile)) {
+
+        alert(
+            "📱 Mobile number must contain exactly 10 digits."
+        );
+
+        return;
+    }
+
+
+    if (!isValidPIN(pin)) {
+
+        alert(
+            "🔐 PIN must contain exactly 4 digits."
+        );
+
+        return;
+    }
+
+
+    const savedAccount =
+        JSON.parse(
+            localStorage.getItem(
+                "smartAttendanceAccount"
+            )
+        );
+
+
+    if (!savedAccount) {
+
+        alert(
+            "❌ No account found.\n\n" +
+            "Please register your face first."
+        );
+
+        return;
+    }
+
+
+    const savedName =
+        String(savedAccount.name || "")
+            .trim()
+            .toLowerCase();
+
+
+    const enteredName =
+        String(name)
+            .trim()
+            .toLowerCase();
+
+
+    if (
+        savedName === enteredName &&
+        String(savedAccount.mobile) === mobile &&
+        String(savedAccount.pin) === pin
+    ) {
+
+        localStorage.setItem(
+            "smartAttendanceLoggedIn",
+            "true"
+        );
+
+
+        alert(
+            "✅ Login Successful!"
+        );
+
+
+        showDashboard();
+
+
+        displayStudents();
+
+        updateDashboard();
+
+        showCurrentDate();
+
+    } else {
+
+        alert(
+            "❌ Login failed!\n\n" +
+            "Name, Mobile Number or PIN is incorrect."
+        );
+    }
+}
+
+
+// =====================================================
+// SHOW DASHBOARD
+// =====================================================
+
+function showDashboard() {
+
+    const loginPage =
+        document.getElementById(
+            "loginPage"
+        );
+
+
+    const dashboardPage =
+        document.getElementById(
+            "dashboardPage"
+        );
+
+
+    const mainContainer =
+        document.getElementById(
+            "mainContainer"
+        );
+
+
+    if (loginPage) {
+
+        loginPage.style.display =
+            "none";
+    }
+
+
+    if (dashboardPage) {
+
+        dashboardPage.style.display =
+            "block";
+    }
+
+
+    if (mainContainer) {
+
+        mainContainer.style.display =
+            "block";
+    }
+}
+
+
+// =====================================================
+// SHOW LOGIN
+// =====================================================
+
+function showLoginPage() {
+
+    const loginPage =
+        document.getElementById(
+            "loginPage"
+        );
+
+
+    const dashboardPage =
+        document.getElementById(
+            "dashboardPage"
+        );
+
+
+    const mainContainer =
+        document.getElementById(
+            "mainContainer"
+        );
+
+
+    if (loginPage) {
+
+        loginPage.style.display =
+            "flex";
+    }
+
+
+    if (dashboardPage) {
+
+        dashboardPage.style.display =
+            "none";
+    }
+
+
+    if (mainContainer) {
+
+        mainContainer.style.display =
+            "none";
+    }
+}
+
+
+// =====================================================
+// FORGOT PIN
+// =====================================================
+
+function forgotPIN() {
+
+    const savedAccount =
+        JSON.parse(
+            localStorage.getItem(
+                "smartAttendanceAccount"
+            )
+        );
+
+
+    if (!savedAccount) {
+
+        alert(
+            "❌ No account found.\n\n" +
+            "Please register your face/student details first."
+        );
+
+        return;
+    }
+
+
+    const name =
+        prompt(
+            "Enter your registered name:"
+        );
+
+
+    if (name === null) return;
+
+
+    const mobile =
+        prompt(
+            "Enter your registered 10 digit mobile number:"
+        );
+
+
+    if (mobile === null) return;
+
+
+    const cleanName =
+        name.trim();
+
+
+    const cleanMobile =
+        mobile.trim();
+
+
+    if (!cleanName || !cleanMobile) {
+
+        alert(
+            "⚠️ Please enter both name and mobile number."
+        );
+
+        return;
+    }
+
+
+    if (!isValidMobile(cleanMobile)) {
+
+        alert(
+            "📱 Please enter a valid 10 digit mobile number."
+        );
+
+        return;
+    }
+
+
+    const nameMatch =
+        String(savedAccount.name || "")
+            .trim()
+            .toLowerCase() ===
+        cleanName.toLowerCase();
+
+
+    const mobileMatch =
+        String(savedAccount.mobile || "") ===
+        cleanMobile;
+
+
+    if (nameMatch && mobileMatch) {
+
+        alert(
+            "🔐 Your PIN is: " +
+            savedAccount.pin
+        );
+
+    } else {
+
+        alert(
+            "❌ Name and mobile number do not match."
+        );
+    }
+}
+
+
+// =====================================================
+// LOGIN STATUS
+// =====================================================
+
+function checkLoginStatus() {
+
+    const loggedIn =
+        localStorage.getItem(
+            "smartAttendanceLoggedIn"
+        );
+
+
+    if (loggedIn === "true") {
+
+        showDashboard();
+
+        displayStudents();
+
+        updateDashboard();
+
+        showCurrentDate();
+
+    } else {
+
+        showLoginPage();
+    }
+}
+
+
+// =====================================================
+// LOGOUT
+// =====================================================
+
+function logoutUser() {
+
+    localStorage.removeItem(
+        "smartAttendanceLoggedIn"
+    );
+
+
+    location.reload();
+}
+
+
+// =====================================================
+// LOGIN BUTTON SETUP
+// =====================================================
+
+function setupLoginButtons() {
+
+    const loginButton =
+        document.getElementById(
+            "loginButton"
+        );
+
+
+    if (loginButton) {
+
+        loginButton.onclick =
+            loginUser;
+    }
+
+
+    const forgotButton =
+        document.getElementById(
+            "forgotPinButton"
+        );
+
+
+    if (forgotButton) {
+
+        forgotButton.onclick =
+            forgotPIN;
+    }
+}
+
+
+// =====================================================
+// LOGIN PIN SETUP
+// =====================================================
+
+function setupLoginPin() {
+
+    const pin =
+        document.getElementById(
+            "loginPin"
+        );
+
+
+    if (!pin) return;
+
+
+    pin.setAttribute(
+        "maxlength",
+        "4"
+    );
+
+
+    pin.setAttribute(
+        "inputmode",
+        "numeric"
+    );
+
+
+    pin.addEventListener(
+        "input",
+        function() {
+
+            this.value =
+                this.value
+                    .replace(/\D/g, "")
+                    .slice(0, 4);
+        }
     );
 }
+
+
+// =====================================================
+// LOGIN MOBILE SETUP
+// =====================================================
+
+function setupLoginMobile() {
+
+    const mobile =
+        document.getElementById(
+            "loginMobile"
+        );
+
+
+    if (!mobile) return;
+
+
+    mobile.setAttribute(
+        "maxlength",
+        "10"
+    );
+
+
+    mobile.setAttribute(
+        "inputmode",
+        "numeric"
+    );
+
+
+    mobile.addEventListener(
+        "input",
+        function() {
+
+            this.value =
+                this.value
+                    .replace(/\D/g, "")
+                    .slice(0, 10);
+        }
+    );
+}
+
+
+// =====================================================
+// ENTER KEY LOGIN
+// =====================================================
+
+function setupLoginEnterKey() {
+
+    const inputs = [
+
+        "loginName",
+
+        "loginMobile",
+
+        "loginPin"
+
+    ];
+
+
+    inputs.forEach(id => {
+
+        const input =
+            document.getElementById(id);
+
+
+        if (!input) return;
+
+
+        input.addEventListener(
+            "keydown",
+            function(event) {
+
+                if (
+                    event.key ===
+                    "Enter"
+                ) {
+
+                    event.preventDefault();
+
+                    loginUser();
+                }
+            }
+        );
+    });
+}
+
+
+// =====================================================
+// =====================================================
+// STUDENT SYSTEM
+// =====================================================
+// =====================================================
 
 
 // =====================================================
@@ -200,20 +889,24 @@ function addStudent() {
             "studentName"
         )?.value.trim();
 
+
     const roll =
         document.getElementById(
             "studentRoll"
         )?.value.trim();
+
 
     const college =
         document.getElementById(
             "studentCollege"
         )?.value.trim();
 
+
     const department =
         document.getElementById(
             "studentDepartment"
         )?.value.trim();
+
 
     const mobile =
         document.getElementById(
@@ -247,12 +940,34 @@ function addStudent() {
     }
 
 
+    const existing =
+        students.find(
+            s =>
+                String(s.roll) ===
+                String(roll)
+        );
+
+
+    if (existing) {
+
+        alert(
+            "⚠️ A student with this roll number already exists."
+        );
+
+        return;
+    }
+
+
     students.push({
 
         name,
+
         roll,
+
         college,
+
         department,
+
         mobile,
 
         email: "",
@@ -260,7 +975,9 @@ function addStudent() {
         status: "Not Marked",
 
         attendanceDate: "",
+
         attendanceDay: "",
+
         attendanceTime: ""
     });
 
@@ -273,20 +990,33 @@ function addStudent() {
 
 
     [
+
         "studentName",
+
         "studentRoll",
+
         "studentCollege",
+
         "studentDepartment",
+
         "studentMobile"
+
     ].forEach(id => {
 
         const element =
             document.getElementById(id);
 
+
         if (element) {
+
             element.value = "";
         }
     });
+
+
+    alert(
+        "✅ Student added successfully!"
+    );
 }
 
 
@@ -301,10 +1031,12 @@ function displayStudents() {
             "studentList"
         );
 
+
     const searchElement =
         document.getElementById(
             "searchStudent"
         );
+
 
     if (!list) return;
 
@@ -325,15 +1057,16 @@ function displayStudents() {
 
             return (
 
-                (student.name || "")
+                String(student.name || "")
                     .toLowerCase()
                     .includes(search)
 
                 ||
 
-                (student.roll || "")
+                String(student.roll || "")
                     .toLowerCase()
                     .includes(search)
+
             );
         });
 
@@ -357,6 +1090,7 @@ function displayStudents() {
             document.createElement(
                 "div"
             );
+
 
         row.className =
             "student-row";
@@ -458,6 +1192,7 @@ function displayStudents() {
                 </button>
 
             </div>
+
         `;
 
 
@@ -479,18 +1214,18 @@ function markPresent(index) {
     const attendance =
         getAttendanceDateTime();
 
-    const dateKey =
-        getDateKey();
-
 
     students[index].status =
         "Present";
 
+
     students[index].attendanceDate =
         attendance.date;
 
+
     students[index].attendanceDay =
         attendance.day;
+
 
     students[index].attendanceTime =
         attendance.time;
@@ -527,11 +1262,14 @@ function markAbsent(index) {
     students[index].status =
         "Absent";
 
+
     students[index].attendanceDate =
         attendance.date;
 
+
     students[index].attendanceDay =
         attendance.day;
+
 
     students[index].attendanceTime =
         attendance.time;
@@ -569,8 +1307,13 @@ function saveStudentDailyAttendance(
     if (!attendanceHistory[dateKey]) {
 
         attendanceHistory[dateKey] = {
-            date: attendance.date,
-            day: attendance.day,
+
+            date:
+                attendance.date,
+
+            day:
+                attendance.day,
+
             students: {}
         };
     }
@@ -579,14 +1322,26 @@ function saveStudentDailyAttendance(
     attendanceHistory[dateKey]
         .students[student.roll] = {
 
-            name: student.name,
-            roll: student.roll,
-            college: student.college,
-            department: student.department,
-            mobile: student.mobile || "",
-            email: student.email || "",
+            name:
+                student.name,
 
-            status: status,
+            roll:
+                student.roll,
+
+            college:
+                student.college,
+
+            department:
+                student.department,
+
+            mobile:
+                student.mobile || "",
+
+            email:
+                student.email || "",
+
+            status:
+                status,
 
             time:
                 status === "Present"
@@ -613,6 +1368,7 @@ function deleteStudent(index) {
             "Delete this student?"
         )
     ) {
+
         return;
     }
 
@@ -624,15 +1380,13 @@ function deleteStudent(index) {
     students.splice(index, 1);
 
 
-    // Remove student from attendance history
-
     Object.keys(
         attendanceHistory
     ).forEach(dateKey => {
 
         if (
-            attendanceHistory[dateKey]
-                .students &&
+            attendanceHistory[dateKey] &&
+            attendanceHistory[dateKey].students &&
             attendanceHistory[dateKey]
                 .students[roll]
         ) {
@@ -666,13 +1420,17 @@ function updateDashboard() {
 
     const present =
         students.filter(
-            s => s.status === "Present"
+            s =>
+                s.status ===
+                "Present"
         ).length;
 
 
     const absent =
         students.filter(
-            s => s.status === "Absent"
+            s =>
+                s.status ===
+                "Absent"
         ).length;
 
 
@@ -689,15 +1447,18 @@ function updateDashboard() {
             "totalStudents"
         );
 
+
     const presentElement =
         document.getElementById(
             "presentStudents"
         );
 
+
     const absentElement =
         document.getElementById(
             "absentStudents"
         );
+
 
     const percentageElement =
         document.getElementById(
@@ -735,7 +1496,14 @@ function updateDashboard() {
 
 
 // =====================================================
-// LOAD FACE MODELS
+// =====================================================
+// FACE API
+// =====================================================
+// =====================================================
+
+
+// =====================================================
+// LOAD MODELS
 // =====================================================
 
 async function loadFaceModels() {
@@ -752,7 +1520,7 @@ async function loadFaceModels() {
     ) {
 
         console.error(
-            "face-api.js not loaded."
+            "face-api.js is not loaded."
         );
 
         return false;
@@ -763,21 +1531,32 @@ async function loadFaceModels() {
 
         await faceapi.nets
             .tinyFaceDetector
-            .loadFromUri(MODEL_URL);
+            .loadFromUri(
+                MODEL_URL
+            );
 
 
         await faceapi.nets
             .faceLandmark68Net
-            .loadFromUri(MODEL_URL);
+            .loadFromUri(
+                MODEL_URL
+            );
 
 
         await faceapi.nets
             .faceRecognitionNet
-            .loadFromUri(MODEL_URL);
+            .loadFromUri(
+                MODEL_URL
+            );
 
 
         faceModelLoaded =
             true;
+
+
+        console.log(
+            "Face models loaded successfully."
+        );
 
 
         return true;
@@ -789,13 +1568,14 @@ async function loadFaceModels() {
             error
         );
 
+
         return false;
     }
 }
 
 
 // =====================================================
-// CAMERA START
+// START CAMERA
 // =====================================================
 
 async function startCameraForVideo(
@@ -807,6 +1587,7 @@ async function startCameraForVideo(
         document.getElementById(
             videoId
         );
+
 
     const status =
         document.getElementById(
@@ -825,6 +1606,19 @@ async function startCameraForVideo(
     }
 
 
+    if (
+        !navigator.mediaDevices ||
+        !navigator.mediaDevices.getUserMedia
+    ) {
+
+        alert(
+            "❌ Camera is not supported by this browser."
+        );
+
+        return null;
+    }
+
+
     try {
 
         const stream =
@@ -833,7 +1627,8 @@ async function startCameraForVideo(
 
                     video: {
 
-                        facingMode: "user",
+                        facingMode:
+                            "user",
 
                         width: {
                             ideal: 640
@@ -855,8 +1650,10 @@ async function startCameraForVideo(
         video.autoplay =
             true;
 
+
         video.muted =
             true;
+
 
         video.playsInline =
             true;
@@ -874,7 +1671,6 @@ async function startCameraForVideo(
 
         return stream;
 
-
     } catch (error) {
 
         console.error(
@@ -891,7 +1687,8 @@ async function startCameraForVideo(
 
 
         alert(
-            "Camera could not start. Please allow camera permission."
+            "❌ Camera could not start.\n\n" +
+            "Please allow camera permission."
         );
 
 
@@ -951,28 +1748,30 @@ async function startAutomaticFaceRegistration() {
             "faceName"
         )?.value.trim();
 
+
     const roll =
         document.getElementById(
             "faceRoll"
         )?.value.trim();
+
 
     const college =
         document.getElementById(
             "collegeName"
         )?.value.trim();
 
+
     const department =
         document.getElementById(
             "departmentName"
         )?.value.trim();
+
 
     const mobile =
         document.getElementById(
             "faceMobile"
         )?.value.trim();
 
-
-    // Optional email
 
     const emailElement =
         document.getElementById(
@@ -986,20 +1785,17 @@ async function startAutomaticFaceRegistration() {
             : "";
 
 
-    const video =
-        document.getElementById(
-            "registrationCamera"
-        );
-
     const status =
         document.getElementById(
             "registrationStatus"
         );
 
+
     const message =
         document.getElementById(
             "registrationMessage"
         );
+
 
     const button =
         document.getElementById(
@@ -1019,18 +1815,12 @@ async function startAutomaticFaceRegistration() {
 
             message.innerHTML = `
 
-                <div class="success-message"
-                     style="
-                        background:#fff7ed;
-                        border-color:#f97316;
-                        color:#9a3412;
-                     ">
+                <div class="success-message">
 
                     ⚠️ Please fill all
                     student details.
 
                 </div>
-
             `;
         }
 
@@ -1038,20 +1828,13 @@ async function startAutomaticFaceRegistration() {
     }
 
 
-    // Mobile must be exactly 10 digits
-
     if (!isValidMobile(mobile)) {
 
         if (message) {
 
             message.innerHTML = `
 
-                <div class="success-message"
-                     style="
-                        background:#fff7ed;
-                        border-color:#f97316;
-                        color:#9a3412;
-                     ">
+                <div class="success-message">
 
                     📱 Mobile number must
                     contain exactly 10 digits.
@@ -1064,20 +1847,13 @@ async function startAutomaticFaceRegistration() {
     }
 
 
-    // Optional email validation
-
     if (!isValidEmail(email)) {
 
         if (message) {
 
             message.innerHTML = `
 
-                <div class="success-message"
-                     style="
-                        background:#fff7ed;
-                        border-color:#f97316;
-                        color:#9a3412;
-                     ">
+                <div class="success-message">
 
                     📧 Please enter a valid
                     email address.
@@ -1114,8 +1890,15 @@ async function startAutomaticFaceRegistration() {
             "registerFaceButton"
         );
 
+
         return;
     }
+
+
+    const video =
+        document.getElementById(
+            "registrationCamera"
+        );
 
 
     if (!video?.srcObject) {
@@ -1132,6 +1915,7 @@ async function startAutomaticFaceRegistration() {
             buttonEnable(
                 "registerFaceButton"
             );
+
 
             return;
         }
@@ -1184,6 +1968,7 @@ async function detectRegistrationFace(
             "registrationCamera"
         );
 
+
     const status =
         document.getElementById(
             "registrationStatus"
@@ -1194,6 +1979,12 @@ async function detectRegistrationFace(
 
         registrationRunning =
             false;
+
+
+        buttonEnable(
+            "registerFaceButton"
+        );
+
 
         return;
     }
@@ -1208,9 +1999,11 @@ async function detectRegistrationFace(
                     new faceapi
                         .TinyFaceDetectorOptions({
 
-                            inputSize: 320,
+                            inputSize:
+                                320,
 
-                            scoreThreshold: 0.5
+                            scoreThreshold:
+                                0.5
                         })
                 )
                 .withFaceLandmarks()
@@ -1232,27 +2025,37 @@ async function detectRegistrationFace(
                 );
 
 
-            // Save face
+            // Save registered face
+
+            const registeredData = {
+
+                name,
+
+                roll,
+
+                college,
+
+                department,
+
+                mobile,
+
+                email,
+
+                descriptor
+            };
+
 
             localStorage.setItem(
                 "registeredFaceStudent",
-                JSON.stringify({
-
-                    name,
-                    roll,
-                    college,
-                    department,
-                    mobile,
-                    email,
-
-                    descriptor
-                })
+                JSON.stringify(
+                    registeredData
+                )
             );
 
 
-            // Find existing student
+            // Find student
 
-            const existing =
+            let existing =
                 students.find(
                     s =>
                         String(s.roll) ===
@@ -1282,32 +2085,70 @@ async function detectRegistrationFace(
                 students.push({
 
                     name,
+
                     roll,
+
                     college,
+
                     department,
+
                     mobile,
+
                     email,
 
                     status:
                         "Not Marked",
 
-                    attendanceDate: "",
-                    attendanceDay: "",
-                    attendanceTime: ""
+                    attendanceDate:
+                        "",
+
+                    attendanceDay:
+                        "",
+
+                    attendanceTime:
+                        ""
                 });
             }
 
 
             saveStudents();
 
+
+            // CREATE LOGIN ACCOUNT
+
+            const accountCreated =
+                createSmartAttendanceAccount(
+                    name,
+                    mobile,
+                    roll,
+                    college,
+                    department,
+                    email
+                );
+
+
+            if (!accountCreated) {
+
+                registrationRunning =
+                    false;
+
+
+                buttonEnable(
+                    "registerFaceButton"
+                );
+
+
+                return;
+            }
+
+
             displayStudents();
 
             updateDashboard();
 
 
-            // Success
-
             registrationSuccessful();
+
 
             return;
         }
@@ -1321,7 +2162,7 @@ async function detectRegistrationFace(
 
 
         setTimeout(
-            () => {
+            function() {
 
                 detectRegistrationFace(
                     name,
@@ -1335,7 +2176,6 @@ async function detectRegistrationFace(
             },
             300
         );
-
 
     } catch (error) {
 
@@ -1378,6 +2218,7 @@ function registrationSuccessful() {
             "registrationStatus"
         );
 
+
     const message =
         document.getElementById(
             "registrationMessage"
@@ -1395,13 +2236,9 @@ function registrationSuccessful() {
 
         message.innerHTML = `
 
-            <div
-                class="success-message"
-            >
+            <div class="success-message">
 
-                <div
-                    class="success-icon"
-                >
+                <div class="success-icon">
                     ✅
                 </div>
 
@@ -1411,7 +2248,11 @@ function registrationSuccessful() {
 
                 <br><br>
 
-                🎉 Face Registration Completed
+                🎉 Account Created Successfully!
+
+                <br><br>
+
+                You can now Login.
 
             </div>
         `;
@@ -1419,8 +2260,9 @@ function registrationSuccessful() {
 
 
     alert(
-        "✅ Face Captured Successfully!\n\n" +
-        "🎉 Face Registration Completed"
+        "✅ Face Registration Completed!\n\n" +
+        "🎉 Your Smart Attendance account has been created.\n\n" +
+        "Please Login using your Name, Mobile and PIN."
     );
 
 
@@ -1447,6 +2289,7 @@ function stopRegistrationCamera() {
                 track =>
                     track.stop()
             );
+
 
         registrationStream =
             null;
@@ -1476,6 +2319,7 @@ function buttonEnable(id) {
     const button =
         document.getElementById(id);
 
+
     if (button) {
 
         button.disabled =
@@ -1495,15 +2339,18 @@ async function startFaceAttendance() {
             "attendanceCamera"
         );
 
+
     const status =
         document.getElementById(
             "attendanceStatus"
         );
 
+
     const button =
         document.getElementById(
             "attendanceButton"
         );
+
 
     const result =
         document.getElementById(
@@ -1523,14 +2370,7 @@ async function startFaceAttendance() {
 
             result.innerHTML = `
 
-                <div
-                    class="success-message"
-                    style="
-                        background:#fff7ed;
-                        border-color:#f97316;
-                        color:#9a3412;
-                    "
-                >
+                <div class="success-message">
 
                     ❌ No face registered.
 
@@ -1541,6 +2381,7 @@ async function startFaceAttendance() {
                 </div>
             `;
         }
+
 
         return;
     }
@@ -1560,11 +2401,31 @@ async function startFaceAttendance() {
 
         console.error(error);
 
+
         if (result) {
 
             result.innerText =
                 "❌ Registered face data is corrupted.";
         }
+
+
+        return;
+    }
+
+
+    if (
+        !registeredStudent.descriptor ||
+        !Array.isArray(
+            registeredStudent.descriptor
+        )
+    ) {
+
+        if (result) {
+
+            result.innerText =
+                "❌ Face registration data is invalid.";
+        }
+
 
         return;
     }
@@ -1600,6 +2461,7 @@ async function startFaceAttendance() {
             "attendanceButton"
         );
 
+
         return;
     }
 
@@ -1618,6 +2480,7 @@ async function startFaceAttendance() {
             buttonEnable(
                 "attendanceButton"
             );
+
 
             return;
         }
@@ -1642,7 +2505,7 @@ async function startFaceAttendance() {
 
 
 // =====================================================
-// AUTOMATIC ATTENDANCE DETECTION
+// DETECT ATTENDANCE FACE
 // =====================================================
 
 async function detectAttendanceFace(
@@ -1660,6 +2523,7 @@ async function detectAttendanceFace(
             "attendanceCamera"
         );
 
+
     const status =
         document.getElementById(
             "attendanceStatus"
@@ -1675,9 +2539,11 @@ async function detectAttendanceFace(
                     new faceapi
                         .TinyFaceDetectorOptions({
 
-                            inputSize: 320,
+                            inputSize:
+                                320,
 
-                            scoreThreshold: 0.5
+                            scoreThreshold:
+                                0.5
                         })
                 )
                 .withFaceLandmarks()
@@ -1694,7 +2560,7 @@ async function detectAttendanceFace(
 
 
             setTimeout(
-                () => {
+                function() {
 
                     detectAttendanceFace(
                         registeredStudent
@@ -1703,6 +2569,7 @@ async function detectAttendanceFace(
                 },
                 300
             );
+
 
             return;
         }
@@ -1742,13 +2609,6 @@ async function detectAttendanceFace(
 
         } else {
 
-            if (status) {
-
-                status.innerText =
-                    "Face does not match ❌";
-            }
-
-
             attendanceRunning =
                 false;
 
@@ -1759,6 +2619,13 @@ async function detectAttendanceFace(
             buttonEnable(
                 "attendanceButton"
             );
+
+
+            if (status) {
+
+                status.innerText =
+                    "Face does not match ❌";
+            }
 
 
             const result =
@@ -1792,10 +2659,9 @@ async function detectAttendanceFace(
 
 
             alert(
-                "❌ Face does not match.\nPlease try again."
+                "❌ Face does not match.\n\nPlease try again."
             );
         }
-
 
     } catch (error) {
 
@@ -1839,19 +2705,11 @@ function showAttendanceSuccess(
         getAttendanceDateTime();
 
 
-    const dateKey =
-        getDateKey();
-
-
     const result =
         document.getElementById(
             "attendanceResult"
         );
 
-
-    // =================================================
-    // FIND STUDENT
-    // =================================================
 
     let index =
         students.findIndex(
@@ -1861,28 +2719,29 @@ function showAttendanceSuccess(
         );
 
 
-    // =================================================
-    // UPDATE STUDENT
-    // =================================================
-
     if (index !== -1) {
 
         students[index].status =
             "Present";
 
+
         students[index].attendanceDate =
             attendance.date;
+
 
         students[index].attendanceDay =
             attendance.day;
 
+
         students[index].attendanceTime =
             attendance.time;
+
 
         students[index].mobile =
             student.mobile ||
             students[index].mobile ||
             "";
+
 
         students[index].email =
             student.email ||
@@ -1930,10 +2789,6 @@ function showAttendanceSuccess(
     }
 
 
-    // =================================================
-    // SAVE TODAY'S ATTENDANCE
-    // =================================================
-
     saveStudentDailyAttendance(
         students[index],
         "Present",
@@ -1943,22 +2798,12 @@ function showAttendanceSuccess(
 
     saveStudents();
 
-    saveAttendanceHistory();
-
-
-    // =================================================
-    // EMAIL
-    // =================================================
 
     const email =
         student.email ||
         students[index].email ||
         "";
 
-
-    // =================================================
-    // EMAIL BUTTON
-    // =================================================
 
     let emailButton = "";
 
@@ -2029,26 +2874,17 @@ function showAttendanceSuccess(
             >
                 📧 Send Attendance Email
             </a>
-
         `;
     }
 
-
-    // =================================================
-    // SUCCESS MESSAGE
-    // =================================================
 
     if (result) {
 
         result.innerHTML = `
 
-            <div
-                class="success-message"
-            >
+            <div class="success-message">
 
-                <div
-                    class="success-icon"
-                >
+                <div class="success-icon">
                     ✅
                 </div>
 
@@ -2128,10 +2964,6 @@ function showAttendanceSuccess(
     }
 
 
-    // =================================================
-    // STATUS
-    // =================================================
-
     const status =
         document.getElementById(
             "attendanceStatus"
@@ -2145,18 +2977,10 @@ function showAttendanceSuccess(
     }
 
 
-    // =================================================
-    // UPDATE PAGE
-    // =================================================
-
     displayStudents();
 
     updateDashboard();
 
-
-    // =================================================
-    // STOP CAMERA
-    // =================================================
 
     stopAttendanceCamera();
 
@@ -2165,10 +2989,6 @@ function showAttendanceSuccess(
         "attendanceButton"
     );
 
-
-    // =================================================
-    // POPUP
-    // =================================================
 
     alert(
 
@@ -2192,7 +3012,6 @@ function showAttendanceSuccess(
 
         "🕐 Time: " +
         attendance.time
-
     );
 }
 
@@ -2211,6 +3030,7 @@ function stopAttendanceCamera() {
                 track =>
                     track.stop()
             );
+
 
         attendanceStream =
             null;
@@ -2232,7 +3052,9 @@ function stopAttendanceCamera() {
 
 
 // =====================================================
-// THREE LINE MENU
+// =====================================================
+// MENU
+// =====================================================
 // =====================================================
 
 function toggleMenu() {
@@ -2253,7 +3075,7 @@ function toggleMenu() {
 
 
 // =====================================================
-// EDIT MY DETAILS
+// EDIT DETAILS
 // =====================================================
 
 function openEditDetails() {
@@ -2275,46 +3097,54 @@ function openEditDetails() {
 
     if (saved) {
 
-        const student =
-            JSON.parse(saved);
+        try {
+
+            const student =
+                JSON.parse(saved);
 
 
-        const fields = {
+            const fields = {
 
-            editName:
-                student.name || "",
+                editName:
+                    student.name || "",
 
-            editRoll:
-                student.roll || "",
+                editRoll:
+                    student.roll || "",
 
-            editCollege:
-                student.college || "",
+                editCollege:
+                    student.college || "",
 
-            editDepartment:
-                student.department || "",
+                editDepartment:
+                    student.department || "",
 
-            editMobile:
-                student.mobile || "",
+                editMobile:
+                    student.mobile || "",
 
-            editEmail:
-                student.email || ""
-        };
+                editEmail:
+                    student.email || ""
+            };
 
 
-        Object.keys(fields)
-            .forEach(id => {
+            Object.keys(fields)
+                .forEach(id => {
 
-                const element =
-                    document.getElementById(
-                        id
-                    );
+                    const element =
+                        document.getElementById(
+                            id
+                        );
 
-                if (element) {
 
-                    element.value =
-                        fields[id];
-                }
-            });
+                    if (element) {
+
+                        element.value =
+                            fields[id];
+                    }
+                });
+
+        } catch (error) {
+
+            console.error(error);
+        }
     }
 
 
@@ -2356,25 +3186,30 @@ function saveEditedDetails() {
             "editName"
         )?.value.trim();
 
+
     const roll =
         document.getElementById(
             "editRoll"
         )?.value.trim();
+
 
     const college =
         document.getElementById(
             "editCollege"
         )?.value.trim();
 
+
     const department =
         document.getElementById(
             "editDepartment"
         )?.value.trim();
 
+
     const mobile =
         document.getElementById(
             "editMobile"
         )?.value.trim();
+
 
     const emailElement =
         document.getElementById(
@@ -2449,6 +3284,7 @@ function saveEditedDetails() {
         students[index].email =
             email;
 
+
         saveStudents();
     }
 
@@ -2461,33 +3297,78 @@ function saveEditedDetails() {
 
     if (saved) {
 
-        const student =
-            JSON.parse(saved);
+        try {
+
+            const student =
+                JSON.parse(saved);
 
 
-        student.name =
-            name;
+            student.name =
+                name;
 
-        student.roll =
-            roll;
+            student.roll =
+                roll;
 
-        student.college =
-            college;
+            student.college =
+                college;
 
-        student.department =
-            department;
+            student.department =
+                department;
 
-        student.mobile =
-            mobile;
+            student.mobile =
+                mobile;
 
-        student.email =
-            email;
+            student.email =
+                email;
 
 
-        localStorage.setItem(
-            "registeredFaceStudent",
-            JSON.stringify(student)
-        );
+            localStorage.setItem(
+                "registeredFaceStudent",
+                JSON.stringify(student)
+            );
+
+
+            // Update login account too
+
+            const account =
+                JSON.parse(
+                    localStorage.getItem(
+                        "smartAttendanceAccount"
+                    )
+                );
+
+
+            if (account) {
+
+                account.name =
+                    name;
+
+                account.mobile =
+                    mobile;
+
+                account.roll =
+                    roll;
+
+                account.college =
+                    college;
+
+                account.department =
+                    department;
+
+                account.email =
+                    email;
+
+
+                localStorage.setItem(
+                    "smartAttendanceAccount",
+                    JSON.stringify(account)
+                );
+            }
+
+        } catch (error) {
+
+            console.error(error);
+        }
     }
 
 
@@ -2505,7 +3386,7 @@ function saveEditedDetails() {
 
 
 // =====================================================
-// ADD / UPDATE MOBILE
+// MOBILE UPDATE
 // =====================================================
 
 function openMobileUpdate() {
@@ -2563,6 +3444,27 @@ function openMobileUpdate() {
     );
 
 
+    const account =
+        JSON.parse(
+            localStorage.getItem(
+                "smartAttendanceAccount"
+            )
+        );
+
+
+    if (account) {
+
+        account.mobile =
+            cleanMobile;
+
+
+        localStorage.setItem(
+            "smartAttendanceAccount",
+            JSON.stringify(account)
+        );
+    }
+
+
     const index =
         students.findIndex(
             s =>
@@ -2575,6 +3477,7 @@ function openMobileUpdate() {
 
         students[index].mobile =
             cleanMobile;
+
 
         saveStudents();
     }
@@ -2648,6 +3551,27 @@ function openEmailUpdate() {
     );
 
 
+    const account =
+        JSON.parse(
+            localStorage.getItem(
+                "smartAttendanceAccount"
+            )
+        );
+
+
+    if (account) {
+
+        account.email =
+            cleanEmail;
+
+
+        localStorage.setItem(
+            "smartAttendanceAccount",
+            JSON.stringify(account)
+        );
+    }
+
+
     const index =
         students.findIndex(
             s =>
@@ -2660,6 +3584,7 @@ function openEmailUpdate() {
 
         students[index].email =
             cleanEmail;
+
 
         saveStudents();
     }
@@ -2684,6 +3609,7 @@ function showRegisteredStudents() {
         document.getElementById(
             "studentsModal"
         );
+
 
     const list =
         document.getElementById(
@@ -2792,6 +3718,13 @@ function closeRegisteredStudents() {
 
 
 // =====================================================
+// =====================================================
+// ATTENDANCE HISTORY
+// =====================================================
+// =====================================================
+
+
+// =====================================================
 // CHECK ATTENDANCE
 // =====================================================
 
@@ -2815,12 +3748,11 @@ function showCheckAttendance() {
 
     calculateAttendanceSummary();
 
+
     modal.classList.add(
         "show"
     );
 
-
-    // Close menu
 
     const menu =
         document.getElementById(
@@ -2900,10 +3832,12 @@ function calculateAttendanceSummary() {
             "attendanceTotalDays"
         );
 
+
     const presentElement =
         document.getElementById(
             "attendancePresentDays"
         );
+
 
     const absentElement =
         document.getElementById(
@@ -2957,7 +3891,9 @@ function showAttendanceHistory() {
     const dates =
         Object.keys(
             attendanceHistory
-        ).sort().reverse();
+        )
+        .sort()
+        .reverse();
 
 
     if (dates.length === 0) {
@@ -3166,7 +4102,7 @@ function closeAdminDetails() {
 
 
 // =====================================================
-// CLOSE MODALS WHEN CLICKING OUTSIDE
+// CLOSE MODALS OUTSIDE CLICK
 // =====================================================
 
 window.addEventListener(
@@ -3179,18 +4115,20 @@ window.addEventListener(
             );
 
 
-        modals.forEach(modal => {
+        modals.forEach(
+            modal => {
 
-            if (
-                event.target ===
-                modal
-            ) {
+                if (
+                    event.target ===
+                    modal
+                ) {
 
-                modal.classList.remove(
-                    "show"
-                );
+                    modal.classList.remove(
+                        "show"
+                    );
+                }
             }
-        });
+        );
     }
 );
 
@@ -3204,8 +4142,13 @@ function setupMobileInputLimit() {
     const ids = [
 
         "faceMobile",
+
         "studentMobile",
-        "editMobile"
+
+        "editMobile",
+
+        "loginMobile"
+
     ];
 
 
@@ -3224,6 +4167,7 @@ function setupMobileInputLimit() {
             "maxlength",
             "10"
         );
+
 
         input.setAttribute(
             "inputmode",
@@ -3252,1049 +4196,74 @@ function setupMobileInputLimit() {
 
 
 // =====================================================
+// SEARCH STUDENT
+// =====================================================
+
+function setupStudentSearch() {
+
+    const search =
+        document.getElementById(
+            "searchStudent"
+        );
+
+
+    if (!search) return;
+
+
+    search.addEventListener(
+        "input",
+        displayStudents
+    );
+}
+
+
+// =====================================================
+// =====================================================
 // PAGE LOAD
+// =====================================================
 // =====================================================
 
 window.addEventListener(
     "load",
     async function() {
 
-        displayStudents();
+        console.log(
+            "Smart Attendance System loaded."
+        );
 
-        updateDashboard();
 
-        showCurrentDate();
+        // Basic UI
+
+        setupLoginButtons();
+
+        setupLoginPin();
+
+        setupLoginMobile();
+
+        setupLoginEnterKey();
 
         setupMobileInputLimit();
 
-
-        // Load models
-// =====================================================
-// LOGIN SYSTEM
-// =====================================================
-
-function loginUser() {
-
-    const name =
-        document.getElementById("loginName")?.value.trim();
-
-    const mobile =
-        document.getElementById("loginMobile")?.value.trim();
-
-    const pin =
-        document.getElementById("loginPin")?.value.trim();
+        setupStudentSearch();
 
 
-    if (!name || !mobile || !pin) {
-
-        alert("⚠️ Please enter Name, Mobile Number and PIN.");
-        return;
-    }
-
-
-    if (!/^[0-9]{10}$/.test(mobile)) {
-
-        alert("📱 Mobile number must contain exactly 10 digits.");
-        return;
-    }
-
-
-    if (!/^[0-9]{4}$/.test(pin)) {
-
-        alert("🔐 PIN must contain exactly 4 digits.");
-        return;
-    }
-
-
-    // Get saved login account
-    const savedAccount =
-        JSON.parse(
-            localStorage.getItem("smartAttendanceAccount")
-        );
-
-
-    // If no account exists
-    if (!savedAccount) {
-
-        alert(
-            "❌ No account found.\n\n" +
-            "Please register your face/student details first."
-        );
-
-        return;
-    }
-
-
-    // Check login details
-    if (
-        savedAccount.name === name &&
-        savedAccount.mobile === mobile &&
-        savedAccount.pin === pin
-    ) {
-
-        localStorage.setItem(
-            "smartAttendanceLoggedIn",
-            "true"
-        );
-
-
-        alert("✅ Login Successful!");
-
-
-        // Hide login page
-        const loginPage =
-            document.getElementById("loginPage");
-
-        if (loginPage) {
-
-            loginPage.style.display = "none";
-        }
-
-
-        // Show dashboard
-        const dashboard =
-            document.getElementById("dashboardPage");
-
-        if (dashboard) {
-
-            dashboard.style.display = "block";
-        }
-
-
-        // If your HTML uses another dashboard container
-        const mainContainer =
-            document.getElementById("mainContainer");
-
-        if (mainContainer) {
-
-            mainContainer.style.display = "block";
-        }
-
+        // Student dashboard
 
         displayStudents();
+
         updateDashboard();
+
         showCurrentDate();
 
-    } else {
 
-        alert(
-            "❌ Login failed!\n\n" +
-            "Name, Mobile Number or PIN is incorrect."
-        );
-    }
-}
-
-
-// =====================================================
-// FORGOT PIN
-// =====================================================
-
-function forgotPIN() {
-
-    const name =
-        prompt("Enter your registered name:");
-
-    if (!name) return;
-
-
-    const mobile =
-        prompt("Enter your registered 10 digit mobile number:");
-
-    if (!mobile) return;
-
-
-    const cleanMobile =
-        mobile.trim();
-
-
-    if (!/^[0-9]{10}$/.test(cleanMobile)) {
-
-        alert(
-            "📱 Please enter a valid 10 digit mobile number."
-        );
-
-        return;
-    }
-
-
-    const savedAccount =
-        JSON.parse(
-            localStorage.getItem("smartAttendanceAccount")
-        );
-
-
-    if (!savedAccount) {
-
-        alert(
-            "❌ No account found."
-        );
-
-        return;
-    }
-
-
-    if (
-        savedAccount.name === name.trim() &&
-        savedAccount.mobile === cleanMobile
-    ) {
-
-        alert(
-            "🔐 Your PIN is: " +
-            savedAccount.pin
-        );
-
-    } else {
-
-        alert(
-            "❌ Name and mobile number do not match."
-        );
-    }
-}
-
-
-// =====================================================
-// LOGIN PAGE CHECK
-// =====================================================
-
-function checkLoginStatus() {
-
-    const loggedIn =
-        localStorage.getItem(
-            "smartAttendanceLoggedIn"
-        );
-
-
-    const loginPage =
-        document.getElementById("loginPage");
-
-    const dashboardPage =
-        document.getElementById("dashboardPage");
-
-
-    if (loggedIn === "true") {
-
-        if (loginPage) {
-
-            loginPage.style.display =
-                "none";
-        }
-
-
-        if (dashboardPage) {
-
-            dashboardPage.style.display =
-                "block";
-        }
-
-    } else {
-
-        if (loginPage) {
-
-            loginPage.style.display =
-                "flex";
-        }
-
-
-        if (dashboardPage) {
-
-            dashboardPage.style.display =
-                "none";
-        }
-    }
-}
-
-
-// =====================================================
-// LOGOUT
-// =====================================================
-
-function logoutUser() {
-
-    localStorage.removeItem(
-        "smartAttendanceLoggedIn"
-    );
-
-
-    location.reload();
-}
-
-
-// =====================================================
-// LOGIN BUTTON CONNECTION
-// =====================================================
-
-function setupLoginButtons() {
-
-    const loginButton =
-        document.getElementById(
-            "loginButton"
-        );
-
-
-    if (loginButton) {
-
-        loginButton.addEventListener(
-            "click",
-            loginUser
-        );
-    }
-
-
-    const forgotButton =
-        document.getElementById(
-            "forgotPinButton"
-        );
-
-
-    if (forgotButton) {
-
-        forgotButton.addEventListener(
-            "click",
-            forgotPIN
-        );
-    }
-}
-
-
-// =====================================================
-// LOGIN PIN INPUT
-// =====================================================
-
-function setupLoginPin() {
-
-    const pin =
-        document.getElementById(
-            "loginPin"
-        );
-
-
-    if (!pin) return;
-
-
-    pin.setAttribute(
-        "maxlength",
-        "4"
-    );
-
-    pin.setAttribute(
-        "inputmode",
-        "numeric"
-    );
-
-
-    pin.addEventListener(
-        "input",
-        function() {
-
-            this.value =
-                this.value
-                    .replace(/\D/g, "")
-                    .slice(0, 4);
-        }
-    );
-}
-
-
-// =====================================================
-// PAGE LOAD - LOGIN
-// =====================================================
-
-window.addEventListener(
-    "load",
-    function() {
-
-        setupLoginButtons();
-
-        setupLoginPin();
+        // Login check
 
         checkLoginStatus();
 
-    }
-);// =====================================================
-// LOGIN SYSTEM
-// =====================================================
 
-function loginUser() {
+        // Face models
 
-    const name =
-        document.getElementById("loginName")?.value.trim();
-
-    const mobile =
-        document.getElementById("loginMobile")?.value.trim();
-
-    const pin =
-        document.getElementById("loginPin")?.value.trim();
-
-
-    if (!name || !mobile || !pin) {
-
-        alert("⚠️ Please enter Name, Mobile Number and PIN.");
-        return;
-    }
-
-
-    if (!/^[0-9]{10}$/.test(mobile)) {
-
-        alert("📱 Mobile number must contain exactly 10 digits.");
-        return;
-    }
-
-
-    if (!/^[0-9]{4}$/.test(pin)) {
-
-        alert("🔐 PIN must contain exactly 4 digits.");
-        return;
-    }
-
-
-    // Get saved login account
-    const savedAccount =
-        JSON.parse(
-            localStorage.getItem("smartAttendanceAccount")
-        );
-
-
-    // If no account exists
-    if (!savedAccount) {
-
-        alert(
-            "❌ No account found.\n\n" +
-            "Please register your face/student details first."
-        );
-
-        return;
-    }
-
-
-    // Check login details
-    if (
-        savedAccount.name === name &&
-        savedAccount.mobile === mobile &&
-        savedAccount.pin === pin
-    ) {
-
-        localStorage.setItem(
-            "smartAttendanceLoggedIn",
-            "true"
-        );
-
-
-        alert("✅ Login Successful!");
-
-
-        // Hide login page
-        const loginPage =
-            document.getElementById("loginPage");
-
-        if (loginPage) {
-
-            loginPage.style.display = "none";
-        }
-
-
-        // Show dashboard
-        const dashboard =
-            document.getElementById("dashboardPage");
-
-        if (dashboard) {
-
-            dashboard.style.display = "block";
-        }
-
-
-        // If your HTML uses another dashboard container
-        const mainContainer =
-            document.getElementById("mainContainer");
-
-        if (mainContainer) {
-
-            mainContainer.style.display = "block";
-        }
-
-
-        displayStudents();
-        updateDashboard();
-        showCurrentDate();
-
-    } else {
-
-        alert(
-            "❌ Login failed!\n\n" +
-            "Name, Mobile Number or PIN is incorrect."
-        );
-    }
-}
-
-
-// =====================================================
-// FORGOT PIN
-// =====================================================
-
-function forgotPIN() {
-
-    const name =
-        prompt("Enter your registered name:");
-
-    if (!name) return;
-
-
-    const mobile =
-        prompt("Enter your registered 10 digit mobile number:");
-
-    if (!mobile) return;
-
-
-    const cleanMobile =
-        mobile.trim();
-
-
-    if (!/^[0-9]{10}$/.test(cleanMobile)) {
-
-        alert(
-            "📱 Please enter a valid 10 digit mobile number."
-        );
-
-        return;
-    }
-
-
-    const savedAccount =
-        JSON.parse(
-            localStorage.getItem("smartAttendanceAccount")
-        );
-
-
-    if (!savedAccount) {
-
-        alert(
-            "❌ No account found."
-        );
-
-        return;
-    }
-
-
-    if (
-        savedAccount.name === name.trim() &&
-        savedAccount.mobile === cleanMobile
-    ) {
-
-        alert(
-            "🔐 Your PIN is: " +
-            savedAccount.pin
-        );
-
-    } else {
-
-        alert(
-            "❌ Name and mobile number do not match."
-        );
-    }
-}
-
-
-// =====================================================
-// LOGIN PAGE CHECK
-// =====================================================
-
-function checkLoginStatus() {
-
-    const loggedIn =
-        localStorage.getItem(
-            "smartAttendanceLoggedIn"
-        );
-
-
-    const loginPage =
-        document.getElementById("loginPage");
-
-    const dashboardPage =
-        document.getElementById("dashboardPage");
-
-
-    if (loggedIn === "true") {
-
-        if (loginPage) {
-
-            loginPage.style.display =
-                "none";
-        }
-
-
-        if (dashboardPage) {
-
-            dashboardPage.style.display =
-                "block";
-        }
-
-    } else {
-
-        if (loginPage) {
-
-            loginPage.style.display =
-                "flex";
-        }
-
-
-        if (dashboardPage) {
-
-            dashboardPage.style.display =
-                "none";
-        }
-    }
-}
-
-
-// =====================================================
-// LOGOUT
-// =====================================================
-
-function logoutUser() {
-
-    localStorage.removeItem(
-        "smartAttendanceLoggedIn"
-    );
-
-
-    location.reload();
-}
-
-
-// =====================================================
-// LOGIN BUTTON CONNECTION
-// =====================================================
-
-function setupLoginButtons() {
-
-    const loginButton =
-        document.getElementById(
-            "loginButton"
-        );
-
-
-    if (loginButton) {
-
-        loginButton.addEventListener(
-            "click",
-            loginUser
-        );
-    }
-
-
-    const forgotButton =
-        document.getElementById(
-            "forgotPinButton"
-        );
-
-
-    if (forgotButton) {
-
-        forgotButton.addEventListener(
-            "click",
-            forgotPIN
-        );
-    }
-}
-
-
-// =====================================================
-// LOGIN PIN INPUT
-// =====================================================
-
-function setupLoginPin() {
-
-    const pin =
-        document.getElementById(
-            "loginPin"
-        );
-
-
-    if (!pin) return;
-
-
-    pin.setAttribute(
-        "maxlength",
-        "4"
-    );
-
-    pin.setAttribute(
-        "inputmode",
-        "numeric"
-    );
-
-
-    pin.addEventListener(
-        "input",
-        function() {
-
-            this.value =
-                this.value
-                    .replace(/\D/g, "")
-                    .slice(0, 4);
-        }
-    );
-}
-
-
-// =====================================================
-// PAGE LOAD - LOGIN
-// =====================================================
-
-window.addEventListener(
-    "load",
-    function() {
-
-        setupLoginButtons();
-
-        setupLoginPin();
-
-        checkLoginStatus();
-
-    }
-);
         await loadFaceModels();
-
-    }
-);
-// =====================================================
-// LOGIN SYSTEM
-// =====================================================
-
-function loginUser() {
-
-    const name =
-        document.getElementById("loginName")?.value.trim();
-
-    const mobile =
-        document.getElementById("loginMobile")?.value.trim();
-
-    const pin =
-        document.getElementById("loginPin")?.value.trim();
-
-
-    if (!name || !mobile || !pin) {
-
-        alert("⚠️ Please enter Name, Mobile Number and PIN.");
-        return;
-    }
-
-
-    if (!/^[0-9]{10}$/.test(mobile)) {
-
-        alert("📱 Mobile number must contain exactly 10 digits.");
-        return;
-    }
-
-
-    if (!/^[0-9]{4}$/.test(pin)) {
-
-        alert("🔐 PIN must contain exactly 4 digits.");
-        return;
-    }
-
-
-    // Get saved login account
-    const savedAccount =
-        JSON.parse(
-            localStorage.getItem("smartAttendanceAccount")
-        );
-
-
-    // If no account exists
-    if (!savedAccount) {
-
-        alert(
-            "❌ No account found.\n\n" +
-            "Please register your face/student details first."
-        );
-
-        return;
-    }
-
-
-    // Check login details
-    if (
-        savedAccount.name === name &&
-        savedAccount.mobile === mobile &&
-        savedAccount.pin === pin
-    ) {
-
-        localStorage.setItem(
-            "smartAttendanceLoggedIn",
-            "true"
-        );
-
-
-        alert("✅ Login Successful!");
-
-
-        // Hide login page
-        const loginPage =
-            document.getElementById("loginPage");
-
-        if (loginPage) {
-
-            loginPage.style.display = "none";
-        }
-
-
-        // Show dashboard
-        const dashboard =
-            document.getElementById("dashboardPage");
-
-        if (dashboard) {
-
-            dashboard.style.display = "block";
-        }
-
-
-        // If your HTML uses another dashboard container
-        const mainContainer =
-            document.getElementById("mainContainer");
-
-        if (mainContainer) {
-
-            mainContainer.style.display = "block";
-        }
-
-
-        displayStudents();
-        updateDashboard();
-        showCurrentDate();
-
-    } else {
-
-        alert(
-            "❌ Login failed!\n\n" +
-            "Name, Mobile Number or PIN is incorrect."
-        );
-    }
-}
-
-
-// =====================================================
-// FORGOT PIN
-// =====================================================
-
-function forgotPIN() {
-
-    const name =
-        prompt("Enter your registered name:");
-
-    if (!name) return;
-
-
-    const mobile =
-        prompt("Enter your registered 10 digit mobile number:");
-
-    if (!mobile) return;
-
-
-    const cleanMobile =
-        mobile.trim();
-
-
-    if (!/^[0-9]{10}$/.test(cleanMobile)) {
-
-        alert(
-            "📱 Please enter a valid 10 digit mobile number."
-        );
-
-        return;
-    }
-
-
-    const savedAccount =
-        JSON.parse(
-            localStorage.getItem("smartAttendanceAccount")
-        );
-
-
-    if (!savedAccount) {
-
-        alert(
-            "❌ No account found."
-        );
-
-        return;
-    }
-
-
-    if (
-        savedAccount.name === name.trim() &&
-        savedAccount.mobile === cleanMobile
-    ) {
-
-        alert(
-            "🔐 Your PIN is: " +
-            savedAccount.pin
-        );
-
-    } else {
-
-        alert(
-            "❌ Name and mobile number do not match."
-        );
-    }
-}
-
-
-// =====================================================
-// LOGIN PAGE CHECK
-// =====================================================
-
-function checkLoginStatus() {
-
-    const loggedIn =
-        localStorage.getItem(
-            "smartAttendanceLoggedIn"
-        );
-
-
-    const loginPage =
-        document.getElementById("loginPage");
-
-    const dashboardPage =
-        document.getElementById("dashboardPage");
-
-
-    if (loggedIn === "true") {
-
-        if (loginPage) {
-
-            loginPage.style.display =
-                "none";
-        }
-
-
-        if (dashboardPage) {
-
-            dashboardPage.style.display =
-                "block";
-        }
-
-    } else {
-
-        if (loginPage) {
-
-            loginPage.style.display =
-                "flex";
-        }
-
-
-        if (dashboardPage) {
-
-            dashboardPage.style.display =
-                "none";
-        }
-    }
-}
-
-
-// =====================================================
-// LOGOUT
-// =====================================================
-
-function logoutUser() {
-
-    localStorage.removeItem(
-        "smartAttendanceLoggedIn"
-    );
-
-
-    location.reload();
-}
-
-
-// =====================================================
-// LOGIN BUTTON CONNECTION
-// =====================================================
-
-function setupLoginButtons() {
-
-    const loginButton =
-        document.getElementById(
-            "loginButton"
-        );
-
-
-    if (loginButton) {
-
-        loginButton.addEventListener(
-            "click",
-            loginUser
-        );
-    }
-
-
-    const forgotButton =
-        document.getElementById(
-            "forgotPinButton"
-        );
-
-
-    if (forgotButton) {
-
-        forgotButton.addEventListener(
-            "click",
-            forgotPIN
-        );
-    }
-}
-
-
-// =====================================================
-// LOGIN PIN INPUT
-// =====================================================
-
-function setupLoginPin() {
-
-    const pin =
-        document.getElementById(
-            "loginPin"
-        );
-
-
-    if (!pin) return;
-
-
-    pin.setAttribute(
-        "maxlength",
-        "4"
-    );
-
-    pin.setAttribute(
-        "inputmode",
-        "numeric"
-    );
-
-
-    pin.addEventListener(
-        "input",
-        function() {
-
-            this.value =
-                this.value
-                    .replace(/\D/g, "")
-                    .slice(0, 4);
-        }
-    );
-}
-
-
-// =====================================================
-// PAGE LOAD - LOGIN
-// =====================================================
-
-window.addEventListener(
-    "load",
-    function() {
-
-        setupLoginButtons();
-
-        setupLoginPin();
-
-        checkLoginStatus();
 
     }
 );
