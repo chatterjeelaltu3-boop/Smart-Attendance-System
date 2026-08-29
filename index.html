@@ -3,153 +3,654 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Smart Attendance System</title>
+
     <link rel="stylesheet" href="style.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/face-api.js@0.22.2/dist/face-api.min.js"></script>
 </head>
+
 <body>
 
-    <!-- ================= AUTH AREA ================= -->
-    <div id="authSection" class="auth-container">
-        <img src="Screenshot 2026-08-28 160906.png" alt="Logo" class="login-logo">
-        <div class="auth-header">
-            <h1>Smart Attendance System</h1>
-            <h3>Hooghly Engineering & Technology College</h3>
+<!-- ================= LOGIN PAGE ================= -->
+
+<div id="loginPage" class="page">
+
+    <div class="login-card">
+
+        <!-- LOGO REMOVED — SMILE EMOJI -->
+        <div class="logo-emoji">😊</div>
+
+        <h1>Smart Attendance System</h1>
+
+        <p class="college-name">
+            Hooghly Engineering &amp; Technology College
+        </p>
+
+        <div class="welcome-box">
+            🎓 Welcome Students &amp; Administrator
         </div>
 
-        <div class="auth-tabs">
-            <button id="tabStudent" class="tab-btn active" onclick="switchTab('student')">Student Login</button>
-            <button id="tabAdmin" class="tab-btn" onclick="switchTab('admin')">Admin Login</button>
+        <!-- LOGIN TABS -->
+
+        <div class="tabs">
+
+            <button
+                class="tab active"
+                onclick="showLogin('student')">
+                🎓 Student Login
+            </button>
+
+            <button
+                class="tab"
+                onclick="showLogin('admin')">
+                👑 Admin Login
+            </button>
+
         </div>
 
-        <div id="studentLoginForm">
-            <div class="form-group"><label>Mobile No or Email ID</label><input type="text" id="stuUser" class="form-control" placeholder="Enter Mobile or Email"></div>
-            <div class="form-group"><label>4-Digit PIN</label><input type="password" id="stuPin" class="form-control" maxlength="4" placeholder="••••"></div>
-            <button type="button" class="btn-submit" onclick="handleLogin('student')">Log In</button>
-            <div class="form-links">
-                <a href="#" onclick="showForm('forgotPinForm')">Forgot PIN?</a>
-                <a href="#" onclick="showForm('registerForm')">Create Account</a>
+
+        <!-- STUDENT LOGIN -->
+
+        <div id="studentLogin" class="login-panel">
+
+            <input
+                id="studentLoginName"
+                type="text"
+                placeholder="Student Name"
+            >
+
+            <input
+                id="studentLoginEmail"
+                type="email"
+                placeholder="Email Address"
+            >
+
+            <input
+                id="studentLoginPin"
+                type="password"
+                inputmode="numeric"
+                maxlength="6"
+                placeholder="PIN"
+            >
+
+            <button
+                class="primary-btn"
+                onclick="studentLogin()">
+                🔐 Login
+            </button>
+
+            <div class="login-links">
+
+                <button onclick="openCreateAccount()">
+                    Create Account
+                </button>
+
+                <button onclick="forgotStudentPin()">
+                    Forgot PIN?
+                </button>
+
             </div>
+
         </div>
 
-        <div id="adminLoginForm" class="hidden">
-            <div class="form-group"><label>Admin Username</label><input type="text" class="form-control" value="Pradyut Chatterjee" readonly></div>
-            <div class="form-group"><label>4-Digit Admin PIN</label><input type="password" id="adminPin" class="form-control" maxlength="4" placeholder="••••"></div>
-            <button type="button" class="btn-submit" onclick="handleLogin('admin')">Admin Log In</button>
-            <div class="form-links"><a href="#" onclick="showForm('forgotPinForm')">Forgot Admin PIN?</a></div>
+
+        <!-- ADMIN LOGIN -->
+
+        <div
+            id="adminLogin"
+            class="login-panel hidden">
+
+            <input
+                id="adminLoginName"
+                type="text"
+                value="Pradyut Chatterjee"
+                placeholder="Admin Name"
+            >
+
+            <input
+                id="adminLoginPin"
+                type="password"
+                inputmode="numeric"
+                maxlength="6"
+                placeholder="Admin PIN"
+            >
+
+            <button
+                class="primary-btn"
+                onclick="adminLogin()">
+                👑 Admin Login
+            </button>
+
+            <div class="login-links">
+
+                <button onclick="forgotAdminPin()">
+                    Forgot PIN?
+                </button>
+
+            </div>
+
+            <small>
+                Default Admin: Pradyut Chatterjee / PIN 1234
+            </small>
+
         </div>
 
-        <div id="registerForm" class="hidden">
-            <div class="form-group"><label>Full Name</label><input type="text" id="regName" class="form-control"></div>
-            <div class="form-group"><label>Mobile No</label><input type="tel" id="regMob" class="form-control"></div>
-            <div class="form-group"><label>Email ID</label><input type="email" id="regEmail" class="form-control"></div>
-            <div class="form-group"><label>Department</label><input type="text" id="regDept" class="form-control" placeholder="e.g. CSE"></div>
-            <div class="form-group"><label>Set 4-Digit PIN</label><input type="password" id="regPin" class="form-control" maxlength="4" placeholder="••••"></div>
-            <button type="button" class="btn-submit" onclick="processRegistration()">Register Now</button>
-            <div class="form-links"><a href="#" onclick="showForm('studentLoginForm')">Back to Login</a></div>
-        </div>
-
-        <div id="forgotPinForm" class="hidden">
-            <div class="form-group"><label>Enter Mobile or Email</label><input type="text" class="form-control"></div>
-            <div class="form-group"><label>Confirm New PIN</label><input type="password" class="form-control" maxlength="4" placeholder="••••"></div>
-            <button type="button" class="btn-submit" onclick="showForm('studentLoginForm')">Reset PIN</button>
-        </div>
     </div>
 
-    <!-- ================= MAIN DASHBOARD AREA ================= -->
-    <div id="dashboardSection" class="dashboard-container hidden">
-        <!-- 3 Bar Sidebar Navigation -->
-        <div class="sidebar">
-            <div class="hamburger-header">☰ Navigation Menu</div>
-            <div class="admin-profile">
-                <p style="font-size:10px; color:#9ca3af; text-transform: uppercase;">Administrator</p>
-                <p class="admin-name">Ayush Chatterjee</p>
+</div>
+
+
+<!-- ================= MAIN APP ================= -->
+
+<div id="appPage" class="hidden">
+
+    <!-- TOP BAR -->
+
+    <div class="topbar">
+
+        <button
+            class="menu-btn"
+            onclick="toggleMenu()">
+            ☰
+        </button>
+
+
+        <div class="brand">
+
+            <!-- SMILE INSTEAD OF LOGO -->
+
+            <div class="brand-emoji">
+                😊
             </div>
-            <div class="menu-items">
-                <p>Navigation</p>
-                <a href="#" onclick="showDashboardHome()">🏠 Dashboard Home</a>
-                <a href="#" onclick="showEditDetails()">✏️ Edit Personal Details</a>
-                <a href="#" onclick="showAttendanceView()">🗓️ Check Attendance</a>
-                <a href="#" id="adminRegMenuOpt" class="hidden" onclick="showRegisteredStudents()">👥 Registered Students</a>
-                <p>Exit</p>
-                <a href="#" onclick="location.reload()" style="color:#ef4444;">Sign Out</a>
+
+            <div>
+
+                <b>
+                    Smart Attendance System
+                </b>
+
+                <span>
+                    Hooghly Engineering &amp; Technology College
+                </span>
+
             </div>
+
         </div>
 
-        <!-- Main Workspace Frame -->
-        <div class="main-content">
-            <!-- ফিক্সড: ড্যাশবোর্ডের উপরে লোগো এবং তার তলায় Hooghly Engineering & Technology College লার্জ হেডার -->
-            <div class="dashboard-header-block">
-                <img src="Screenshot 2026-08-28 160906.png" alt="College Logo" class="dash-logo-small">
+
+        <button
+            class="logout-btn"
+            onclick="logout()">
+            Logout
+        </button>
+
+    </div>
+
+
+    <!-- LEFT THREE LINE MENU -->
+
+    <div
+        id="sideMenu"
+        class="side-menu">
+
+        <button onclick="showSection('dashboard')">
+            🏠 Dashboard
+        </button>
+
+        <button onclick="showSection('faceRegistration')">
+            📸 Face Registration
+        </button>
+
+        <button onclick="showSection('faceAttendance')">
+            🤳 Face Attendance
+        </button>
+
+        <button onclick="showRegisteredStudents()">
+            👥 Registered Students
+        </button>
+
+        <button onclick="showCheckAttendance()">
+            📊 Check Attendance
+        </button>
+
+        <button onclick="editMyDetails()">
+            ✏️ Edit My Details
+        </button>
+
+        <button onclick="changeMyPin()">
+            🔐 Change PIN
+        </button>
+
+        <button onclick="logout()">
+            🚪 Logout
+        </button>
+
+    </div>
+
+
+    <!-- MAIN CONTENT -->
+
+    <main class="container">
+
+
+        <!-- ================= DASHBOARD ================= -->
+
+        <section
+            id="dashboard"
+            class="section">
+
+            <div class="hero-box">
+
+                <div class="hero-emoji">
+                    😊
+                </div>
+
                 <div>
-                    <h2 style="color: #1e3a8a; font-size: 20px; font-weight: 700; margin-bottom: 2px;">Hooghly Engineering & Technology College</h2>
-                    <div class="welcome-msg" id="welcomeMsg">Welcome back, User!</div>
+
+                    <h1 id="welcomeTitle">
+                        Welcome!
+                    </h1>
+
+                    <p id="welcomeText">
+                        Welcome to your Smart Attendance Dashboard.
+                    </p>
+
                 </div>
+
             </div>
 
-            <!-- View 1: Main Dashboard (Camera Face Register & Attendance Face Capture Area) -->
-            <div id="mainDashboardView" class="grid-container">
-                <!-- Left Block: Mirror View Camera -->
-                <div class="card">
-                    <h2 id="camTitle">📸 Smart Live Node (Mirror View)</h2>
-                    <div class="camera-box"><video id="webcam" autoplay playsinline></video></div>
-                    <div id="liveTimeStamp" class="time-stamp-box hidden"></div>
+
+            <div class="info-strip">
+
+                <span id="roleText"></span>
+
+                <span id="todayText"></span>
+
+            </div>
+
+
+            <!-- DASHBOARD CARDS -->
+
+            <div class="cards">
+
+                <div class="stat-card blue">
+
+                    <span>👥</span>
+
+                    <h3>
+                        Total Students
+                    </h3>
+
+                    <strong id="totalStudents">
+                        0
+                    </strong>
+
                 </div>
-                
-                <!-- Right Block: Dynamic Forms Grid (Register Face or Take Attendance Automatically) -->
-                <div class="card" id="studentRegisterCard">
-                    <!-- Section A: Register Face Frame -->
-                    <div id="faceRegisterSection">
-                        <h2>👤 Face Register & Details</h2>
-                        <p style="font-size:13px; color:#4b5563; margin-bottom:15px;">Fill your profile metadata to activate the live auto capture sequence.</p>
-                        <div class="form-group"><label>Student Identity Name / Email</label><input type="text" id="frName" class="form-control" readonly></div>
-                        <div class="form-group"><label>Roll Number</label><input type="text" id="frRoll" class="form-control" readonly></div>
-                        <div class="form-group"><label>Mobile Number</label><input type="text" id="frMob" class="form-control" readonly></div>
-                        <div class="form-group"><label>Department/Branch</label><input type="text" id="frBranch" class="form-control" readonly></div>
-                        <div class="form-group"><label>College Node</label><input type="text" id="frCollege" class="form-control" readonly></div>
-                        <button class="btn-submit" onclick="triggerAutomaticCapture()">Start Automatic Capture</button>
-                    </div>
 
-                    <!-- Section B: Face Attendance Sequence Frame (After Registration) -->
-                    <div id="faceAttendanceSection" class="hidden" style="margin-top: 25px; padding-top: 25px; border-top: 2px dashed #e5e7eb;">
-                        <h2>📷 Face Attendance Node</h2>
-                        <p style="font-size:13px; color:#4b5563; margin-bottom:15px;">Click below to capture face for daily attendance stream verification.</p>
-                        <button class="btn-submit" style="background: linear-gradient(to right, #00c6ff, #0072ff);" onclick="triggerFaceAttendance()">Automatic Face Capture Attendance</button>
-                    </div>
+
+                <div class="stat-card green">
+
+                    <span>✅</span>
+
+                    <h3>
+                        Present Today
+                    </h3>
+
+                    <strong id="presentStudents">
+                        0
+                    </strong>
+
                 </div>
+
+
+                <div class="stat-card red">
+
+                    <span>❌</span>
+
+                    <h3>
+                        Absent Today
+                    </h3>
+
+                    <strong id="absentStudents">
+                        0
+                    </strong>
+
+                </div>
+
+
+                <div class="stat-card purple">
+
+                    <span>📊</span>
+
+                    <h3>
+                        Attendance
+                    </h3>
+
+                    <strong id="attendancePercentage">
+                        0%
+                    </strong>
+
+                </div>
+
             </div>
 
-            <!-- View 2: Edit Profile Module (Name, Roll, Department, College update করা যাবে) -->
-            <div id="editDetailsView" class="card hidden">
-                <h2>✏️ Edit Personal Details</h2>
-                <p style="font-size:13px; color:#6b7280; margin-bottom:15px;">Update your database sync credentials below:</p>
-                <div class="form-group"><label>Full Name</label><input type="text" id="editName" class="form-control"></div>
-                <div class="form-group"><label>Roll No</label><input type="text" id="editRoll" class="form-control"></div>
-                <div class="form-group"><label>Department/Branch</label><input type="text" id="editBranch" class="form-control"></div>
-                <div class="form-group"><label>College Name</label><input type="text" id="editCollege" class="form-control"></div>
-                <button class="btn-submit" onclick="savePersonalDetails()">Update & Save Credentials</button>
+        </section>
+
+
+        <!-- ================= FACE REGISTRATION ================= -->
+
+        <section
+            id="faceRegistration"
+            class="section hidden">
+
+            <h2>
+                📸 Face Registration
+            </h2>
+
+            <div class="colored-note">
+
+                Enter your details once, then click
+                <b>Capture Face &amp; Register</b>.
+
+                The camera will automatically detect your face.
+
             </div>
 
-            <!-- View 3: Check Attendance Sheet Stream -->
-            <div id="attendanceLogsView" class="card hidden">
-                <h2>🗓️ Check Attendance Logs</h2>
-                <table class="data-table">
-                    <thead><tr><th>Name</th><th>Roll No</th><th>Time Log</th><th>Status</th></tr></thead>
-                    <tbody id="attendanceTableBody"></tbody>
-                </table>
+
+            <div class="form-grid">
+
+                <input
+                    id="faceName"
+                    placeholder="Student Name"
+                >
+
+                <input
+                    id="faceRoll"
+                    placeholder="Roll Number"
+                >
+
+                <input
+                    id="collegeName"
+                    value="Hooghly Engineering & Technology College"
+                    placeholder="College"
+                >
+
+                <input
+                    id="departmentName"
+                    placeholder="Department / Branch"
+                >
+
+                <input
+                    id="faceMobile"
+                    type="tel"
+                    maxlength="10"
+                    inputmode="numeric"
+                    placeholder="Mobile Number (10 digits)"
+                >
+
+                <input
+                    id="faceEmail"
+                    type="email"
+                    placeholder="Email (optional)"
+                >
+
             </div>
 
-            <!-- View 4: Admin Controls Registered Students Database List -->
-            <div id="registeredStudentsView" class="card hidden">
-                <h2>👥 Global Registry Management (Admin Control)</h2>
-                <table class="data-table">
-                    <thead><tr><th>Pic</th><th>Name</th><th>Roll No</th><th>Contact</th><th>Dept</th><th>Action</th></tr></thead>
-                    <tbody id="registryTableBody"></tbody>
-                </table>
+
+            <!-- CAMERA -->
+
+            <div class="camera-box">
+
+                <video
+                    id="registrationCamera"
+                    autoplay
+                    muted
+                    playsinline>
+                </video>
+
+                <div
+                    id="registrationStatus"
+                    class="camera-status">
+
+                    Camera is OFF
+
+                </div>
+
+            </div>
+
+
+            <button
+                id="registerFaceButton"
+                class="primary-btn"
+                onclick="startAutomaticFaceRegistration()">
+
+                📸 Capture Face &amp; Register
+
+            </button>
+
+
+            <div id="registrationMessage"></div>
+
+        </section>
+
+
+        <!-- ================= FACE ATTENDANCE ================= -->
+
+        <section
+            id="faceAttendance"
+            class="section hidden">
+
+            <h2>
+                🤳 Face Attendance
+            </h2>
+
+
+            <div class="colored-note success-note">
+
+                Keep your face in the camera.
+
+                When your registered face is detected,
+                attendance will be marked automatically.
+
+            </div>
+
+
+            <div class="camera-box">
+
+                <video
+                    id="attendanceCamera"
+                    autoplay
+                    muted
+                    playsinline>
+                </video>
+
+                <div
+                    id="attendanceStatus"
+                    class="camera-status">
+
+                    Camera is OFF
+
+                </div>
+
+            </div>
+
+
+            <!-- ONLY CAPTURE FACE -->
+
+            <button
+                id="attendanceButton"
+                class="primary-btn"
+                onclick="startFaceAttendance()">
+
+                📸 Capture Face
+
+            </button>
+
+
+            <div id="attendanceResult"></div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<!-- ================= CREATE ACCOUNT ================= -->
+
+<div
+    id="createModal"
+    class="modal hidden">
+
+    <div class="modal-card">
+
+        <button
+            class="close"
+            onclick="closeModal('createModal')">
+            ×
+        </button>
+
+
+        <h2>
+            🎓 Create Student Account
+        </h2>
+
+
+        <input
+            id="createName"
+            placeholder="Full Name"
+        >
+
+
+        <input
+            id="createEmail"
+            type="email"
+            placeholder="Email Address"
+        >
+
+
+        <input
+            id="createPin"
+            type="password"
+            inputmode="numeric"
+            maxlength="6"
+            placeholder="Create PIN (4-6 digits)"
+        >
+
+
+        <button
+            class="primary-btn"
+            onclick="createAccount()">
+
+            Create Account
+
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- ================= REGISTERED STUDENTS ================= -->
+
+<div
+    id="studentsModal"
+    class="modal hidden">
+
+    <div class="modal-card wide">
+
+        <button
+            class="close"
+            onclick="closeModal('studentsModal')">
+            ×
+        </button>
+
+
+        <h2>
+            👥 Registered Students
+        </h2>
+
+
+        <div id="registeredStudentsList"></div>
+
+    </div>
+
+</div>
+
+
+<!-- ================= CHECK ATTENDANCE ================= -->
+
+<div
+    id="attendanceModal"
+    class="modal hidden">
+
+    <div class="modal-card wide">
+
+        <button
+            class="close"
+            onclick="closeModal('attendanceModal')">
+            ×
+        </button>
+
+
+        <h2>
+            📊 Check Attendance
+        </h2>
+
+
+        <div class="summary-grid">
+
+            <div class="summary total">
+
+                <b>
+                    Total Days
+                </b>
+
+                <strong id="attendanceTotalDays">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="summary present">
+
+                <b>
+                    Present
+                </b>
+
+                <strong id="attendancePresentDays">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="summary absent">
+
+                <b>
+                    Absent
+                </b>
+
+                <strong id="attendanceAbsentDays">
+                    0
+                </strong>
+
             </div>
 
         </div>
+
+
+        <div id="attendanceHistory"></div>
+
     </div>
 
-    <!-- Popup Status Toaster -->
-    <div id="popupAlert" class="popup-success hidden"></div>
+</div>
 
+
+<script src="script.js"></script>
+
+</body>
+</html>
